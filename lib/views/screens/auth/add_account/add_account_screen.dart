@@ -3,6 +3,9 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:masscoinex/controllers/add_account_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
+import 'package:masscoinex/views/screens/auth/add_account/add_card/card_fields_screen.dart';
+import 'package:masscoinex/views/screens/auth/add_account/add_card/card_picture_screen.dart';
+import 'package:masscoinex/views/screens/auth/add_account/add_card/card_video_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
@@ -11,47 +14,17 @@ class AddAccountScreen extends StatelessWidget {
       Get.put(AddAccountController());
   @override
   Widget build(BuildContext context) {
-    final TabBar _tabBar = TabBar(
-      onTap: (index) {
-        _addAccountController.currentIndex.value = index;
-      },
-      tabs: [
-        Tab(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 2.h),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.account_balance,
-                  color: GlobalVals.appbarColor,
-                ),
-                Text(
-                  "Add Bank",
-                  style: TextStyle(color: GlobalVals.appbarColor),
-                ),
-              ],
-            ),
-          ),
-        ),
-        Tab(
-          child: Padding(
-            padding: EdgeInsets.symmetric(horizontal: 2.h),
-            child: Column(
-              children: [
-                Icon(
-                  Icons.credit_card,
-                  color: GlobalVals.appbarColor,
-                ),
-                Text(
-                  "Add Card",
-                  style: TextStyle(color: GlobalVals.appbarColor),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
+    final _cardScreens = [
+      CardFieldsScreen(
+        addAccountController: _addAccountController,
+      ),
+      CardPictureScreen(
+        addAccountController: _addAccountController,
+      ),
+      CardVideoScreen(
+        addAccountController: _addAccountController,
+      ),
+    ];
     return DefaultTabController(
       length: 2,
       child: Builder(
@@ -66,14 +39,14 @@ class AddAccountScreen extends StatelessWidget {
               title: Text("Add Account"),
               backgroundColor: GlobalVals.appbarColor,
               bottom: PreferredSize(
-                preferredSize: _tabBar.preferredSize,
+                preferredSize: _addAccountController.size,
                 child: ColoredBox(
                   color: Colors.white,
-                  child: _tabBar,
+                  child: _addAccountController.tabBar,
                 ),
               ),
             ),
-            body: _tabBars(),
+            body: _tabBars(_cardScreens),
             /* floatingActionButton: GetX<AddAccountController>(
               init: AddAccountController(),
               builder: (val) {
@@ -98,8 +71,8 @@ class AddAccountScreen extends StatelessWidget {
                 );
               },
             ), */
-            bottomNavigationBar: Padding(
-              padding: EdgeInsets.only(bottom: 1.h),
+            /* bottomNavigationBar: Padding(
+              padding: EdgeInsets.only(bottom: 1.h, left: 1.h, right: 1.h),
               child: Container(
                 width: double.infinity,
                 child: ElevatedButton(
@@ -125,37 +98,14 @@ class AddAccountScreen extends StatelessWidget {
                   ),
                 ),
               ),
-            ),
+            ), */
           );
         },
       ),
     );
   }
 
-  Container _textFields(String hint) {
-    return Container(
-      width: double.infinity,
-      child: TextField(
-        textAlign: TextAlign.center,
-        decoration: InputDecoration(
-          border: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(
-              5.h,
-            ),
-            gapPadding: 1.0,
-          ),
-          hintText: hint,
-          focusColor: Colors.blue,
-          contentPadding: EdgeInsets.symmetric(
-            vertical: 1.h,
-            horizontal: 2.h,
-          ),
-        ),
-      ),
-    );
-  }
-
-  Widget _tabBars() {
+  Widget _tabBars(var cardScreens) {
     return TabBarView(
       children: [
         Padding(
@@ -168,9 +118,10 @@ class AddAccountScreen extends StatelessWidget {
         ),
         Padding(
           padding: EdgeInsets.all(2.h),
-          child: SingleChildScrollView(
-            child: Column(
-              children: _addAccountController.addCard,
+          child: Obx(
+            () => IndexedStack(
+              children: cardScreens,
+              index: _addAccountController.cardScreenIndex.value,
             ),
           ),
         ),

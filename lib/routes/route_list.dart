@@ -16,4 +16,6 @@ class Routes {
   static const completeScreen = "/completeScreen";
   static const addAccount = "/addAccount";
   static const addAccountSuccessful = "/addAccountSuccessful";
+  //CurrencySelected
+  static const currencySelected = "/currencySelected";
 }

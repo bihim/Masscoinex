@@ -1,6 +1,7 @@
 import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:masscoinex/views/screens/main_screen.dart';
@@ -37,6 +38,7 @@ class SplashScreen extends StatefulWidget {
 /// AnimationControllers can be created with `vsync: this` because of TickerProviderStateMixin.
 class _MyStatefulWidgetState extends State<SplashScreen>
     with TickerProviderStateMixin {
+  bool isLoggedIn = false;
   late final AnimationController _controller = AnimationController(
     duration: const Duration(seconds: 3),
     vsync: this,
@@ -47,6 +49,13 @@ class _MyStatefulWidgetState extends State<SplashScreen>
   );
 
   @override
+  void initState() {
+    final box = GetStorage();
+    isLoggedIn = box.read("loggedIn") ?? false;
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
@@ -55,7 +64,8 @@ class _MyStatefulWidgetState extends State<SplashScreen>
   @override
   Widget build(BuildContext context) {
     Future.delayed(Duration(seconds: 3), () {
-      Get.offAllNamed(Routes.mainScreen);
+      Get.offAllNamed(
+          isLoggedIn == true ? Routes.mainScreenCopy : Routes.mainScreen);
     });
     return Scaffold(
       backgroundColor: GlobalVals.backgroundColor,

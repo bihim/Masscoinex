@@ -9,10 +9,57 @@ class AddAccountController extends GetxController {
   final currentCardDetails = 1.obs;
   final RxList<Column> addBank = [Column()].obs;
   final RxList<Column> addCard = [Column()].obs;
+  var size = Size(10.h, 10.h);
+  var tabBar = TabBar(
+    tabs: [],
+  );
+  var cardScreenIndex = 0.obs;
   @override
   void onInit() {
     addBank.add(_bankFields());
     addCard.add(_cardFields());
+    tabBar = TabBar(
+      onTap: (index) {
+        currentIndex.value = index;
+      },
+      tabs: [
+        Tab(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2.h),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.account_balance,
+                  color: GlobalVals.appbarColor,
+                ),
+                Text(
+                  "Add Bank",
+                  style: TextStyle(color: GlobalVals.appbarColor),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Tab(
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 2.h),
+            child: Column(
+              children: [
+                Icon(
+                  Icons.credit_card,
+                  color: GlobalVals.appbarColor,
+                ),
+                Text(
+                  "Add Card",
+                  style: TextStyle(color: GlobalVals.appbarColor),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+    size = tabBar.preferredSize;
     super.onInit();
   }
 
@@ -101,6 +148,32 @@ class AddAccountController extends GetxController {
         ),
         _textFields("Branch Telephone"),
         SizedBox(
+          height: 2.h,
+        ),
+        Container(
+          width: double.infinity,
+          child: ElevatedButton(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(
+                GlobalVals.buttonColor,
+              ),
+              elevation: MaterialStateProperty.all(0),
+              shape: MaterialStateProperty.all(
+                RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(
+                    5.h,
+                  ),
+                ),
+              ),
+            ),
+            onPressed: () {},
+            child: Padding(
+              padding: EdgeInsets.symmetric(vertical: 2.h),
+              child: const Text("Continue"),
+            ),
+          ),
+        ),
+        SizedBox(
           height: 8.h,
         ),
       ],
@@ -187,6 +260,32 @@ class AddAccountController extends GetxController {
           height: 2.h,
         ),
         _textFields("CVV"),
+        Padding(
+          padding: EdgeInsets.only(bottom: 1.h, left: 1.h, right: 1.h),
+          child: Container(
+            width: double.infinity,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                backgroundColor: MaterialStateProperty.all(
+                  GlobalVals.buttonColor,
+                ),
+                elevation: MaterialStateProperty.all(0),
+                shape: MaterialStateProperty.all(
+                  RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(
+                      5.h,
+                    ),
+                  ),
+                ),
+              ),
+              onPressed: () {},
+              child: Padding(
+                padding: EdgeInsets.symmetric(vertical: 2.h),
+                child: const Text("Continue"),
+              ),
+            ),
+          ),
+        ),
         SizedBox(
           height: 8.h,
         ),

@@ -3,6 +3,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/controllers/dashboard_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
+import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class DashboardScreenCopy extends StatelessWidget {
@@ -223,7 +224,8 @@ class DashboardScreenCopy extends StatelessWidget {
                     ),
                   ),
                   onTap: () {
-                    //Get.toNamed(Routes.loginScreen);
+                    Get.toNamed(Routes.currencySelected,
+                       parameters: {'index': "$index"});
                   },
                 ),
               );
@@ -256,8 +258,7 @@ class DashboardScreenCopy extends StatelessWidget {
         ),
       ),
       onPressed: () {
-        Fluttertoast.showToast(
-                        msg: buttonText);
+        Fluttertoast.showToast(msg: buttonText);
       },
       child: Padding(
         padding: EdgeInsets.only(

@@ -4,6 +4,7 @@ import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:lottie/lottie.dart';
+import 'package:get_storage/get_storage.dart';
 
 class AddAccountCompleteScreen extends StatelessWidget {
   const AddAccountCompleteScreen({Key? key}) : super(key: key);
@@ -67,6 +68,8 @@ class AddAccountCompleteScreen extends StatelessWidget {
                 ),
                 onPressed: () {
                   Get.offAllNamed(Routes.mainScreenCopy);
+                  GetStorage box = GetStorage();
+                  box.write("loggedIn", true);
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.h),

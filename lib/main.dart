@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/views/screens/auth/add_account/add_account_screen.dart';
@@ -16,15 +17,16 @@ import 'package:masscoinex/views/screens/auth/registration/kyc_uploaded_screen.d
 import 'package:masscoinex/views/screens/auth/registration/mobile_verification_screen.dart';
 import 'package:masscoinex/views/screens/auth/registration/registration_details_screen.dart';
 import 'package:masscoinex/views/screens/auth/registration/registration_screen.dart';
+import 'package:masscoinex/views/screens/currency_selected/currency_selected_screen.dart';
 import 'package:masscoinex/views/screens/main_screen.dart';
 import 'package:masscoinex/views/screens/main_screen_copy.dart';
 import 'package:masscoinex/views/screens/splash_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-
 import 'bindings/main_binding.dart';
 import 'bindings/registration_binding.dart';
 
-void main() {
+void main() async {
+  await GetStorage.init();
   runApp(MyApp());
 }
 
@@ -116,6 +118,10 @@ class MyApp extends StatelessWidget {
           GetPage(
             name: Routes.addAccountSuccessful,
             page: () => AddAccountCompleteScreen(),
+          ),
+          GetPage(
+            name: Routes.currencySelected,
+            page: () => CurrencySelectedScreen(),
           ),
         ],
       );
