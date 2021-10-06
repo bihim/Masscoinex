@@ -2,6 +2,11 @@ import 'package:get/get.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/models/currency_selector_list_model.dart';
 import 'package:masscoinex/models/dashboard_crypto_status_model.dart';
+import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/buy_screen.dart';
+import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/deposit_screen.dart';
+import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/sell_screen.dart';
+import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/swap_screen.dart';
+import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/withdraw_screen.dart';
 
 class CurrencySelectedController extends GetxController {
   var selectedIndex = 0.obs;
@@ -53,10 +58,22 @@ class CurrencySelectedController extends GetxController {
     ),
   ];
   var currencySelectedList = [
-    CurrencySelectorListModel(id: 1, money: "0", values: "SWAP", isSelected: true.obs),
-    CurrencySelectorListModel(id: 2, money: "5", values: "BUY", isSelected: true.obs),
-    CurrencySelectorListModel(id: 3, money: "0", values: "SELL", isSelected: true.obs),
-    CurrencySelectorListModel(id: 4, money: "2", values: "DEPOSIT", isSelected: true.obs),
-    CurrencySelectorListModel(id: 5, money: "0", values: "WITHDRAW", isSelected: true.obs),
+    CurrencySelectorListModel(
+        id: 1, money: "0", values: "SWAP", isSelected: true.obs),
+    CurrencySelectorListModel(
+        id: 2, money: "5", values: "BUY", isSelected: true.obs),
+    CurrencySelectorListModel(
+        id: 3, money: "0", values: "SELL", isSelected: true.obs),
+    CurrencySelectorListModel(
+        id: 4, money: "2", values: "DEPOSIT", isSelected: true.obs),
+    CurrencySelectorListModel(
+        id: 5, money: "0", values: "WITHDRAW", isSelected: true.obs),
+  ];
+  var currencyScreens = [
+    CurrencySwapScreen(),
+    BuyScreen(),
+    SellScreen(),
+    DepositScreen(),
+    WithdrawScreen(),
   ];
 }

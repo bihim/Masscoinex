@@ -104,30 +104,30 @@ class CardFieldsScreen extends StatelessWidget {
 
   Container _continue() {
     return Container(
-          width: double.infinity,
-          child: ElevatedButton(
-            style: ButtonStyle(
-              backgroundColor: MaterialStateProperty.all(
-                GlobalVals.buttonColor,
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            GlobalVals.buttonColor,
+          ),
+          elevation: MaterialStateProperty.all(0),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                5.h,
               ),
-              elevation: MaterialStateProperty.all(0),
-              shape: MaterialStateProperty.all(
-                RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(
-                    5.h,
-                  ),
-                ),
-              ),
-            ),
-            onPressed: () {
-              addAccountController.cardScreenIndex.value = 1;
-            },
-            child: Padding(
-              padding: EdgeInsets.symmetric(vertical: 2.h),
-              child: const Text("Continue"),
             ),
           ),
-        );
+        ),
+        onPressed: () {
+          addAccountController.cardScreenIndex.value = 1;
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 2.h),
+          child: const Text("Continue"),
+        ),
+      ),
+    );
   }
 
   Container _textFields(String hint) {

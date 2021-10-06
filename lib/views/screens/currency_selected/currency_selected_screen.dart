@@ -35,6 +35,15 @@ class CurrencySelectedScreen extends StatelessWidget {
               height: 2.h,
             ),
             _listItems(),
+            SizedBox(
+              height: 2.h,
+            ),
+            Obx(
+              () => IndexedStack(
+                children: _currencySelectedController.currencyScreens,
+                index: _selectedIndex.value,
+              ),
+            )
           ],
         ),
       ),
@@ -58,6 +67,7 @@ class CurrencySelectedScreen extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(2.h),
                   ),
+                  elevation: 0.3.h,
                   child: Container(
                     decoration: BoxDecoration(
                       borderRadius: BorderRadius.circular(2.h),
