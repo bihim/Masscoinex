@@ -1,9 +1,11 @@
 import 'package:get/get.dart';
 import 'package:masscoinex/global/global_vals.dart';
+import 'package:masscoinex/models/currency_selector_list_model.dart';
 import 'package:masscoinex/models/dashboard_crypto_status_model.dart';
 
 class CurrencySelectedController extends GetxController {
-   var dashBoardCryptoStatusModels = [
+  var selectedIndex = 0.obs;
+  var dashBoardCryptoStatusModels = [
     DashBoardCryptoStatusModel(
       cryptoAsset: "assets/bitcoin.png",
       cryptoName: "Bitcoin",
@@ -49,5 +51,12 @@ class CurrencySelectedController extends GetxController {
       cryptoPriceDollarSell: "\$6885",
       priceColor: GlobalVals.downColor,
     ),
+  ];
+  var currencySelectedList = [
+    CurrencySelectorListModel(id: 1, money: "0", values: "SWAP", isSelected: true.obs),
+    CurrencySelectorListModel(id: 2, money: "5", values: "BUY", isSelected: true.obs),
+    CurrencySelectorListModel(id: 3, money: "0", values: "SELL", isSelected: true.obs),
+    CurrencySelectorListModel(id: 4, money: "2", values: "DEPOSIT", isSelected: true.obs),
+    CurrencySelectorListModel(id: 5, money: "0", values: "WITHDRAW", isSelected: true.obs),
   ];
 }

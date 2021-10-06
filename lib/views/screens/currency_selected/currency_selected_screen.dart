@@ -6,6 +6,7 @@ import 'package:masscoinex/views/components/arc_clip.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class CurrencySelectedScreen extends StatelessWidget {
+  final _selectedIndex = 0.obs;
   final CurrencySelectedController _currencySelectedController =
       Get.put(CurrencySelectedController());
 
@@ -22,18 +23,110 @@ class CurrencySelectedScreen extends StatelessWidget {
         backgroundColor: GlobalVals.appbarColor,
       ),
       body: SingleChildScrollView(
-        child: Obx(
-          () => Column(
-            children: [
-              _animatedCurrencyProviderThings(_visible, _index),
-              _topItems(_visible),
-              SizedBox(
-                height: 2.h,
-              ),
-              //?make the list here
-            ],
-          ),
+        child: Column(
+          children: [
+            Obx(
+              () => _animatedCurrencyProviderThings(_visible, _index),
+            ),
+            Obx(
+              () => _topItems(_visible),
+            ),
+            SizedBox(
+              height: 2.h,
+            ),
+            _listItems(),
+          ],
         ),
+      ),
+    );
+  }
+
+  Container _listItems() {
+    return Container(
+      height: 15.h,
+      margin: EdgeInsets.only(left: 1.h, right: 1.h),
+      child: ListView.separated(
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (context, index) {
+          print("Current index $index");
+          return Material(
+            color: Colors.transparent,
+            child: InkWell(
+              borderRadius: BorderRadius.circular(2.h),
+              child: Obx(
+                () => Card(
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(2.h),
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(2.h),
+                      border: Border.all(
+                        color: _selectedIndex.value == index
+                            ? Colors.red
+                            : Colors.transparent,
+                      ),
+                    ),
+                    padding: EdgeInsets.all(3.h),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(
+                              _selectedIndex.value == index
+                                  ? Icons.account_balance_wallet
+                                  : Icons.account_balance_wallet_outlined,
+                              color: _selectedIndex.value == index
+                                  ? Colors.red
+                                  : Colors.grey,
+                            ),
+                            SizedBox(
+                              width: 2.w,
+                            ),
+                            Text(
+                              "${_currencySelectedController.currencySelectedList[index].money} BCH",
+                              style: TextStyle(
+                                color: _selectedIndex.value == index
+                                    ? Colors.red
+                                    : Colors.grey,
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: 2.h,
+                        ),
+                        Text(
+                          _currencySelectedController
+                              .currencySelectedList[index].values,
+                          style: TextStyle(
+                            color: _selectedIndex.value == index
+                                ? Colors.black
+                                : Colors.grey,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16.sp,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              onTap: () {
+                _selectedIndex.value = index;
+                print(index);
+              },
+            ),
+          );
+        },
+        separatorBuilder: (context, index) {
+          return SizedBox();
+        },
+        itemCount: _currencySelectedController.currencySelectedList.length,
       ),
     );
   }
