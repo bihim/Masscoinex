@@ -122,24 +122,24 @@ class LoginScreen extends StatelessWidget {
                       ),
                       Expanded(
                         flex: 3,
-                        child: TextField(
-                          textAlign: TextAlign.center,
-                          keyboardType: TextInputType.phone,
-                          decoration: InputDecoration(
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(
-                                5.h,
+                          child: TextField(
+                            textAlign: TextAlign.center,
+                            keyboardType: TextInputType.phone,
+                            decoration: InputDecoration(
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(
+                                  5.h,
+                                ),
+                                gapPadding: 1.0,
                               ),
-                              gapPadding: 1.0,
-                            ),
-                            hintText: "Mobile Number",
-                            focusColor: Colors.blue,
-                            contentPadding: EdgeInsets.symmetric(
-                              vertical: 1.h,
-                              horizontal: 2.h,
+                              hintText: "Mobile Number",
+                              focusColor: Colors.blue,
+                              contentPadding: EdgeInsets.symmetric(
+                                vertical: 1.h,
+                                horizontal: 2.h,
+                              ),
                             ),
                           ),
-                        ),
                       ),
                     ],
                   ),

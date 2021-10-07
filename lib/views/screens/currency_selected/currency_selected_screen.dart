@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/controllers/currency_selected_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
+import 'package:masscoinex/routes/route_list.dart';
 import 'package:masscoinex/views/components/arc_clip.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -14,6 +15,7 @@ class CurrencySelectedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var _visible = true.obs;
     final int _index = int.parse(Get.parameters["index"]!);
+    //?Add history. Work on history
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -47,6 +49,25 @@ class CurrencySelectedScreen extends StatelessWidget {
           ],
         ),
       ),
+      bottomNavigationBar: BottomNavigationBar(
+          backgroundColor: GlobalVals.backgroundColor,
+          type: BottomNavigationBarType.fixed,
+          selectedIconTheme: IconThemeData(
+            color: GlobalVals.bottomNavSelectedColor,
+          ),
+          unselectedItemColor: Colors.white,
+          selectedItemColor: Colors.white,
+          items: _currencySelectedController.bottomNavItems,
+          onTap: (index) {
+            if(index!=1){
+              Get.offAllNamed(Routes.mainScreenCopy, parameters: {"index": index.toString(), "isComingFromCurrency": "yes"});
+            }
+            else{
+              //?Implement history here
+            }
+          },
+          currentIndex: 1,
+        ),
     );
   }
 

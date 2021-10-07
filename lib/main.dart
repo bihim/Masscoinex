@@ -17,9 +17,16 @@ import 'package:masscoinex/views/screens/auth/registration/kyc_uploaded_screen.d
 import 'package:masscoinex/views/screens/auth/registration/mobile_verification_screen.dart';
 import 'package:masscoinex/views/screens/auth/registration/registration_details_screen.dart';
 import 'package:masscoinex/views/screens/auth/registration/registration_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/fiat_deposit_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/mode_of_payment_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/bank_transfer_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/card_payment_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/upi_payment_screen.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_selected_screen.dart';
 import 'package:masscoinex/views/screens/main_screen.dart';
 import 'package:masscoinex/views/screens/main_screen_copy.dart';
+import 'package:masscoinex/views/screens/nav_screens/security_screen.dart';
+import 'package:masscoinex/views/screens/nav_screens/support_screen.dart';
 import 'package:masscoinex/views/screens/splash_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'bindings/main_binding.dart';
@@ -33,98 +40,124 @@ void main() async {
 class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return ResponsiveSizer(builder: (context, orientation, screenType) {
-      return GetMaterialApp(
-        title: 'Masscoinex',
-        theme: ThemeData(
-          primarySwatch: Colors.blue,
-          fontFamily: "Sans Fransisco Pro",
-          appBarTheme: AppBarTheme(
-            backwardsCompatibility: false, // 1
-            systemOverlayStyle: SystemUiOverlayStyle.light, // 2
+    return ResponsiveSizer(
+      builder: (context, orientation, screenType) {
+        return GetMaterialApp(
+          title: 'Masscoinex',
+          theme: ThemeData(
+            primarySwatch: Colors.blue,
+            fontFamily: "Sans Fransisco Pro",
+            appBarTheme: AppBarTheme(
+              backwardsCompatibility: false,
+              systemOverlayStyle: SystemUiOverlayStyle.light, 
+            ),
           ),
-        ),
-        debugShowCheckedModeBanner: false,
-        initialRoute: Routes.splashScreen,
-        initialBinding: MainBinding(),
-        getPages: [
-          GetPage(
-            name: Routes.splashScreen,
-            page: () => SplashScreen(),
-          ),
-          GetPage(
-            name: Routes.mainScreen,
-            page: () => MainScreen(),
-            binding: MainBinding(),
-          ),
-          GetPage(
-            name: Routes.mainScreenCopy,
-            page: () => MainScreenCopy(),
-            binding: MainBinding(),
-          ),
-          GetPage(
-            name: Routes.loginScreen,
-            page: () => LoginScreen(),
-          ),
-          GetPage(
-            name: Routes.mobileVerification,
-            page: () => MobileVerificationScreen(),
-          ),
-          GetPage(
-            name: Routes.loginEmail,
-            page: () => LoginEmailScreen(),
-          ),
-          GetPage(
-            name: Routes.emailVerification,
-            page: () => EmailOtpScreen(),
-          ),
-          GetPage(
-            name: Routes.pinScreen,
-            page: () => PinScreen(),
-          ),
-          GetPage(
-            name: Routes.kycOrNot,
-            page: () => KycOrNotScreen(),
-          ),
-          GetPage(
-            name: Routes.registration,
-            page: () => RegistrationScreen(),
-            binding: RegistrationBinding(),
-          ),
-          GetPage(
-            name: Routes.mobileVerificationRegistration,
-            page: () => MobileVerificationRegistrationScreen(),
-          ),
-          GetPage(
-            name: Routes.emailVerificationRegistration,
-            page: () => EmailOtpRegistrationScreen(),
-          ),
-          GetPage(
-            name: Routes.registrationDetails,
-            page: () => RegistrationDetailsScreen(),
-          ),
-          GetPage(
-            name: Routes.kycUploadedScreen,
-            page: () => KycUploadedScreen(),
-          ),
-          GetPage(
-            name: Routes.completeScreen,
-            page: () => CompleteScreen(),
-          ),
-          GetPage(
-            name: Routes.addAccount,
-            page: () => AddAccountScreen(),
-          ),
-          GetPage(
-            name: Routes.addAccountSuccessful,
-            page: () => AddAccountCompleteScreen(),
-          ),
-          GetPage(
-            name: Routes.currencySelected,
-            page: () => CurrencySelectedScreen(),
-          ),
-        ],
-      );
-    });
+          debugShowCheckedModeBanner: false,
+          initialRoute: Routes.splashScreen,
+          initialBinding: MainBinding(),
+          getPages: [
+            GetPage(
+              name: Routes.splashScreen,
+              page: () => SplashScreen(),
+            ),
+            GetPage(
+              name: Routes.mainScreen,
+              page: () => MainScreen(),
+              binding: MainBinding(),
+            ),
+            GetPage(
+              name: Routes.mainScreenCopy,
+              page: () => MainScreenCopy(),
+              binding: MainBinding(),
+            ),
+            GetPage(
+              name: Routes.loginScreen,
+              page: () => LoginScreen(),
+            ),
+            GetPage(
+              name: Routes.mobileVerification,
+              page: () => MobileVerificationScreen(),
+            ),
+            GetPage(
+              name: Routes.loginEmail,
+              page: () => LoginEmailScreen(),
+            ),
+            GetPage(
+              name: Routes.emailVerification,
+              page: () => EmailOtpScreen(),
+            ),
+            GetPage(
+              name: Routes.pinScreen,
+              page: () => PinScreen(),
+            ),
+            GetPage(
+              name: Routes.kycOrNot,
+              page: () => KycOrNotScreen(),
+            ),
+            GetPage(
+              name: Routes.registration,
+              page: () => RegistrationScreen(),
+              binding: RegistrationBinding(),
+            ),
+            GetPage(
+              name: Routes.mobileVerificationRegistration,
+              page: () => MobileVerificationRegistrationScreen(),
+            ),
+            GetPage(
+              name: Routes.emailVerificationRegistration,
+              page: () => EmailOtpRegistrationScreen(),
+            ),
+            GetPage(
+              name: Routes.registrationDetails,
+              page: () => RegistrationDetailsScreen(),
+            ),
+            GetPage(
+              name: Routes.kycUploadedScreen,
+              page: () => KycUploadedScreen(),
+            ),
+            GetPage(
+              name: Routes.completeScreen,
+              page: () => CompleteScreen(),
+            ),
+            GetPage(
+              name: Routes.addAccount,
+              page: () => AddAccountScreen(),
+            ),
+            GetPage(
+              name: Routes.addAccountSuccessful,
+              page: () => AddAccountCompleteScreen(),
+            ),
+            GetPage(
+              name: Routes.currencySelected,
+              page: () => CurrencySelectedScreen(),
+            ),
+            GetPage(
+              name: Routes.modeOfPayment,
+              page: () => ModeOfPaymentScreen(),
+            ),
+            GetPage(
+              name: Routes.upiPayment,
+              page: () => UPIPaymentScreen(),
+            ),
+            GetPage(
+              name: Routes.bankPayment,
+              page: () => BankTransferScreen(),
+            ),
+            GetPage(
+              name: Routes.cardPayment,
+              page: () => CardPaymentScreen(),
+            ),
+            GetPage(
+              name: Routes.security,
+              page: () => SecurityScreen(),
+            ),
+            GetPage(
+              name: Routes.support,
+              page: () => SupportScreen(),
+            ),
+          ],
+        );
+      },
+    );
   }
 }

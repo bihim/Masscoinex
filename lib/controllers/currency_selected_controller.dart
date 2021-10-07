@@ -7,6 +7,7 @@ import 'package:masscoinex/views/screens/currency_selected/currency_list_screens
 import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/sell_screen.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/swap_screen.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/withdraw_screen.dart';
+import 'package:flutter/material.dart';
 
 class CurrencySelectedController extends GetxController {
   var selectedIndex = 0.obs;
@@ -75,5 +76,26 @@ class CurrencySelectedController extends GetxController {
     SellScreen(),
     DepositScreen(),
     WithdrawScreen(),
+  ];
+  var bottomNavItems = [
+    BottomNavigationBarItem(
+        icon: Icon(Icons.dashboard_outlined),
+        activeIcon: Icon(Icons.dashboard),
+        label: "Dashboard"),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.shuffle_outlined),
+        activeIcon: Icon(Icons.shuffle),
+        label: "History"),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.account_balance_wallet_outlined),
+        activeIcon: Icon(Icons.account_balance_wallet),
+        label: "Fiat Wallet"),
+    BottomNavigationBarItem(
+        icon: Icon(Icons.person_outline),
+        activeIcon: Icon(Icons.person),
+        label: "Profile"),
+  ];
+  var currencyCurrentScreens = [
+    
   ];
 }

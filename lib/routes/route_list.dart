@@ -4,7 +4,8 @@ class Routes {
   static const mainScreenCopy = "/mainCopy";
   static const loginScreen = "/login";
   static const mobileVerification = "/mobileVerification";
-  static const mobileVerificationRegistration = "/mobileVerificationRegistration";
+  static const mobileVerificationRegistration =
+      "/mobileVerificationRegistration";
   static const loginEmail = "/loginEmail";
   static const emailVerification = "/emailVerification";
   static const emailVerificationRegistration = "/emailVerificationRegistration";
@@ -18,4 +19,12 @@ class Routes {
   static const addAccountSuccessful = "/addAccountSuccessful";
   //CurrencySelected
   static const currencySelected = "/currencySelected";
+  //Fiat
+  static const modeOfPayment = "/modeOfPayment";
+  static const upiPayment = "/upiPayment";
+  static const bankPayment = "/bankPayment";
+  static const cardPayment = "/cardPayment";
+  //Navbar
+  static const security = "/security";
+  static const support = "/support";
 }
