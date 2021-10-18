@@ -6,6 +6,6 @@ class GlobalVals {
   static const bottomNavSelectedColor = Color(0xFFf7499e);
   static const raiseColor = 0xFF71b553;
   static const downColor = 0xFFe07978;
-  static const buttonColor = Color(0xFF1e65cf);
+  static const buttonColor = Color(0xFF2072ef);
   static const currencyColor = Color(0xFF4d16a8);
 }

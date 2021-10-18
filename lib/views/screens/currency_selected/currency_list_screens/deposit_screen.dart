@@ -8,6 +8,9 @@ class DepositScreen extends StatelessWidget {
   final _dropDownValueFromList = ['BTC', 'RPL', 'EOS', 'ETH', 'ION'];
   final _textEditingController =
       TextEditingController(text: "XhoP8eoo29fz3GXpkhT6XBkNamLsbbpolqGnKOLh");
+  final String currentCurrencyText;
+  DepositScreen({Key? key, required this.currentCurrencyText})
+      : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -28,11 +31,46 @@ class DepositScreen extends StatelessWidget {
               ),
               child: Column(
                 children: [
-                  _dropDown(
+                  /* _dropDown(
                     CrossAxisAlignment.start,
-                    "Select Crypto",
+                    "Crypto Currency",
                     _dropdownValueFrom,
                     _dropDownValueFromList,
+                  ) */
+                  Container(
+                    width: double.infinity,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Crypto Currency",
+                          style: TextStyle(
+                            color: Colors.grey.shade800,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                        SizedBox(
+                          height: 1.h,
+                        ),
+                        Container(
+                          width: double.infinity,
+                          padding: EdgeInsets.symmetric(horizontal: 2.h),
+                          decoration: BoxDecoration(
+                            color: Colors.grey.shade200,
+                            borderRadius: BorderRadius.circular(1.h),
+                            border: Border.all(
+                              color: Colors.grey,
+                            ),
+                          ),
+                          child: Padding(
+                            padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                            child: Text(
+                              currentCurrencyText,
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Image.asset(
                     "assets/barcode.jpg",

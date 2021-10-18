@@ -1,46 +1,69 @@
 import 'package:flutter/material.dart';
 import 'package:masscoinex/global/global_vals.dart';
+import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
-class CurrencySwapScreen extends StatelessWidget {
-  final _dropdownValueFrom = 'BTC'.obs;
-  final _dropdownValueTo = 'BTC'.obs;
-  final _dropDownValueFromList = ['BTC', 'RPL', 'EOS', 'ETH', 'ION'];
-  final _dropDownValueToList = ['BTC', 'RPL', 'EOS', 'ETH', 'ION'];
+class DashboardDepositScreen extends StatelessWidget {
+  final _dropdownValueFrom = '40000'.obs;
+  final _dropdownValueTo = 'USD'.obs;
+  final _dropDownValueFromList = ['40000', '30000', '20000', '10000', '5000'];
+  final _dropDownValueToList = ['USD', 'INR', 'BDT', 'RMB'];
   final TextEditingController _cryptoValueController =
-      TextEditingController(text: "150000");
-  final TextEditingController _toCryptoValueController =
-      TextEditingController(text: "457800");
+      TextEditingController(text: "1");
+  final TextEditingController _amountController =
+      TextEditingController(text: "1634568");
   final TextEditingController _denominatedValue =
-      TextEditingController(text: "1.98");
-
-  final String currentCurrencyText;
-  CurrencySwapScreen({Key? key, required this.currentCurrencyText})
-      : super(key: key);
+      TextEditingController(text: "42000");
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: 1.h,
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: GlobalVals.appbarColor,
+        title: Text(
+          "Deposit",
+        ),
       ),
-      child: Column(
-        children: [
-          _swap(),
-          SizedBox(
-            height: 3.h,
-          ),
-          _continue(),
-          SizedBox(
-            height: 5.h,
-          ),
-        ],
+      body: Container(
+        padding: EdgeInsets.symmetric(
+          horizontal: 3.h,
+        ),
+        child: Column(
+          children: [
+            SizedBox(
+              height: 2.h,
+            ),
+            _converter(),
+            SizedBox(
+              height: 2.h,
+            ),
+            _cryptoValueConvt(),
+            SizedBox(
+              height: 2.h,
+            ),
+            _denominated(),
+            SizedBox(
+              height: 2.h,
+            ),
+            _buttons(),
+            SizedBox(
+              height: 2.h,
+            ),
+          ],
+        ),
       ),
     );
   }
 
-  Container _continue() {
+  Widget _buttons() {
+    return _continue(
+      "Continue",
+      () => Get.toNamed(Routes.modeOfPayment),
+    );
+  }
+
+  Container _continue(String text, VoidCallback voidCallback) {
     return Container(
       width: double.infinity,
       child: ElevatedButton(
@@ -57,53 +80,10 @@ class CurrencySwapScreen extends StatelessWidget {
             ),
           ),
         ),
-        onPressed: () {
-          //
-        },
+        onPressed: voidCallback,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 2.h),
-          child: const Text("Continue"),
-        ),
-      ),
-    );
-  }
-
-  Card _swap() {
-    return Card(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(2.h),
-      ),
-      elevation: 0.5.h,
-      child: Container(
-        padding: EdgeInsets.all(2.h),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(2.h),
-        ),
-        child: Column(
-          children: [
-            _converter(),
-            SizedBox(
-              height: 3.h,
-            ),
-            _cryptoValueConvt(),
-            SizedBox(
-              height: 2.h,
-            ),
-            Container(
-              width: double.infinity,
-              child: Text(
-                "(Fee 16.40 USD)",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.sp,
-                ),
-              ),
-            ),
-            SizedBox(
-              height: 3.h,
-            ),
-            _denominated(),
-          ],
+          child: Text(text),
         ),
       ),
     );
@@ -114,7 +94,7 @@ class CurrencySwapScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "You Received Denominated Value",
+          "Receiving Crypto Value",
           style: TextStyle(
             color: Colors.grey.shade800,
             fontWeight: FontWeight.bold,
@@ -157,27 +137,28 @@ class CurrencySwapScreen extends StatelessWidget {
           flex: 1,
           child: _cryptoValue(
               CrossAxisAlignment.start,
-              "Crypto Value",
+              "Transaction Rate",
               _cryptoValueController,
-              BorderRadius.only(
-                topLeft: Radius.circular(1.h),
-                bottomLeft: Radius.circular(1.h),
-              ),
+              BorderRadius.circular(1.h),
               Colors.grey.shade200,
-              TextAlign.start),
+              TextAlign.start,
+              null,
+              "%"),
+        ),
+        SizedBox(
+          width: 10.w,
         ),
         Expanded(
           flex: 1,
           child: _cryptoValue(
               CrossAxisAlignment.end,
-              "To Crypto Value",
-              _toCryptoValueController,
-              BorderRadius.only(
-                topRight: Radius.circular(1.h),
-                bottomRight: Radius.circular(1.h),
-              ),
-              Colors.white,
-              TextAlign.end),
+              "Transaction Fee",
+              _amountController,
+              BorderRadius.circular(1.h),
+              Colors.grey.shade200,
+              TextAlign.end,
+              "INR",
+              null),
         ),
       ],
     );
@@ -189,7 +170,9 @@ class CurrencySwapScreen extends StatelessWidget {
       TextEditingController textEditingController,
       BorderRadius borderRadius,
       Color color,
-      TextAlign textAlign) {
+      TextAlign textAlign,
+      String? prefixText,
+      String? suffixTest) {
     return Column(
       crossAxisAlignment: crossAxisAlignment,
       children: [
@@ -218,6 +201,8 @@ class CurrencySwapScreen extends StatelessWidget {
             cursorColor: GlobalVals.appbarColor,
             controller: textEditingController,
             decoration: InputDecoration(
+              prefix: prefixText != null ? Text(prefixText) : SizedBox(),
+              suffix: suffixTest != null ? Text(suffixTest) : SizedBox(),
               hintText: "Enter Crypto Value",
               border: UnderlineInputBorder(
                 borderSide: BorderSide.none,
@@ -236,42 +221,11 @@ class CurrencySwapScreen extends StatelessWidget {
       children: [
         Expanded(
           flex: 2,
-          child: /* _dropDown(
+          child: _dropDown(
             CrossAxisAlignment.start,
-            "Crypto Currency",
+            "Amount to Deposit",
             _dropdownValueFrom,
             _dropDownValueFromList,
-          ) */
-              Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Crypto Currency",
-                style: TextStyle(
-                  color: Colors.grey.shade800,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
-              SizedBox(
-                height: 1.h,
-              ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 2.h),
-                decoration: BoxDecoration(
-                  color: Colors.grey.shade200,
-                  borderRadius: BorderRadius.circular(1.h),
-                  border: Border.all(
-                    color: Colors.grey,
-                  ),
-                ),
-                child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
-                  child: Text(
-                    currentCurrencyText,
-                  ),
-                ),
-              )
-            ],
           ),
         ),
         Expanded(
@@ -287,7 +241,7 @@ class CurrencySwapScreen extends StatelessWidget {
           flex: 2,
           child: _dropDown(
             CrossAxisAlignment.end,
-            "To Crypto",
+            "Currency",
             _dropdownValueTo,
             _dropDownValueToList,
           ),

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:masscoinex/controllers/main_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
@@ -13,69 +15,97 @@ class MainScreenCopy extends StatelessWidget {
       Get.parameters["isComingFromCurrency"] != null
           ? Get.parameters["isComingFromCurrency"]!
           : "no";
-  var _curIndex = 0.obs;
+  final _curIndex = 0.obs;
   @override
   Widget build(BuildContext context) {
     print("Indexxx $_index");
-    return Scaffold(
-      appBar: AppBar(
-        title: Obx(() => _title()),
-        bottom: PreferredSize(
-          child: Container(
-            color: Colors.white,
-            height: 0.1.h,
+    Future<bool> _onWillPop() async {
+      return (await showDialog(
+            context: context,
+            builder: (context) => new AlertDialog(
+              title: Text('Are you sure?'),
+              content: Text('Do you want to exit an App'),
+              actions: [
+                TextButton(
+                  onPressed: () {
+                    Get.back();
+                  },
+                  child: Text('No'),
+                ),
+                TextButton(
+                  onPressed: () {
+                    SystemNavigator.pop();
+                  },
+                  child: Text('Yes'),
+                ),
+              ],
+            ),
+          )) ??
+          false;
+    }
+
+    return WillPopScope(
+      onWillPop: _onWillPop,
+      child: Scaffold(
+        appBar: AppBar(
+          title: Obx(() => _title()),
+          bottom: PreferredSize(
+            child: Container(
+              color: Colors.white,
+              height: 0.1.h,
+            ),
+            preferredSize: Size.fromHeight(
+              0.1.h,
+            ),
           ),
-          preferredSize: Size.fromHeight(
-            0.1.h,
-          ),
-        ),
-        backgroundColor: GlobalVals.appbarColor,
-        actions: [
-          Obx(
-            () => _mainController.bottomIndex.value == 0
-                ? Padding(
-                    padding: EdgeInsets.only(right: 1.h),
-                    child: CircleAvatar(
-                      backgroundColor: Colors.white,
-                      radius: 2.h,
-                      child: Icon(
-                        Icons.person,
-                        color: GlobalVals.appbarColor,
+          backgroundColor: GlobalVals.appbarColor,
+          actions: [
+            Obx(
+              () => _mainController.bottomIndex.value == 0
+                  ? Padding(
+                      padding: EdgeInsets.only(right: 1.h),
+                      child: CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 2.h,
+                        child: Icon(
+                          Icons.person,
+                          color: GlobalVals.appbarColor,
+                        ),
                       ),
-                    ),
-                  )
-                : SizedBox(),
-          ),
-        ],
-      ),
-      drawer: _drawer(),
-      body: Obx(
-        () => IndexedStack(
-          children: _mainController.screensCopy,
-          index: currentIndex() != null
-              ? currentIndex()!.value
-              : _mainController.bottomIndex.value,
+                    )
+                  : SizedBox(),
+            ),
+          ],
         ),
-      ),
-      bottomNavigationBar: Obx(
-        () => BottomNavigationBar(
-          backgroundColor: GlobalVals.backgroundColor,
-          type: BottomNavigationBarType.fixed,
-          selectedIconTheme: IconThemeData(
-            color: GlobalVals.bottomNavSelectedColor,
+        drawer: _drawer(),
+        body: Obx(
+          () => IndexedStack(
+            children: _mainController.screensCopy,
+            index: currentIndex() != null
+                ? currentIndex()!.value
+                : _mainController.bottomIndex.value,
           ),
-          unselectedItemColor: Colors.white,
-          selectedItemColor: Colors.white,
-          items: _mainController.bottomNavItems,
-          onTap: (index) {
-            _mainController.bottomIndex.value = index;
-            _index = index;
-            print("IndexOfCurrency ");
-            print("IndexOfBottom ${_mainController.bottomIndex.value}");
-          },
-          currentIndex: currentIndex() != null
-              ? currentIndex()!.value
-              : _mainController.bottomIndex.value,
+        ),
+        bottomNavigationBar: Obx(
+          () => BottomNavigationBar(
+            backgroundColor: GlobalVals.backgroundColor,
+            type: BottomNavigationBarType.fixed,
+            selectedIconTheme: IconThemeData(
+              color: GlobalVals.bottomNavSelectedColor,
+            ),
+            unselectedItemColor: Colors.white,
+            selectedItemColor: Colors.white,
+            items: _mainController.bottomNavItems,
+            onTap: (index) {
+              _mainController.bottomIndex.value = index;
+              _index = index;
+              print("IndexOfCurrency ");
+              print("IndexOfBottom ${_mainController.bottomIndex.value}");
+            },
+            currentIndex: currentIndex() != null
+                ? currentIndex()!.value
+                : _mainController.bottomIndex.value,
+          ),
         ),
       ),
     );
@@ -152,7 +182,9 @@ class MainScreenCopy extends StatelessWidget {
               Icons.ballot_outlined,
               "Verify Identity (KYC)",
               "Upload documents to complete the KYC process",
-              () {},
+              () {
+                Get.toNamed(Routes.verifyKyc);
+              },
             ),
             _tiles(Icons.account_balance_outlined, "Bank & Card",
                 "View & edit your bank & card details", () {}),
@@ -178,7 +210,7 @@ class MainScreenCopy extends StatelessWidget {
               dense: true,
               leading: Image.asset(
                 "assets/logo_white.png",
-                width: 5.h,
+                width: 4.h,
                 color: Colors.grey,
               ),
               title: Text(
@@ -210,7 +242,11 @@ class MainScreenCopy extends StatelessWidget {
                     ),
                   ),
                 ),
-                onPressed: () {},
+                onPressed: () {
+                  GetStorage box = GetStorage();
+                  box.write("loggedIn", false);
+                  Get.offAllNamed(Routes.splashScreen);
+                },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.h),
                   child: Text(
@@ -233,7 +269,7 @@ class MainScreenCopy extends StatelessWidget {
       leading: Icon(
         iconData,
         color: Colors.grey,
-        size: 5.h,
+        size: 4.h,
       ),
       title: Text(
         title,
@@ -255,6 +291,8 @@ class MainScreenCopy extends StatelessWidget {
       if (_index != 1234) {
         _curIndex.value = _index;
         return _index.obs;
+      } else if (_curIndex.value != 0) {
+        return 0.obs;
       } else {
         _curIndex.value = 0;
         return 0.obs;

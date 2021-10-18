@@ -17,16 +17,21 @@ import 'package:masscoinex/views/screens/auth/registration/kyc_uploaded_screen.d
 import 'package:masscoinex/views/screens/auth/registration/mobile_verification_screen.dart';
 import 'package:masscoinex/views/screens/auth/registration/registration_details_screen.dart';
 import 'package:masscoinex/views/screens/auth/registration/registration_screen.dart';
-import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/fiat_deposit_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screens/dashboard_deposit_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screens/dashboard_history_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screens/dashboard_withdraw_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/mode_of_payment_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/bank_transfer_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/card_payment_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/upi_payment_screen.dart';
+import 'package:masscoinex/views/screens/currency_selected/currency_screens/history_screen.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_selected_screen.dart';
 import 'package:masscoinex/views/screens/main_screen.dart';
 import 'package:masscoinex/views/screens/main_screen_copy.dart';
 import 'package:masscoinex/views/screens/nav_screens/security_screen.dart';
 import 'package:masscoinex/views/screens/nav_screens/support_screen.dart';
+import 'package:masscoinex/views/screens/nav_screens/verification_kyc/kyc_uploaded_screen.dart';
+import 'package:masscoinex/views/screens/nav_screens/verification_kyc/registration_details_screen.dart';
 import 'package:masscoinex/views/screens/splash_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'bindings/main_binding.dart';
@@ -48,8 +53,7 @@ class MyApp extends StatelessWidget {
             primarySwatch: Colors.blue,
             fontFamily: "Sans Fransisco Pro",
             appBarTheme: AppBarTheme(
-              backwardsCompatibility: false,
-              systemOverlayStyle: SystemUiOverlayStyle.light, 
+              systemOverlayStyle: SystemUiOverlayStyle.light,
             ),
           ),
           debugShowCheckedModeBanner: false,
@@ -129,7 +133,7 @@ class MyApp extends StatelessWidget {
             ),
             GetPage(
               name: Routes.currencySelected,
-              page: () => CurrencySelectedScreen(),
+            page: () => CurrencySelectedScreen(),
             ),
             GetPage(
               name: Routes.modeOfPayment,
@@ -154,6 +158,30 @@ class MyApp extends StatelessWidget {
             GetPage(
               name: Routes.support,
               page: () => SupportScreen(),
+            ),
+            GetPage(
+              name: Routes.dashboardHistory,
+              page: () => DashboardHistoryScreen(),
+            ),
+            GetPage(
+              name: Routes.dashboardDeposit,
+              page: () => DashboardDepositScreen(),
+            ),
+            GetPage(
+              name: Routes.dashboardWithdraw,
+              page: () => DashboardWithdrawScreen(),
+            ),
+            GetPage(
+              name: Routes.verifyKyc,
+              page: () => VerifyRegistrationDetailsScreen(),
+            ),
+            GetPage(
+              name: Routes.verifyKycUpload,
+              page: () => VerifyKycUploadedScreen(),
+            ),
+            GetPage(
+              name: Routes.transactionHistory,
+              page: () => TransactionHistory(),
             ),
           ],
         );

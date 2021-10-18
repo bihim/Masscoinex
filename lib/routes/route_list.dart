@@ -19,6 +19,7 @@ class Routes {
   static const addAccountSuccessful = "/addAccountSuccessful";
   //CurrencySelected
   static const currencySelected = "/currencySelected";
+  static const transactionHistory = "/transactionHistory";
   //Fiat
   static const modeOfPayment = "/modeOfPayment";
   static const upiPayment = "/upiPayment";
@@ -27,4 +28,11 @@ class Routes {
   //Navbar
   static const security = "/security";
   static const support = "/support";
+  //Dashboard
+  static const dashboardHistory = "/dashboardHistory";
+  static const dashboardDeposit = "/dashboardDeposit";
+  static const dashboardWithdraw = "/dashboardWithdraw";
+  //Verify KYC
+  static const verifyKyc = "/verifyKyc";
+  static const verifyKycUpload = "/verifyKycUpload";
 }

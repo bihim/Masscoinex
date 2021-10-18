@@ -1,11 +1,8 @@
-import 'package:animated_splash_screen/animated_splash_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
-import 'package:masscoinex/views/screens/main_screen.dart';
-import 'package:page_transition/page_transition.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 /* class SplashScreen extends StatelessWidget {
@@ -76,6 +73,7 @@ class _MyStatefulWidgetState extends State<SplashScreen>
         child: Center(
           child: Image.asset(
             "assets/splash.png",
+            color: Colors.white,
             height: 55.h,
             width: 75.w,
           ),

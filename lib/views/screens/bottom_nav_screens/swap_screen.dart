@@ -26,7 +26,7 @@ class SwapScreen extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             SizedBox(
-              height: 14.h,
+              height: 3.h,
             ),
             _swap(),
             SizedBox(

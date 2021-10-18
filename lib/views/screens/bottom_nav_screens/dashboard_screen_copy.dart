@@ -58,10 +58,10 @@ class DashboardScreenCopy extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     _buttonDepoWithdraw(GlobalVals.appbarColor,
-                        Icons.arrow_downward, "Deposit"),
+                        Icons.arrow_downward, "Deposit", ()=> Get.toNamed(Routes.dashboardDeposit)),
                     _buttonDepoWithdraw(
-                        GlobalVals.appbarColor, Icons.arrow_upward, "Withdraw"),
-                    _buttonDepoWithdraw(Colors.red, Icons.history, "History"),
+                        GlobalVals.appbarColor, Icons.arrow_upward, "Withdraw", ()=>Get.toNamed(Routes.dashboardWithdraw)),
+                    _buttonDepoWithdraw(Colors.red, Icons.history, "History", ()=>Get.toNamed(Routes.dashboardHistory)),
                   ],
                 ),
               ),
@@ -246,7 +246,7 @@ class DashboardScreenCopy extends StatelessWidget {
   }
 
   ElevatedButton _buttonDepoWithdraw(
-      Color color, IconData iconData, String buttonText) {
+      Color color, IconData iconData, String buttonText, VoidCallback voidCallback) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         elevation: 2.h,
@@ -257,9 +257,7 @@ class DashboardScreenCopy extends StatelessWidget {
           borderRadius: new BorderRadius.circular(2.h),
         ),
       ),
-      onPressed: () {
-        Fluttertoast.showToast(msg: buttonText);
-      },
+      onPressed: voidCallback,
       child: Padding(
         padding: EdgeInsets.only(
             left: 1.5.h, right: 1.5.h, top: 0.5.h, bottom: 0.5.h),

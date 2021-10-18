@@ -6,6 +6,12 @@ import 'package:masscoinex/routes/route_list.dart';
 import 'package:masscoinex/views/components/arc_clip.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
+import 'currency_list_screens/buy_screen.dart';
+import 'currency_list_screens/deposit_screen.dart';
+import 'currency_list_screens/sell_screen.dart';
+import 'currency_list_screens/swap_screen.dart';
+import 'currency_list_screens/withdraw_screen.dart';
+
 class CurrencySelectedScreen extends StatelessWidget {
   final _selectedIndex = 0.obs;
   final CurrencySelectedController _currencySelectedController =
@@ -15,6 +21,28 @@ class CurrencySelectedScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     var _visible = true.obs;
     final int _index = int.parse(Get.parameters["index"]!);
+    var _currencyScreens = [
+      CurrencySwapScreen(
+        currentCurrencyText: _currencySelectedController
+            .dashBoardCryptoStatusModels[_index].cryptoName,
+      ),
+      BuyScreen(
+        currentCurrencyText: _currencySelectedController
+            .dashBoardCryptoStatusModels[_index].cryptoName,
+      ),
+      SellScreen(
+        currentCurrencyText: _currencySelectedController
+            .dashBoardCryptoStatusModels[_index].cryptoName,
+      ),
+      DepositScreen(
+        currentCurrencyText: _currencySelectedController
+            .dashBoardCryptoStatusModels[_index].cryptoName,
+      ),
+      WithdrawScreen(
+        currentCurrencyText: _currencySelectedController
+            .dashBoardCryptoStatusModels[_index].cryptoName,
+      ),
+    ];
     //?Add history. Work on history
     return Scaffold(
       appBar: AppBar(
@@ -42,7 +70,7 @@ class CurrencySelectedScreen extends StatelessWidget {
             ),
             Obx(
               () => IndexedStack(
-                children: _currencySelectedController.currencyScreens,
+                children: _currencyScreens,
                 index: _selectedIndex.value,
               ),
             )
@@ -50,24 +78,32 @@ class CurrencySelectedScreen extends StatelessWidget {
         ),
       ),
       bottomNavigationBar: BottomNavigationBar(
-          backgroundColor: GlobalVals.backgroundColor,
-          type: BottomNavigationBarType.fixed,
-          selectedIconTheme: IconThemeData(
-            color: GlobalVals.bottomNavSelectedColor,
-          ),
-          unselectedItemColor: Colors.white,
-          selectedItemColor: Colors.white,
-          items: _currencySelectedController.bottomNavItems,
-          onTap: (index) {
-            if(index!=1){
-              Get.offAllNamed(Routes.mainScreenCopy, parameters: {"index": index.toString(), "isComingFromCurrency": "yes"});
-            }
-            else{
-              //?Implement history here
-            }
-          },
-          currentIndex: 1,
+        backgroundColor: GlobalVals.backgroundColor,
+        type: BottomNavigationBarType.fixed,
+        selectedIconTheme: IconThemeData(
+          color: GlobalVals.bottomNavSelectedColor,
         ),
+        unselectedItemColor: Colors.white,
+        selectedItemColor: Colors.white,
+        items: _currencySelectedController.bottomNavItems,
+        onTap: (index) {
+          if (index != 1) {
+            Get.offAllNamed(Routes.mainScreenCopy, parameters: {
+              "index": index.toString(),
+              "isComingFromCurrency": "yes"
+            });
+          } else {
+            //?Implement history here
+            Get.toNamed(Routes.transactionHistory, arguments: [
+              _currencySelectedController
+                  .dashBoardCryptoStatusModels[_index].cryptoNameSmall,
+              _currencySelectedController
+                  .dashBoardCryptoStatusModels[_index].cryptoAsset,
+            ]);
+          }
+        },
+        currentIndex: 1,
+      ),
     );
   }
 

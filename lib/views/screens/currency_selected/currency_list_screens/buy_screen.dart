@@ -14,6 +14,8 @@ class BuyScreen extends StatelessWidget {
       TextEditingController(text: "457800");
   final TextEditingController _denominatedValue =
       TextEditingController(text: "1.98");
+  final String currentCurrencyText;
+  BuyScreen({Key? key, required this.currentCurrencyText}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +58,7 @@ class BuyScreen extends StatelessWidget {
             Obx(
               () => _cryptoValueConvt(),
             ),
-             SizedBox(
+            SizedBox(
               height: 2.h,
             ),
             Container(
@@ -213,11 +215,42 @@ class BuyScreen extends StatelessWidget {
       children: [
         Expanded(
           flex: 2,
-          child: _dropDown(
+          child: /* _dropDown(
             CrossAxisAlignment.start,
-            "Select Crypto",
+            "Crypto Currency",
             _dropdownValueFrom,
             _dropDownValueFromList,
+          ) */
+              Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Crypto Currency",
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 2.h),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(1.h),
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  child: Text(
+                    currentCurrencyText,
+                  ),
+                ),
+              )
+            ],
           ),
         ),
         Expanded(

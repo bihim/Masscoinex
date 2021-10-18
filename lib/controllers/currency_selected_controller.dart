@@ -70,13 +70,13 @@ class CurrencySelectedController extends GetxController {
     CurrencySelectorListModel(
         id: 5, money: "0", values: "WITHDRAW", isSelected: true.obs),
   ];
-  var currencyScreens = [
+  /* var currencyScreens = [
     CurrencySwapScreen(),
     BuyScreen(),
     SellScreen(),
     DepositScreen(),
     WithdrawScreen(),
-  ];
+  ]; */
   var bottomNavItems = [
     BottomNavigationBarItem(
         icon: Icon(Icons.dashboard_outlined),
@@ -95,7 +95,5 @@ class CurrencySelectedController extends GetxController {
         activeIcon: Icon(Icons.person),
         label: "Profile"),
   ];
-  var currencyCurrentScreens = [
-    
-  ];
+  var currencyCurrentScreens = [];
 }
