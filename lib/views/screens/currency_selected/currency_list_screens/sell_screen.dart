@@ -292,7 +292,6 @@ class SellScreen extends StatelessWidget {
         ),
         Obx(
           () => Container(
-            padding: EdgeInsets.symmetric(horizontal: 2.h),
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(1.h),
@@ -300,7 +299,7 @@ class SellScreen extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
-            child: DropdownButton<String>(
+            child: /* DropdownButton<String>(
               value: dropdownInitValue.value,
               elevation: 16,
               isDense: false,
@@ -318,6 +317,52 @@ class SellScreen extends StatelessWidget {
                   child: Text(value),
                 );
               }).toList(),
+            ), */Material(
+              color: Colors.transparent,
+              child: InkWell(
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 1.8.h,
+                    horizontal: 2.h,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        dropdownInitValue.value,
+                        textAlign: TextAlign.start,
+                      ),
+                      Icon(
+                        Icons.arrow_drop_down,
+                      ),
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  Get.defaultDialog(
+                    title: "Select Crypto",
+                    content: Container(
+                      height: 35.h,
+                      width: 100.h,
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(
+                              dropdownList[index],
+                            ),
+                            onTap: () {
+                              dropdownInitValue.value = dropdownList[index];
+                              Get.back();
+                            },
+                          );
+                        },
+                        itemCount: dropdownList.length,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         )

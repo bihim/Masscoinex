@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
@@ -14,6 +15,7 @@ class CurrencySwapScreen extends StatelessWidget {
       TextEditingController(text: "457800");
   final TextEditingController _denominatedValue =
       TextEditingController(text: "1.98");
+  final logger = Logger();
 
   final String currentCurrencyText;
   CurrencySwapScreen({Key? key, required this.currentCurrencyText})
@@ -27,7 +29,7 @@ class CurrencySwapScreen extends StatelessWidget {
       ),
       child: Column(
         children: [
-          _swap(),
+          _swap(context),
           SizedBox(
             height: 3.h,
           ),
@@ -68,7 +70,7 @@ class CurrencySwapScreen extends StatelessWidget {
     );
   }
 
-  Card _swap() {
+  Card _swap(BuildContext context) {
     return Card(
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(2.h),
@@ -81,7 +83,7 @@ class CurrencySwapScreen extends StatelessWidget {
         ),
         child: Column(
           children: [
-            _converter(),
+            _converter(context),
             SizedBox(
               height: 3.h,
             ),
@@ -229,7 +231,7 @@ class CurrencySwapScreen extends StatelessWidget {
     );
   }
 
-  Row _converter() {
+  Row _converter(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -290,14 +292,19 @@ class CurrencySwapScreen extends StatelessWidget {
             "To Crypto",
             _dropdownValueTo,
             _dropDownValueToList,
+            context,
           ),
         ),
       ],
     );
   }
 
-  Widget _dropDown(CrossAxisAlignment crossAxisAlignment, String text,
-      RxString dropdownInitValue, List<String> dropdownList) {
+  Widget _dropDown(
+      CrossAxisAlignment crossAxisAlignment,
+      String text,
+      RxString dropdownInitValue,
+      List<String> dropdownList,
+      BuildContext context) {
     return Column(
       crossAxisAlignment: crossAxisAlignment,
       children: [
@@ -313,7 +320,6 @@ class CurrencySwapScreen extends StatelessWidget {
         ),
         Obx(
           () => Container(
-            padding: EdgeInsets.symmetric(horizontal: 2.h),
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(1.h),
@@ -321,7 +327,7 @@ class CurrencySwapScreen extends StatelessWidget {
                 color: Colors.grey,
               ),
             ),
-            child: DropdownButton<String>(
+            child: /* DropdownButton<String>(
               value: dropdownInitValue.value,
               elevation: 16,
               isDense: false,
@@ -339,6 +345,54 @@ class CurrencySwapScreen extends StatelessWidget {
                   child: Text(value),
                 );
               }).toList(),
+            ), */
+                Material(
+              color: Colors.transparent,
+              child: InkWell(
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.symmetric(
+                    vertical: 1.8.h,
+                    horizontal: 2.h,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        dropdownInitValue.value,
+                        textAlign: TextAlign.start,
+                      ),
+                      Icon(
+                        Icons.arrow_drop_down,
+                      ),
+                    ],
+                  ),
+                ),
+                onTap: () {
+                  logger.d("Pressed");
+                  Get.defaultDialog(
+                    title: "Select Crypto",
+                    content: Container(
+                      height: 35.h,
+                      width: 100.h,
+                      child: ListView.builder(
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            title: Text(
+                              dropdownList[index],
+                            ),
+                            onTap: () {
+                              dropdownInitValue.value = dropdownList[index];
+                              Get.back();
+                            },
+                          );
+                        },
+                        itemCount: dropdownList.length,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
           ),
         )

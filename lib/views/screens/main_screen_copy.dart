@@ -187,9 +187,13 @@ class MainScreenCopy extends StatelessWidget {
               },
             ),
             _tiles(Icons.account_balance_outlined, "Bank & Card",
-                "View & edit your bank & card details", () {}),
+                "View & edit your bank & card details", () {
+              Get.toNamed(Routes.addCardOrBank);
+            }),
             _tiles(Icons.history_outlined, "Transaction History",
-                "View your crypto and fiat transactions", () {}),
+                "View your crypto and fiat transactions", () {
+              Get.toNamed(Routes.transactionHistory);
+            }),
             _tiles(
                 Icons.local_offer_outlined,
                 "Fees",

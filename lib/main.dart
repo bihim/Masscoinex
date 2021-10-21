@@ -28,6 +28,8 @@ import 'package:masscoinex/views/screens/currency_selected/currency_screens/hist
 import 'package:masscoinex/views/screens/currency_selected/currency_selected_screen.dart';
 import 'package:masscoinex/views/screens/main_screen.dart';
 import 'package:masscoinex/views/screens/main_screen_copy.dart';
+import 'package:masscoinex/views/screens/nav_screens/add_account/add_account_complete_screen.dart';
+import 'package:masscoinex/views/screens/nav_screens/add_account/add_account_screen.dart';
 import 'package:masscoinex/views/screens/nav_screens/security_screen.dart';
 import 'package:masscoinex/views/screens/nav_screens/support_screen.dart';
 import 'package:masscoinex/views/screens/nav_screens/verification_kyc/kyc_uploaded_screen.dart';
@@ -182,6 +184,14 @@ class MyApp extends StatelessWidget {
             GetPage(
               name: Routes.transactionHistory,
               page: () => TransactionHistory(),
+            ),
+            GetPage(
+              name: Routes.addCardOrBank,
+              page: () => NavAddAccountScreen(),
+            ),
+            GetPage(
+              name: Routes.addCardOrBankComplete,
+              page: () => NavAddAccountCompleteScreen(),
             ),
           ],
         );

@@ -7,10 +7,10 @@ import 'package:masscoinex/controllers/add_account_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
-class CardPictureScreen extends StatelessWidget {
+class NavCardPictureScreen extends StatelessWidget {
   final AddAccountController addAccountController;
   final _logger = Logger();
-  CardPictureScreen({Key? key, required this.addAccountController})
+  NavCardPictureScreen({Key? key, required this.addAccountController})
       : super(key: key);
 
   @override

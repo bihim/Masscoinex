@@ -6,9 +6,9 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/controllers/add_account_controller.dart';
 
-class CardVideoScreen extends StatelessWidget {
+class NavCardVideoScreen extends StatelessWidget {
   final AddAccountController addAccountController;
-  const CardVideoScreen({Key? key, required this.addAccountController})
+  const NavCardVideoScreen({Key? key, required this.addAccountController})
       : super(key: key);
 
   @override
@@ -47,7 +47,7 @@ class CardVideoScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Get.toNamed(Routes.addAccountSuccessful);
+                  Get.offNamed(Routes.addCardOrBankComplete);
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.h),

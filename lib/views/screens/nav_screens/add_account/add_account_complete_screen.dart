@@ -6,8 +6,8 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:lottie/lottie.dart';
 import 'package:get_storage/get_storage.dart';
 
-class AddAccountCompleteScreen extends StatelessWidget {
-  const AddAccountCompleteScreen({Key? key}) : super(key: key);
+class NavAddAccountCompleteScreen extends StatelessWidget {
+  const NavAddAccountCompleteScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +44,7 @@ class AddAccountCompleteScreen extends StatelessWidget {
                 height: 2.h,
               ),
               Text(
-                "Account added successful", 
+                "Account added successful",
                 style: TextStyle(
                   fontSize: 17.sp,
                 ),
@@ -67,9 +67,10 @@ class AddAccountCompleteScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  Get.offAllNamed(Routes.mainScreenCopy);
+                  /* Get.offAllNamed(Routes.mainScreenCopy);
                   GetStorage box = GetStorage();
-                  box.write("loggedIn", true);
+                  box.write("loggedIn", true); */
+                  Get.back();
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.h),

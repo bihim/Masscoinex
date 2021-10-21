@@ -35,4 +35,7 @@ class Routes {
   //Verify KYC
   static const verifyKyc = "/verifyKyc";
   static const verifyKycUpload = "/verifyKycUpload";
+  //Add bank or card
+  static const addCardOrBank = "/addCardOrBank";
+  static const addCardOrBankComplete = "/addCardOrBankComplete";
 }

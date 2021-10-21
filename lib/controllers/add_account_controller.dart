@@ -1,5 +1,6 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -9,6 +10,10 @@ class AddAccountController extends GetxController {
   final currentCardDetails = 1.obs;
   final RxList<Column> addBank = [Column()].obs;
   final RxList<Column> addCard = [Column()].obs;
+  var avatar = "assets/avatar.jpg".obs;
+  var avatar2 = "assets/avatar.jpg".obs;
+  var isFromAsset = true.obs;
+  var isFromAsset2 = true.obs;
   var size = Size(10.h, 10.h);
   var tabBar = TabBar(
     tabs: [],
@@ -61,6 +66,24 @@ class AddAccountController extends GetxController {
     );
     size = tabBar.preferredSize;
     super.onInit();
+  }
+
+  pickImage() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
+    if (photo != null) {
+      isFromAsset.value = false;
+      avatar.value = photo.path;
+    }
+  }
+
+  pickImage2() async {
+    final ImagePicker _picker = ImagePicker();
+    final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
+    if (photo != null) {
+      isFromAsset2.value = false;
+      avatar2.value = photo.path;
+    }
   }
 
   Column _bankFields() {

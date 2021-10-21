@@ -57,11 +57,18 @@ class DashboardScreenCopy extends StatelessWidget {
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    _buttonDepoWithdraw(GlobalVals.appbarColor,
-                        Icons.arrow_downward, "Deposit", ()=> Get.toNamed(Routes.dashboardDeposit)),
                     _buttonDepoWithdraw(
-                        GlobalVals.appbarColor, Icons.arrow_upward, "Withdraw", ()=>Get.toNamed(Routes.dashboardWithdraw)),
-                    _buttonDepoWithdraw(Colors.red, Icons.history, "History", ()=>Get.toNamed(Routes.dashboardHistory)),
+                        Colors.green.shade600,
+                        Icons.arrow_downward,
+                        "Deposit",
+                        () => Get.toNamed(Routes.dashboardDeposit)),
+                    _buttonDepoWithdraw(
+                        GlobalVals.appbarColor,
+                        Icons.arrow_upward,
+                        "Withdraw",
+                        () => Get.toNamed(Routes.dashboardWithdraw)),
+                    _buttonDepoWithdraw(Colors.red, Icons.history, "History",
+                        () => Get.toNamed(Routes.dashboardHistory)),
                   ],
                 ),
               ),
@@ -225,7 +232,7 @@ class DashboardScreenCopy extends StatelessWidget {
                   ),
                   onTap: () {
                     Get.toNamed(Routes.currencySelected,
-                       parameters: {'index': "$index"});
+                        parameters: {'index': "$index"});
                   },
                 ),
               );
@@ -245,8 +252,8 @@ class DashboardScreenCopy extends StatelessWidget {
     );
   }
 
-  ElevatedButton _buttonDepoWithdraw(
-      Color color, IconData iconData, String buttonText, VoidCallback voidCallback) {
+  ElevatedButton _buttonDepoWithdraw(Color color, IconData iconData,
+      String buttonText, VoidCallback voidCallback) {
     return ElevatedButton(
       style: ElevatedButton.styleFrom(
         elevation: 2.h,

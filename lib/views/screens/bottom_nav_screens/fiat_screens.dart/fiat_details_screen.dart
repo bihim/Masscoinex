@@ -199,7 +199,7 @@ class FiatDetailsScreen extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceAround,
         children: [
           _buttonDepoWithdraw(
-              GlobalVals.appbarColor, Icons.arrow_downward, "Deposit", () {
+              Colors.green.shade600, Icons.arrow_downward, "Deposit", () {
             print(fiatController.fiatIndex.value);
             fiatController.fiatIndex.value = 1;
           }),
