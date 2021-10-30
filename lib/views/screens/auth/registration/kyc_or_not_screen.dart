@@ -183,7 +183,12 @@ class KycOrNotScreen extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Get.toNamed(Routes.registration);
+              if(isKycSelected.value == true){
+              }
+              else{
+                Get.toNamed(Routes.registration);
+              }
+              
             },
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 2.h),

@@ -1,12 +1,18 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive/hive.dart';
 import 'package:masscoinex/global/global_vals.dart';
+import 'package:masscoinex/models/checking_user/checking_user_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
 class EmailOtpScreen extends StatelessWidget {
-  const EmailOtpScreen({Key? key}) : super(key: key);
+  final isOtpSuccessful = false.obs;
+  EmailOtpScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +58,18 @@ class EmailOtpScreen extends StatelessWidget {
               ),
               animationDuration: Duration(milliseconds: 300),
               enableActiveFill: true,
-              onCompleted: (v) {
+              onCompleted: (v) async {
+                final _box = await Hive.openBox(GlobalVals.hiveBox);
+                final _success = CheckUserModel.fromJsonSuccess(
+                    json.decode(_box.get(GlobalVals.checkLogin)));
+
+                final _emailOtp = _success.result!.otp;
+                if (v == _emailOtp) {
+                  isOtpSuccessful.value = true;
+                } else {
+                  isOtpSuccessful.value = false;
+                  GlobalVals.errorToast("OTP Mismatch");
+                }
                 print("Completed $v");
               },
               onChanged: (value) {
@@ -88,7 +105,13 @@ class EmailOtpScreen extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              Get.toNamed(Routes.pinScreen);
+              if (isOtpSuccessful.value == true) {
+                Get.toNamed(Routes.pinScreen);
+              } else {
+                GlobalVals.errorToast(
+                  "OTP are not matched",
+                );
+              }
             },
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 2.h),

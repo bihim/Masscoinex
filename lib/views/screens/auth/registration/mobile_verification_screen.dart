@@ -1,19 +1,26 @@
+import 'dart:convert';
+
 import 'package:circular_countdown_timer/circular_countdown_timer.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:hive/hive.dart';
 import 'package:masscoinex/controllers/mobile_verification_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
+import 'package:masscoinex/models/register_user/register_user_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
 class MobileVerificationRegistrationScreen extends StatelessWidget {
-  final MobileVerificationController _mobileVerificationController =
-      Get.find();
+  final _box = Hive.box(GlobalVals.hiveBox);
+  final _otpController = TextEditingController();
+  final MobileVerificationController _mobileVerificationController = Get.find();
 
   @override
   Widget build(BuildContext context) {
+    final _success = RegisterModel.fromJsonSuccess(
+        json.decode(_box.get(GlobalVals.register)));
     Future.delayed(Duration(milliseconds: 1), () {
       _mobileVerificationController.countdownController.start();
     });
@@ -49,7 +56,7 @@ class MobileVerificationRegistrationScreen extends StatelessWidget {
                   ),
                 ),
                 Text(
-                  "+88012012010",
+                  _success.registerResult!.phone,
                   style: TextStyle(
                     fontSize: 19.sp,
                     color: Colors.blue.shade600,
@@ -61,6 +68,7 @@ class MobileVerificationRegistrationScreen extends StatelessWidget {
                 ),
                 TextField(
                   textAlign: TextAlign.center,
+                  controller: _otpController,
                   keyboardType: TextInputType.phone,
                   decoration: InputDecoration(
                     border: OutlineInputBorder(
@@ -199,7 +207,7 @@ class MobileVerificationRegistrationScreen extends StatelessWidget {
                       ),
                     ),
                     onPressed: () {
-                      Get.toNamed(Routes.emailVerificationRegistration);
+                      //Get.toNamed(Routes.emailVerificationRegistration);
                     },
                     child: Padding(
                       padding: EdgeInsets.symmetric(vertical: 2.h),

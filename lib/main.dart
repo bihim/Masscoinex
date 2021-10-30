@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:hive/hive.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/views/screens/auth/add_account/add_account_screen.dart';
@@ -38,9 +39,15 @@ import 'package:masscoinex/views/screens/splash_screen.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'bindings/main_binding.dart';
 import 'bindings/registration_binding.dart';
+import 'package:path_provider/path_provider.dart' as path_provider;
+
+import 'global/global_vals.dart';
 
 void main() async {
   await GetStorage.init();
+  final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
+  Hive.init(appDocumentDir.path);
+  await Hive.openBox(GlobalVals.hiveBox);
   runApp(MyApp());
 }
 

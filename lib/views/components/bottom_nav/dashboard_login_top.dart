@@ -36,7 +36,7 @@ class DashboardLoginTop extends StatelessWidget {
                 ),
               ),
               onPressed: () {
-                Get.toNamed(Routes.loginScreen);
+                Get.toNamed(Routes.loginEmail);
                 //Get.toNamed(Routes.addAccount);
               },
               child: Padding(

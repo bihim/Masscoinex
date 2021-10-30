@@ -1,13 +1,23 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:intl_phone_number_input/intl_phone_number_input.dart';
+import 'package:logger/logger.dart';
 import 'package:masscoinex/controllers/registration_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
-import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
 class RegistrationScreen extends StatelessWidget {
+  final _logger = Logger();
+  final _firstNameEditingController = TextEditingController();
+  final _lastNameEditingController = TextEditingController();
+  final _emailAddressEditingController = TextEditingController();
+  final _enterPasswordEditingController = TextEditingController();
+  final _confirmPasswordEditingController = TextEditingController();
+  final _set4DigitPinEditingController = TextEditingController();
+  final _confirm4DigitPinEditingController = TextEditingController();
+  final _mobileNumberEditingController = TextEditingController();
+  final _countryCode = "IN".obs;
   final RegistrationController _registrationController = Get.find();
 
   @override
@@ -86,6 +96,7 @@ class RegistrationScreen extends StatelessWidget {
                       ),
                       TextField(
                         keyboardType: TextInputType.emailAddress,
+                        controller: _emailAddressEditingController,
                         decoration: InputDecoration(
                           border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(
@@ -120,27 +131,90 @@ class RegistrationScreen extends StatelessWidget {
                         padding: EdgeInsets.symmetric(horizontal: 5.h),
                         child: Container(
                           width: double.infinity,
-                          child: ElevatedButton(
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all(
-                                GlobalVals.buttonColor,
-                              ),
-                              elevation: MaterialStateProperty.all(0),
-                              shape: MaterialStateProperty.all(
-                                RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    5.h,
+                          child: Obx(
+                            () => ElevatedButton(
+                              style: ButtonStyle(
+                                backgroundColor: MaterialStateProperty.all(
+                                  GlobalVals.buttonColor,
+                                ),
+                                elevation: MaterialStateProperty.all(0),
+                                shape: MaterialStateProperty.all(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      5.h,
+                                    ),
                                   ),
                                 ),
                               ),
-                            ),
-                            onPressed: () {
-                              Get.toNamed(
-                                  Routes.mobileVerificationRegistration);
-                            },
-                            child: Padding(
-                              padding: EdgeInsets.symmetric(vertical: 2.h),
-                              child: const Text("Continue"),
+                              onPressed: () {
+                                if (_mobileNumberEditingController.text.isEmpty ||
+                                    _firstNameEditingController.text.isEmpty ||
+                                    _lastNameEditingController.text.isEmpty ||
+                                    _emailAddressEditingController
+                                        .text.isEmpty ||
+                                    _enterPasswordEditingController
+                                        .text.isEmpty ||
+                                    _confirmPasswordEditingController
+                                        .text.isEmpty ||
+                                    _set4DigitPinEditingController
+                                        .text.isEmpty ||
+                                    _confirm4DigitPinEditingController
+                                        .text.isEmpty) {
+                                  GlobalVals.errorToast("Fill up input fields");
+                                } else if (_enterPasswordEditingController
+                                        .text !=
+                                    _confirmPasswordEditingController.text) {
+                                  GlobalVals.errorToast("Password mismatch");
+                                } else if (_set4DigitPinEditingController
+                                        .text !=
+                                    _confirm4DigitPinEditingController.text) {
+                                  GlobalVals.errorToast("Pin mismatch");
+                                } else if (_registrationController
+                                        .isCheckedCondition.value ==
+                                    false) {
+                                  GlobalVals.errorToast(
+                                      "Check terms and condition");
+                                } else if (_enterPasswordEditingController
+                                        .text.length <
+                                    8) {
+                                  GlobalVals.errorToast(
+                                      "Password can't be lower than 8 character");
+                                } else if (_set4DigitPinEditingController
+                                        .text.length <
+                                    6) {
+                                  GlobalVals.errorToast(
+                                      "Pin can't be lower than 6 number");
+                                } else {
+                                  if (!validateStructure(
+                                      _enterPasswordEditingController.text)) {
+                                    GlobalVals.errorToast(
+                                        "Password must contain\nMinimum 1 Upper case\n Minimum 1 lowercase \n Minimum 1 Numeric Number\n Minimum 1 Special Character\nCommon Allow Character ( ! @ # \$ & * ~ )");
+                                  } else if (!RegExp(
+                                          r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+                                      .hasMatch(_emailAddressEditingController
+                                          .text)) {
+                                    GlobalVals.errorToast("Not a valid mail");
+                                  } else {
+                                    _registrationController.registerUser(
+                                        "${_firstNameEditingController.text} ${_lastNameEditingController.text} ",
+                                        _emailAddressEditingController.text,
+                                        _enterPasswordEditingController.text,
+                                        _set4DigitPinEditingController.text,
+                                        _mobileNumberEditingController.text,
+                                        _countryCode.value);
+                                  }
+                                }
+                              },
+                              child: Padding(
+                                padding: EdgeInsets.symmetric(vertical: 2.h),
+                                child: _registrationController
+                                            .isRegistering.value ==
+                                        true
+                                    ? const CircularProgressIndicator(
+                                        color: Colors.white,
+                                      )
+                                    : const Text("Continue"),
+                              ),
                             ),
                           ),
                         ),
@@ -218,8 +292,9 @@ class RegistrationScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: TextField(
-            maxLength: 4,
+            maxLength: 6,
             keyboardType: TextInputType.number,
+            controller: _set4DigitPinEditingController,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
@@ -227,7 +302,7 @@ class RegistrationScreen extends StatelessWidget {
                 ),
                 gapPadding: 1.0,
               ),
-              hintText: "Set 4 digit PIN",
+              hintText: "Set 6 digit PIN",
               focusColor: Colors.blue,
               contentPadding: EdgeInsets.symmetric(
                 vertical: 1.h,
@@ -242,8 +317,9 @@ class RegistrationScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: TextField(
-            maxLength: 4,
+            maxLength: 6,
             keyboardType: TextInputType.number,
+            controller: _confirm4DigitPinEditingController,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
@@ -251,7 +327,7 @@ class RegistrationScreen extends StatelessWidget {
                 ),
                 gapPadding: 1.0,
               ),
-              hintText: "Confirm 4 digit PIN",
+              hintText: "Confirm 6 digit PIN",
               focusColor: Colors.blue,
               contentPadding: EdgeInsets.symmetric(
                 vertical: 1.h,
@@ -270,7 +346,8 @@ class RegistrationScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: TextField(
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.visiblePassword,
+            controller: _enterPasswordEditingController,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
@@ -293,7 +370,8 @@ class RegistrationScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: TextField(
-            keyboardType: TextInputType.name,
+            keyboardType: TextInputType.visiblePassword,
+            controller: _confirmPasswordEditingController,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
@@ -321,6 +399,7 @@ class RegistrationScreen extends StatelessWidget {
           flex: 1,
           child: TextField(
             keyboardType: TextInputType.name,
+            controller: _firstNameEditingController,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
@@ -344,6 +423,7 @@ class RegistrationScreen extends StatelessWidget {
           flex: 1,
           child: TextField(
             keyboardType: TextInputType.name,
+            controller: _lastNameEditingController,
             decoration: InputDecoration(
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
@@ -377,9 +457,15 @@ class RegistrationScreen extends StatelessWidget {
       child: Padding(
         padding: EdgeInsets.only(left: 2.h),
         child: InternationalPhoneNumberInput(
+          textFieldController: _mobileNumberEditingController,
           initialValue: PhoneNumber(isoCode: 'IN'),
           onInputChanged: (PhoneNumber number) {
+            //
             print(number.phoneNumber);
+            _countryCode.value = number.isoCode!;
+            _logger.d(number.isoCode);
+            _logger.d(number.dialCode);
+            _logger.d(number.phoneNumber);
           },
           onInputValidated: (bool value) {
             print(value);
@@ -406,5 +492,12 @@ class RegistrationScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+
+  bool validateStructure(String value) {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(value);
   }
 }
