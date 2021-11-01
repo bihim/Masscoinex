@@ -1,17 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:masscoinex/controllers/dashboard_controller.dart';
+import 'package:masscoinex/controllers/dashboard/dashboard_controller.dart';
+import 'package:masscoinex/controllers/dashboard/dashboard_controller_copy.dart';
 import 'package:masscoinex/global/global_vals.dart';
+import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class DashboardScreenCopy extends StatelessWidget {
-  final DashBoardController _dashBoardController =
-      Get.put(DashBoardController());
+  final _dashBoardController = Get.put(DashBoardControllerCopy());
 
   @override
   Widget build(BuildContext context) {
+    /* var _result = DashboardModel.fromJson(
+        json.decode(_dashBoardController.responseResult.value)); */
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -81,172 +86,185 @@ class DashboardScreenCopy extends StatelessWidget {
               ),
             ],
           ),
-          ListView.separated(
-            itemBuilder: (context, index) {
-              return Material(
-                color: Colors.transparent,
-                child: InkWell(
-                  child: Padding(
-                    padding: EdgeInsets.all(2.h),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          Obx(
+            () => SizedBox(
+              child: _dashBoardController.responseResult.value == ""
+                  ? Column(
                       children: [
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            children: [
-                              Card(
-                                elevation: 0.4.h,
-                                shadowColor: Colors.grey.shade100,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                    5.h,
-                                  ),
-                                ),
-                                child: Container(
-                                  height: 6.h,
-                                  width: 6.h,
-                                  padding: EdgeInsets.all(1.5.h),
-                                  child: Image.asset(
-                                    _dashBoardController
-                                        .dashBoardCryptoStatusModels[index]
-                                        .cryptoAsset,
-                                    fit: BoxFit.fill,
-                                    color: Colors.blue.shade600,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                width: 4.w,
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: _dashBoardController
-                                          .dashBoardCryptoStatusModels[index]
-                                          .cryptoName,
-                                      style: TextStyle(
-                                        fontSize: 17.sp,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text:
-                                          "  (${_dashBoardController.dashBoardCryptoStatusModels[index].cryptoNameSmall})" +
-                                              "\n",
-                                      style: TextStyle(
-                                        fontSize: 15.sp,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: _dashBoardController
-                                          .dashBoardCryptoStatusModels[index]
-                                          .cryptoPrice,
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(
-                                          _dashBoardController
-                                              .dashBoardCryptoStatusModels[
-                                                  index]
-                                              .priceColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
+                        SizedBox(
+                          height: 10.h,
                         ),
-                        Expanded(
-                          flex: 2,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceAround,
-                            children: [
-                              RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: _dashBoardController
-                                              .dashBoardCryptoStatusModels[
-                                                  index]
-                                              .cryptoPriceDollarBuy +
-                                          "\n",
-                                      style: TextStyle(
-                                        fontSize: 17.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "Buy",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(
-                                          GlobalVals.raiseColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              RichText(
-                                text: TextSpan(
-                                  style: TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                  children: [
-                                    TextSpan(
-                                      text: _dashBoardController
-                                              .dashBoardCryptoStatusModels[
-                                                  index]
-                                              .cryptoPriceDollarSell +
-                                          "\n",
-                                      style: TextStyle(
-                                        fontSize: 17.sp,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: "Sell",
-                                      style: TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        color: Color(
-                                          GlobalVals.raiseColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ],
-                          ),
-                        )
+                        CircularProgressIndicator(),
                       ],
+                    )
+                  : ListView.separated(
+                      itemBuilder: (context, index) {
+                        var _result = DashboardModel.fromJson(json
+                            .decode(_dashBoardController.responseResult.value));
+                        return Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            child: Padding(
+                              padding: EdgeInsets.all(2.h),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      children: [
+                                        Card(
+                                          elevation: 0.4.h,
+                                          shadowColor: Colors.grey.shade100,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              5.h,
+                                            ),
+                                          ),
+                                          child: Container(
+                                            height: 6.h,
+                                            width: 6.h,
+                                            padding: EdgeInsets.all(1.5.h),
+                                            child: Image.network(
+                                              _result
+                                                  .cryptoData[index].coinImage,
+                                              fit: BoxFit.fill,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 4.w,
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: _result
+                                                    .cryptoData[index].coinName,
+                                                style: TextStyle(
+                                                  fontSize: 17.sp,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    "(${_result.cryptoData[index].coinSymbol})" +
+                                                        "\n",
+                                                style: TextStyle(
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: _result.cryptoData[index]
+                                                    .cryptoWallet
+                                                    .toString(),
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.green,
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        Expanded(
+                                          flex: 1,
+                                          child: RichText(
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                              children: [
+                                                TextSpan(
+                                                  text: _result
+                                                          .cryptoData[index]
+                                                          .buyPrice +
+                                                      "\n",
+                                                  style: TextStyle(
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text: "Buy",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(
+                                                      GlobalVals.raiseColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                        Expanded(
+                                          flex: 1,
+                                          child: RichText(
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                              children: [
+                                                TextSpan(
+                                                  text: _result
+                                                          .cryptoData[index]
+                                                          .sellPrice +
+                                                      "\n",
+                                                  style: TextStyle(
+                                                    fontSize: 16.sp,
+                                                    fontWeight: FontWeight.bold,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text: "Sell",
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Color(
+                                                      GlobalVals.raiseColor,
+                                                    ),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              Get.toNamed(Routes.currencySelected,
+                                  parameters: {'index': "0"});
+                            },
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          height: 1.h,
+                          color: Colors.grey,
+                        );
+                      },
+                      itemCount: _dashBoardController.resultLength.value,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
                     ),
-                  ),
-                  onTap: () {
-                    Get.toNamed(Routes.currencySelected,
-                        parameters: {'index': "$index"});
-                  },
-                ),
-              );
-            },
-            separatorBuilder: (context, index) {
-              return Divider(
-                height: 1.h,
-                color: Colors.grey,
-              );
-            },
-            itemCount: _dashBoardController.dashBoardCryptoStatusModels.length,
-            physics: NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-          )
+            ),
+          ),
         ],
       ),
     );
@@ -284,3 +302,178 @@ class DashboardScreenCopy extends StatelessWidget {
     );
   }
 }
+
+/* ListView.separated(
+                      itemBuilder: (context, index) {
+                        var _result = DashboardModel.fromJson(json
+                            .decode(_dashBoardController.responseResult.value));
+                        return Material(
+                          color: Colors.transparent,
+                          child: InkWell(
+                            child: Padding(
+                              padding: EdgeInsets.all(2.h),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      children: [
+                                        Card(
+                                          elevation: 0.4.h,
+                                          shadowColor: Colors.grey.shade100,
+                                          shape: RoundedRectangleBorder(
+                                            borderRadius: BorderRadius.circular(
+                                              5.h,
+                                            ),
+                                          ),
+                                          child: Container(
+                                            height: 6.h,
+                                            width: 6.h,
+                                            padding: EdgeInsets.all(1.5.h),
+                                            child: Image.asset(
+                                              _dashBoardController
+                                                  .dashBoardCryptoStatusModels[
+                                                      index]
+                                                  .cryptoAsset,
+                                              fit: BoxFit.fill,
+                                              color: Colors.blue.shade600,
+                                            ),
+                                          ),
+                                        ),
+                                        SizedBox(
+                                          width: 4.w,
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: _dashBoardController
+                                                    .dashBoardCryptoStatusModels[
+                                                        index]
+                                                    .cryptoName,
+                                                style: TextStyle(
+                                                  fontSize: 17.sp,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text:
+                                                    "  (${_dashBoardController.dashBoardCryptoStatusModels[index].cryptoNameSmall})" +
+                                                        "\n",
+                                                style: TextStyle(
+                                                  fontSize: 15.sp,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: _dashBoardController
+                                                    .dashBoardCryptoStatusModels[
+                                                        index]
+                                                    .cryptoPrice,
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(
+                                                    _dashBoardController
+                                                        .dashBoardCryptoStatusModels[
+                                                            index]
+                                                        .priceColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                  Expanded(
+                                    flex: 2,
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceAround,
+                                      children: [
+                                        RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: _dashBoardController
+                                                        .dashBoardCryptoStatusModels[
+                                                            index]
+                                                        .cryptoPriceDollarBuy +
+                                                    "\n",
+                                                style: TextStyle(
+                                                  fontSize: 17.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: "Buy",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(
+                                                    GlobalVals.raiseColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                        RichText(
+                                          text: TextSpan(
+                                            style: TextStyle(
+                                              color: Colors.black,
+                                            ),
+                                            children: [
+                                              TextSpan(
+                                                text: _dashBoardController
+                                                        .dashBoardCryptoStatusModels[
+                                                            index]
+                                                        .cryptoPriceDollarSell +
+                                                    "\n",
+                                                style: TextStyle(
+                                                  fontSize: 17.sp,
+                                                  fontWeight: FontWeight.bold,
+                                                ),
+                                              ),
+                                              TextSpan(
+                                                text: "Sell",
+                                                style: TextStyle(
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Color(
+                                                    GlobalVals.raiseColor,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            onTap: () {
+                              Get.toNamed(Routes.currencySelected,
+                                  parameters: {'index': "$index"});
+                            },
+                          ),
+                        );
+                      },
+                      separatorBuilder: (context, index) {
+                        return Divider(
+                          height: 1.h,
+                          color: Colors.grey,
+                        );
+                      },
+                      itemCount: _dashBoardController
+                          .dashBoardCryptoStatusModels.length,
+                      physics: NeverScrollableScrollPhysics(),
+                      shrinkWrap: true,
+                    ), */

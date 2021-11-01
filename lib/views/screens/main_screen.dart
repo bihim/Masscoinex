@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:masscoinex/controllers/main_controller.dart';
+import 'package:masscoinex/controllers/main/main_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class MainScreen extends StatelessWidget {
-  final MainController _mainController = Get.find();
+  final MainController _mainController = Get.put(MainController());
   @override
   Widget build(BuildContext context) {
     return Obx(

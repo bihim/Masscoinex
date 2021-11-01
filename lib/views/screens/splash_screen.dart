@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:logger/logger.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -47,8 +48,10 @@ class _MyStatefulWidgetState extends State<SplashScreen>
 
   @override
   void initState() {
+    var _logger = Logger();
     final box = GetStorage();
     isLoggedIn = box.read("loggedIn") ?? false;
+    _logger.d(isLoggedIn);
     super.initState();
   }
 

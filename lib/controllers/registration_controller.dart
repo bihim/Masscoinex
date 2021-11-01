@@ -46,7 +46,7 @@ class RegistrationController extends GetxController {
         var _box = await Hive.openBox(GlobalVals.hiveBox);
         _box.put(GlobalVals.register, _response.body);
         _logger.d(_response.body);
-        Get.toNamed(Routes.mobileVerificationRegistration);
+        Get.offAllNamed(Routes.loginEmail);
         //!Redirect it to login
       }
     } else {

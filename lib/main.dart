@@ -67,7 +67,6 @@ class MyApp extends StatelessWidget {
           ),
           debugShowCheckedModeBanner: false,
           initialRoute: Routes.splashScreen,
-          initialBinding: MainBinding(),
           getPages: [
             GetPage(
               name: Routes.splashScreen,
@@ -76,12 +75,10 @@ class MyApp extends StatelessWidget {
             GetPage(
               name: Routes.mainScreen,
               page: () => MainScreen(),
-              binding: MainBinding(),
             ),
             GetPage(
               name: Routes.mainScreenCopy,
               page: () => MainScreenCopy(),
-              binding: MainBinding(),
             ),
             GetPage(
               name: Routes.loginScreen,

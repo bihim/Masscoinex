@@ -2,13 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:masscoinex/controllers/main_controller.dart';
+import 'package:masscoinex/controllers/main/main_controller.dart';
+import 'package:masscoinex/controllers/main/main_controller_copy.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class MainScreenCopy extends StatelessWidget {
-  final MainController _mainController = Get.find();
+  final _mainController = Get.put(MainControllerCopy());
   int _index = int.parse(
       Get.parameters["index"] != null ? Get.parameters["index"]! : "1234");
   final String _isComingFromCurrency =

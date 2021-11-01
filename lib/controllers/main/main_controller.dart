@@ -39,10 +39,4 @@ class MainController extends GetxController {
     FiatWalletScreen(),
     ProfileScreen(),
   ];
-  var screensCopy = [
-    DashboardScreenCopy(),
-    SwapScreen(),
-    FiatWalletScreen(),
-    ProfileScreen(),
-  ];
 }
