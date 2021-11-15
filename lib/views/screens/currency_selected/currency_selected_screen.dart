@@ -14,8 +14,7 @@ import 'currency_list_screens/withdraw_screen.dart';
 
 class CurrencySelectedScreen extends StatelessWidget {
   final _selectedIndex = 0.obs;
-  final CurrencySelectedController _currencySelectedController =
-      Get.put(CurrencySelectedController());
+  final _currencySelectedController = Get.put(CurrencySelectedController());
 
   @override
   Widget build(BuildContext context) {
@@ -27,8 +26,7 @@ class CurrencySelectedScreen extends StatelessWidget {
             .dashBoardCryptoStatusModels[_index].cryptoName,
       ),
       BuyScreen(
-        currentCurrencyText: _currencySelectedController
-            .dashBoardCryptoStatusModels[_index].cryptoName,
+        index: _index,
       ),
       SellScreen(
         currentCurrencyText: _currencySelectedController
@@ -48,7 +46,7 @@ class CurrencySelectedScreen extends StatelessWidget {
       appBar: AppBar(
         title: Text(
           _currencySelectedController
-              .dashBoardCryptoStatusModels[_index].cryptoName,
+              .dashboardValue.cryptoData[_index].coinName,
         ),
         backgroundColor: GlobalVals.appbarColor,
       ),
@@ -59,7 +57,7 @@ class CurrencySelectedScreen extends StatelessWidget {
               () => _animatedCurrencyProviderThings(_visible, _index),
             ),
             Obx(
-              () => _topItems(_visible),
+              () => _topItems(_visible, _index),
             ),
             SizedBox(
               height: 2.h,
@@ -198,7 +196,7 @@ class CurrencySelectedScreen extends StatelessWidget {
     );
   }
 
-  Padding _topItems(RxBool _visible) {
+  Padding _topItems(RxBool _visible, int index) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 3.h),
       child: Row(
@@ -216,7 +214,8 @@ class CurrencySelectedScreen extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: "INR 23850",
+                  text: _currencySelectedController
+                      .dashboardValue.cryptoData[index].buyPrice,
                   style: TextStyle(
                     color: Colors.grey.shade900,
                   ),
@@ -248,7 +247,8 @@ class CurrencySelectedScreen extends StatelessWidget {
                   ),
                 ),
                 TextSpan(
-                  text: "INR 12333",
+                  text: _currencySelectedController
+                      .dashboardValue.cryptoData[index].sellPrice,
                   style: TextStyle(
                     color: Colors.grey.shade900,
                   ),
@@ -310,12 +310,10 @@ class CurrencySelectedScreen extends StatelessWidget {
                               height: 5.h,
                               width: 5.h,
                               padding: EdgeInsets.all(1.h),
-                              child: Image.asset(
+                              child: Image.network(
                                 _currencySelectedController
-                                    .dashBoardCryptoStatusModels[index]
-                                    .cryptoAsset,
+                                    .dashboardValue.cryptoData[index].coinImage,
                                 fit: BoxFit.fill,
-                                color: Colors.blue.shade600,
                               ),
                             ),
                           ),
@@ -330,7 +328,7 @@ class CurrencySelectedScreen extends StatelessWidget {
                               children: [
                                 TextSpan(
                                   text:
-                                      "${_currencySelectedController.dashBoardCryptoStatusModels[index].cryptoName}    ",
+                                      "${_currencySelectedController.dashboardValue.cryptoData[index].coinName}    ",
                                   style: TextStyle(
                                     fontSize: 17.sp,
                                     fontWeight: FontWeight.bold,

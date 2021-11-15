@@ -1,21 +1,22 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:logger/logger.dart';
-import 'dart:convert';
 import 'package:http/http.dart' as http;
+import 'package:logger/logger.dart';
 import 'package:masscoinex/global/global_vals.dart';
-import 'package:masscoinex/models/register_user/register_user_model.dart';
+import 'package:masscoinex/models/user_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:path/path.dart';
 import 'package:masscoinex/api/api_routes.dart';
-import 'package:masscoinex/views/screens/auth/registration/registration_details_screen/declaration_screen.dart';
-import 'package:masscoinex/views/screens/auth/registration/registration_details_screen/document_screen.dart';
-import 'package:masscoinex/views/screens/auth/registration/registration_details_screen/selfie_id_screen.dart';
-import 'package:masscoinex/views/screens/auth/registration/registration_details_screen/selfie_screen.dart';
+import 'package:masscoinex/views/screens/nav_screens/verification_kyc/registration_details_screen/declaration_screen.dart';
+import 'package:masscoinex/views/screens/nav_screens/verification_kyc/registration_details_screen/document_screen.dart';
+import 'package:masscoinex/views/screens/nav_screens/verification_kyc/registration_details_screen/selfie_id_screen.dart';
+import 'package:masscoinex/views/screens/nav_screens/verification_kyc/registration_details_screen/selfie_screen.dart';
 
-class RegistrationDetailsController extends GetxController {
+class VerifyRegistrationDetailsController extends GetxController {
   var currentIndex = 0.obs;
   var previousIndex = 0.obs;
   var uploadImageFront = XFile("").obs;
@@ -32,18 +33,18 @@ class RegistrationDetailsController extends GetxController {
   final _logger = Logger();
 
   List<StatelessWidget> screens(
-      RegistrationDetailsController registrationDetailsController) {
+      VerifyRegistrationDetailsController registrationDetailsController) {
     return [
-      DocumentScreen(
+      VerifyDocumentScreen(
         registrationDetailsController: registrationDetailsController,
       ),
-      SelfieIdScreen(
+      VerifySelfieIdScreen(
         registrationDetailsController: registrationDetailsController,
       ),
-      SelfieScreen(
+      VerifySelfieScreen(
         registrationDetailsController: registrationDetailsController,
       ),
-      DeclarationScreen(
+      VerifyDeclarationScreen(
         registrationDetailsController: registrationDetailsController,
       ),
     ];
@@ -52,8 +53,9 @@ class RegistrationDetailsController extends GetxController {
   uploadImagesToKyc() async {
     isUploaded.value = true;
     var _box = await Hive.openBox(GlobalVals.hiveBox);
-    var _result = RegisterModel.fromJsonSuccess(
-        json.decode(_box.get(GlobalVals.register)));
+    final _userInfo =
+        UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
+    final _token = _userInfo.result.token;
     String _testToken =
         "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk0YmZlNWViYzhjYjhhYjZiYzRkMWZjM2FjYjFkM2ExMmZlZmY4ZDNmYWUzNDNkY2RmNDhkNGIxMmNiMzMzZTRlOThiZTcxNzQ3MmYxMGRjIn0.eyJhdWQiOiIxIiwianRpIjoiOTRiZmU1ZWJjOGNiOGFiNmJjNGQxZmMzYWNiMWQzYTEyZmVmZjhkM2ZhZTM0M2RjZGY0OGQ0YjEyY2IzMzNlNGU5OGJlNzE3NDcyZjEwZGMiLCJpYXQiOjE2MzU4MjA2MTIsIm5iZiI6MTYzNTgyMDYxMiwiZXhwIjoxNjY3MzU2NjEyLCJzdWIiOiIxODA0Iiwic2NvcGVzIjpbXX0.Mxyg-d1YWlyujd1hKJ1ncQXPlWO_6IXFi7CW7sk-NnMaZRLGEg1yyS51gE9p6rjbg9SK02wWW0NyKEi21tTFGKffOvaChtStYjQYCg5B-b6IL3xEem5OnISmreFlxkeOVIk0IYutV-K_kKaq7RntbbqxYfMTfJ3qIaLW4oiSBaaDpG_8ndBGJyy3l5zmNjCtQmPDiDtF1T8lTlwF-KNvt0_MXmbeqA5_tvVF2DW5hKhwTacngWarNCWL9BzSfukqxD8C2c9p0f8s2Qt4IZLAYDyxYdPDfoIm7oFkiH2sYBcoSEK1ZLgX1MHKe_YbbmuEU5MGfBal4OQxqmX1gCTXYqImoiZgEemzQCohn6DtGC5WFLyKTIXn74MGpou2pyuyDmIse35zAVOsy5B9rvTUf3JfVQLHSQNfH8M6GNsc_hAH7r5W-q9bkweHxuoa0ptydxoCSTsFhP325D8lwA390kizQCDcczH1kXg-Ifoa3OPCDopwL_Idai-evAEVp2ZD7tmXMEFVvOq3GuJRi3P-G45tWtr6TWDFPBfHYM7muzDYT-k9_MOHm4LSJE5Lf9dZ2nidQ8z06nWIE3He2G3sdq16dO5s5C6GBRJfgLvpd-mPHVfCkutY8PO54UE1ytUtbUdailiN_tc5mzGpGdNqzfKNhFxXFyDKZSlNiNvdE-s";
     var _request = new http.MultipartRequest(
@@ -61,7 +63,7 @@ class RegistrationDetailsController extends GetxController {
     Map<String, String> _header = {
       'Content-Type': 'application/json',
       'Accept': 'application/json',
-      'Authorization': 'Bearer ${_result.registerResult!.token}',
+      'Authorization': 'Bearer $_token',
     };
     /* Front */
     var _frontStream =
@@ -108,9 +110,9 @@ class RegistrationDetailsController extends GetxController {
     _logger.d(_response.statusCode);
     _response.stream.transform(utf8.decoder).listen((event) async {
       isUploaded.value = false;
-      Get.toNamed(Routes.kycUploadedScreen);
       var _box = await Hive.openBox(GlobalVals.hiveBox);
       _box.put(GlobalVals.kycUploadModel, event);
+      Get.offNamed(Routes.verifyKycUpload);
       _logger.d(event);
     });
   }

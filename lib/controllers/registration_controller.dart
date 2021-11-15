@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -18,8 +19,10 @@ class RegistrationController extends GetxController {
   registerUser(String fullname, String email, String password, String pin,
       String phone, String country) async {
     isRegistering.value = true;
+    final _getBox = GetStorage();
+    bool _isKyc = _getBox.read("isKyc");
     final Map<String, dynamic> _body = {
-      "fullname": fullname,
+      "full_name": fullname,
       "email": email,
       "password": password,
       "pin": pin,
@@ -29,25 +32,30 @@ class RegistrationController extends GetxController {
       "privacy_policy": "1",
       "aml_kyc": "1",
       "notify": "1",
-      "user_type": "nonkyc",
+      "user_type": _isKyc ? "kyc" : "nonkyc",
     };
-    var _response = await http.post(
-        Uri.parse(ApiRoutes.baseUrl + ApiRoutes.checkingUser),
-        body: _body);
+    var _response = await http
+        .post(Uri.parse(ApiRoutes.baseUrl + ApiRoutes.register), body: _body);
     if (_response.statusCode == 200) {
       isRegistering.value = false;
       var _status = RegisterModel.fromJson(json.decode(_response.body));
+      _logger.d(_response.body);
       if (_status.code == "0") {
-        var _error = RegisterModel.fromJsonError(json.decode(_response.body));
-        GlobalVals.errorToast(_error.registerResultError!.email.first);
+        //var _error = RegisterModel.fromJsonError(json.decode(_response.body));
+        GlobalVals.errorToast("Something went wrong");
       } else {
         var _success =
             RegisterModel.fromJsonSuccess(json.decode(_response.body));
         var _box = await Hive.openBox(GlobalVals.hiveBox);
+        var _getBox = GetStorage();
         _box.put(GlobalVals.register, _response.body);
         _logger.d(_response.body);
-        Get.offAllNamed(Routes.loginEmail);
-        //!Redirect it to login
+        if (_isKyc) {
+          _getBox.write("isComingFromRegistration", true);
+          Get.toNamed(Routes.registrationDetails);
+        } else {
+          Get.offAllNamed(Routes.loginEmail);
+        }
       }
     } else {
       isRegistering.value = false;

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get_storage/get_storage.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
@@ -123,8 +124,9 @@ class KycOrNotScreen extends StatelessWidget {
                                   boxShadow: [
                                     BoxShadow(
                                       color: Colors.black87,
-                                      blurRadius:
-                                          isKycSelected.value == true ? 0.0 : 15.0,
+                                      blurRadius: isKycSelected.value == true
+                                          ? 0.0
+                                          : 15.0,
                                     ),
                                   ],
                                   border: Border.all(
@@ -183,12 +185,9 @@ class KycOrNotScreen extends StatelessWidget {
               ),
             ),
             onPressed: () {
-              if(isKycSelected.value == true){
-              }
-              else{
-                Get.toNamed(Routes.registration);
-              }
-              
+              final _box = GetStorage();
+              _box.write("isKyc", isKycSelected.value);
+              Get.toNamed(Routes.registration);
             },
             child: Padding(
               padding: EdgeInsets.symmetric(vertical: 2.h),

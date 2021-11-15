@@ -19,6 +19,11 @@ class AddAccountController extends GetxController {
     tabs: [],
   );
   var cardScreenIndex = 0.obs;
+
+  var addAccountScreens = [
+    
+  ];
+
   @override
   void onInit() {
     addBank.add(_bankFields());
@@ -89,24 +94,6 @@ class AddAccountController extends GetxController {
   Column _bankFields() {
     return Column(
       children: [
-        /* Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: GlobalVals.backgroundColor,
-            borderRadius: BorderRadius.circular(2.h),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 2.h),
-          child: Text(
-            "Bank details ${currentBankDetails.value.toString()}",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 2.h,
-        ), */
         _textFields("Your full name as per bank record"),
         SizedBox(
           height: 2.h,
@@ -206,24 +193,6 @@ class AddAccountController extends GetxController {
   Column _cardFields() {
     return Column(
       children: [
-        /* Container(
-          width: double.infinity,
-          decoration: BoxDecoration(
-            color: GlobalVals.backgroundColor,
-            borderRadius: BorderRadius.circular(2.h),
-          ),
-          padding: EdgeInsets.symmetric(vertical: 2.h),
-          child: Text(
-            "Card details ${currentCardDetails.value.toString()}",
-            textAlign: TextAlign.center,
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ),
-        ),
-        SizedBox(
-          height: 2.h,
-        ), */
         _textFields("Name on Card"),
         SizedBox(
           height: 2.h,

@@ -1,7 +1,11 @@
+import 'dart:convert';
+
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/models/currency_selector_list_model.dart';
 import 'package:masscoinex/models/dashboard_crypto_status_model.dart';
+import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/buy_screen.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/deposit_screen.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/sell_screen.dart';
@@ -11,6 +15,16 @@ import 'package:flutter/material.dart';
 
 class CurrencySelectedController extends GetxController {
   var selectedIndex = 0.obs;
+  final _box = Hive.box(GlobalVals.hiveBox);
+  var _dashboardString = "".obs;
+  late DashboardModel dashboardValue;
+  @override
+  void onInit() {
+    super.onInit();
+    _dashboardString.value = _box.get(GlobalVals.dashBoard);
+    dashboardValue = DashboardModel.fromJson(json.decode(_dashboardString.value));
+  }
+
   var dashBoardCryptoStatusModels = [
     DashBoardCryptoStatusModel(
       cryptoAsset: "assets/bitcoin.png",

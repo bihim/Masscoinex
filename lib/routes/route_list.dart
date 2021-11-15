@@ -15,6 +15,7 @@ class Routes {
   static const registrationDetails = "/registrationDetails";
   static const kycUploadedScreen = "/kycUploadedScreen";
   static const completeScreen = "/completeScreen";
+  static const selectCurrencyScreen = "/selectCurrencyScreen";
   static const addAccount = "/addAccount";
   static const addAccountSuccessful = "/addAccountSuccessful";
   //CurrencySelected
@@ -35,6 +36,7 @@ class Routes {
   //Verify KYC
   static const verifyKyc = "/verifyKyc";
   static const verifyKycUpload = "/verifyKycUpload";
+  static const verifySelectCurrency= "/verifySelectCurrency";
   //Add bank or card
   static const addCardOrBank = "/addCardOrBank";
   static const addCardOrBankComplete = "/addCardOrBankComplete";

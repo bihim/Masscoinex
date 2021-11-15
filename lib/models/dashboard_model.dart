@@ -99,7 +99,7 @@ class Notification {
 
 class Wallet {
   dynamic userId;
-  int amount;
+  dynamic amount;
   dynamic currency;
   Wallet({
     required this.userId,

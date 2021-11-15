@@ -1,15 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:logger/logger.dart';
-import 'package:masscoinex/controllers/registration_details_controller.dart';
+import 'package:masscoinex/controllers/nav_kyc/verify_registration_details_controller.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/global/global_vals.dart';
 
-class RegistrationDetailsScreen extends StatelessWidget {
-  final RegistrationDetailsController _registrationDetailsController =
-      Get.find();
-  final _logger = Logger();
+class VerifyRegistrationDetailsScreen extends StatelessWidget {
+  final _registrationDetailsController =
+      Get.put(VerifyRegistrationDetailsController());
 
   @override
   Widget build(BuildContext context) {
@@ -88,32 +86,6 @@ class RegistrationDetailsScreen extends StatelessWidget {
       ),
     );
   }
-  handleAppLifecycleState() {
-    AppLifecycleState _lastLifecyleState;
-    SystemChannels.lifecycle.setMessageHandler((msg) {
-
-      print('SystemChannels> $msg');
-      _logger.d('SystemChannels> $msg');
-
-      switch (msg) {
-        case "AppLifecycleState.paused":
-          _lastLifecyleState = AppLifecycleState.paused;
-          break;
-        case "AppLifecycleState.inactive":
-          _lastLifecyleState = AppLifecycleState.inactive;
-          break;
-        case "AppLifecycleState.resumed":
-          _lastLifecyleState = AppLifecycleState.resumed;
-          Get.back();
-          break;
-        case "AppLifecycleState.suspending":
-          _lastLifecyleState = AppLifecycleState.detached;
-          break;
-        default:
-      }
-      return Future.value("");
-    });
-  }
 
   Widget _topBarItems(
     IconData iconData,
@@ -134,13 +106,7 @@ class RegistrationDetailsScreen extends StatelessWidget {
         children: [
           IconButton(
             onPressed: () {
-              /* _registrationDetailsController.currentIndex.value = indexNumber;
-              if (indexNumber != 0) {
-                _registrationDetailsController.previousIndex.value =
-                    indexNumber - 1;
-              } else {
-                _registrationDetailsController.previousIndex.value = 0;
-              } */
+              //_registrationDetailsController.currentIndex.value = indexNumber;
             },
             icon: Icon(
               indexNumber == _registrationDetailsController.currentIndex.value
@@ -172,5 +138,32 @@ class RegistrationDetailsScreen extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  handleAppLifecycleState() {
+    AppLifecycleState _lastLifecyleState;
+    SystemChannels.lifecycle.setMessageHandler((msg) {
+
+      print('SystemChannels> $msg');
+      //_logger.d('SystemChannels> $msg');
+
+      switch (msg) {
+        case "AppLifecycleState.paused":
+          _lastLifecyleState = AppLifecycleState.paused;
+          break;
+        case "AppLifecycleState.inactive":
+          _lastLifecyleState = AppLifecycleState.inactive;
+          break;
+        case "AppLifecycleState.resumed":
+          _lastLifecyleState = AppLifecycleState.resumed;
+          Get.back();
+          break;
+        case "AppLifecycleState.suspending":
+          _lastLifecyleState = AppLifecycleState.detached;
+          break;
+        default:
+      }
+      return Future.value("");
+    });
   }
 }

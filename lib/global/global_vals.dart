@@ -17,12 +17,23 @@ class GlobalVals {
   static const user = "user";
   static const dashBoard = "dashBoard";
   static const dashBoardData = "dashBoardData";
+  static const kycUploadModel = "kycUploadModel";
+  static const profileInfo = "profileInfo";
+  static const buyCryptos = "buyCryptos";
 
   //?ErrorToast
   static errorToast(String text) {
     Fluttertoast.showToast(
       msg: text,
       backgroundColor: Colors.red,
+      textColor: Colors.white,
+    );
+  }
+
+  static successToast(String text) {
+    Fluttertoast.showToast(
+      msg: text,
+      backgroundColor: Colors.green,
       textColor: Colors.white,
     );
   }

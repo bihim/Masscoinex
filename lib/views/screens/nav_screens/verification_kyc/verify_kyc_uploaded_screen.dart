@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/global/global_vals.dart';
+import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:lottie/lottie.dart';
 
@@ -74,8 +75,8 @@ class VerifyKycUploadedScreen extends StatelessWidget {
                   ),
                 ),
                 onPressed: () {
-                  //Get.toNamed(Routes.completeScreen);
-                  Get.back();
+                  Get.offNamed(Routes.verifySelectCurrency);
+                  //Get.back();
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.h),
