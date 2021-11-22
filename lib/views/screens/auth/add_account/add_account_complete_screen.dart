@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:hive/hive.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:lottie/lottie.dart';
-import 'package:get_storage/get_storage.dart';
 
 class AddAccountCompleteScreen extends StatelessWidget {
   const AddAccountCompleteScreen({Key? key}) : super(key: key);
@@ -66,10 +66,10 @@ class AddAccountCompleteScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                onPressed: () {
+                onPressed: ()async {
                   Get.offAllNamed(Routes.mainScreenCopy);
-                  GetStorage box = GetStorage();
-                  box.write("loggedIn", true);
+                  var _box = await Hive.openBox(GlobalVals.hiveBox);
+                  _box.put("loggedIn", true);
                 },
                 child: Padding(
                   padding: EdgeInsets.symmetric(vertical: 2.h),

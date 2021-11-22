@@ -3,7 +3,6 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
@@ -37,10 +36,11 @@ class PinController extends GetxController {
       _logger.d(_response.body);
       if (_loginUser.code == "1") {
         _box.put(GlobalVals.user, _response.body);
+        _box.put(GlobalVals.isLoggedIn, true);
         _logger.d(_response.body);
-        Get.offAllNamed(Routes.mainScreenCopy);
-        GetStorage box = GetStorage();
-        box.write("loggedIn", true);
+        getProfileInfo();
+        /* GetStorage box = GetStorage();
+        box.write("loggedIn", true); */
         Fluttertoast.showToast(
           msg: "Successfully logged in",
           backgroundColor: Colors.green,
@@ -53,6 +53,37 @@ class PinController extends GetxController {
       GlobalVals.errorToast(
         "Server Error",
       );
+    }
+  }
+
+  getProfileInfo() async {
+    final _box = await Hive.openBox(GlobalVals.hiveBox);
+    final _userInfo =
+        UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
+    final _token = _userInfo.result.token;
+    _logger.d(_token);
+    Map<String, String> _header = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    final _response = await http.get(
+      Uri.parse(ApiRoutes.baseUrl + ApiRoutes.profileInfo),
+      headers: _header,
+    );
+    _logger.d(_response.body);
+    if (_response.statusCode == 200) {
+      _box.put(GlobalVals.profileInfo, _response.body);
+      Get.offAllNamed(Routes.mainScreenCopy);
+      //Get.offAllNamed(Routes.mainScreenCopy);
+      //responseResult.value = _response.body;
+      // var _result = DashboardModel.fromJson(json.decode(_response.body));
+      //resultLength.value = _result.cryptoData.length;
+      /* 
+      _logger.d(_token); */
+    } else {
+      //Get.offAllNamed(Routes.mainScreen);
+      GlobalVals.errorToast("Server Error");
     }
   }
 }

@@ -1,24 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
+import 'package:masscoinex/controllers/dashboard/currency_select/sell_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
 class SellScreen extends StatelessWidget {
-  final _dropdownValueFrom = 'BTC'.obs;
-  final _dropdownValueTo = 'USD'.obs;
-  final _dropDownValueFromList = ['BTC', 'RPL', 'EOS', 'ETH', 'ION'];
-  final _dropDownValueToList = ['USD', 'IND', 'BDT', 'EURO', 'DIRHAM'];
-  final TextEditingController _cryptoValueController =
-      TextEditingController(text: "150000");
-  final TextEditingController _toCryptoValueController =
-      TextEditingController(text: "657630.00");
-  final TextEditingController _denominatedValue =
-      TextEditingController(text: "1.98");
-  final String currentCurrencyText;
-  SellScreen({Key? key, required this.currentCurrencyText}) : super(key: key);
+  final _logger = Logger();
+  final int index;
+  final _controller = Get.put(SellController());
+
+  SellScreen({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    _controller.index.value = index;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 1.h,
@@ -55,19 +51,22 @@ class SellScreen extends StatelessWidget {
             SizedBox(
               height: 3.h,
             ),
-            Obx(
+            _cryptoValueConvt(),
+            /* Obx(
               () => _cryptoValueConvt(),
-            ),
+            ), */
             SizedBox(
               height: 2.h,
             ),
             Container(
               width: double.infinity,
-              child: Text(
-                "(Fee 16.40 USD)",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.sp,
+              child: Obx(
+                () => Text(
+                  "(Fee ${_controller.transactionFeeRate.value}${_controller.dashboardValue.wallet.currency})",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14.sp,
+                  ),
                 ),
               ),
             ),
@@ -75,6 +74,16 @@ class SellScreen extends StatelessWidget {
               height: 3.h,
             ),
             _denominated(),
+            SizedBox(
+              height: 2.h,
+            ),
+            Obx(
+              () => SizedBox(
+                child: _controller.isTypeFinished.value == true
+                    ? SizedBox()
+                    : CircularProgressIndicator(),
+              ),
+            ),
           ],
         ),
       ),
@@ -106,8 +115,9 @@ class SellScreen extends StatelessWidget {
             ),
           ),
           child: TextField(
+            enabled: false,
             cursorColor: GlobalVals.appbarColor,
-            controller: _denominatedValue,
+            controller: _controller.denominatedValue,
             decoration: InputDecoration(
               hintText: "Denomitated Value",
               border: UnderlineInputBorder(
@@ -126,82 +136,108 @@ class SellScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          flex: 1,
-          child: _cryptoValue(
-            CrossAxisAlignment.start,
-            "Crypto Value",
-            _cryptoValueController,
-            BorderRadius.only(
-              topLeft: Radius.circular(1.h),
-              bottomLeft: Radius.circular(1.h),
-            ),
-            Colors.grey.shade200,
-            null,
-            null,
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Crypto Value",
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              Container(
+                height: 6.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(1.h),
+                    bottomLeft: Radius.circular(1.h),
+                  ),
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                ),
+                child: TextField(
+                  textAlign: TextAlign.start,
+                  keyboardType: TextInputType.number,
+                  cursorColor: GlobalVals.appbarColor,
+                  controller: _controller.cryptoValueController,
+                  decoration: InputDecoration(
+                    prefix: Text("     "),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onChanged: (text) {
+                    Future.delayed(Duration(milliseconds: 800), () {
+                      if (text == _controller.cryptoValueController.text) {
+                        _controller.insertValue(
+                            _controller.cryptoValueController.text);
+                        _logger.d(_controller.cryptoValueController.text);
+                      }
+                    });
+                  },
+                ),
+              ),
+            ],
           ),
         ),
         Expanded(
-          flex: 2,
-          child: _cryptoValue(
-            CrossAxisAlignment.end,
-            "Amount",
-            _toCryptoValueController,
-            BorderRadius.only(
-              topRight: Radius.circular(1.h),
-              bottomRight: Radius.circular(1.h),
-            ),
-            Colors.white,
-            "Total",
-            _dropdownValueTo.value,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Column _cryptoValue(
-      CrossAxisAlignment crossAxisAlignment,
-      String text,
-      TextEditingController textEditingController,
-      BorderRadius borderRadius,
-      Color color,
-      String? prefixText,
-      String? suffixText) {
-    return Column(
-      crossAxisAlignment: crossAxisAlignment,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.grey.shade800,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(
-          height: 1.h,
-        ),
-        Container(
-          height: 6.h,
-          padding: EdgeInsets.symmetric(horizontal: 2.h),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: borderRadius,
-            border: Border.all(
-              color: Colors.grey,
-            ),
-          ),
-          child: TextField(
-            textAlign: prefixText != null ? TextAlign.end : TextAlign.start,
-            cursorColor: GlobalVals.appbarColor,
-            controller: textEditingController,
-            decoration: InputDecoration(
-              hintText: "Enter Crypto Value",
-              prefix: prefixText != null ? Text(prefixText) : SizedBox(),
-              suffix: suffixText != null ? Text(suffixText) : SizedBox(),
-              border: UnderlineInputBorder(
-                borderSide: BorderSide.none,
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Amount",
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
+              SizedBox(
+                height: 1.h,
+              ),
+              Container(
+                height: 6.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(1.h),
+                    bottomRight: Radius.circular(1.h),
+                  ),
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                ),
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.end,
+                  cursorColor: GlobalVals.appbarColor,
+                  controller: _controller.amountController,
+                  decoration: InputDecoration(
+                    suffix: Text(
+                        "${_controller.dashboardValue.wallet.currency}        "),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onChanged: (text) {
+                    Future.delayed(Duration(milliseconds: 800), () {
+                      if (text == _controller.amountController.text) {
+                        _controller
+                            .insertAmount(_controller.amountController.text);
+                        _logger.d(_controller.amountController.text);
+                      }
+                    });
+                  },
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -215,13 +251,7 @@ class SellScreen extends StatelessWidget {
       children: [
         Expanded(
           flex: 2,
-          child: /* _dropDown(
-            CrossAxisAlignment.start,
-            "Crypto Currency",
-            _dropdownValueFrom,
-            _dropDownValueFromList,
-          ) */
-              Column(
+          child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
@@ -246,7 +276,7 @@ class SellScreen extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
                   child: Text(
-                    currentCurrencyText,
+                    _controller.dashboardValue.cryptoData[index].coinName,
                   ),
                 ),
               )
@@ -264,108 +294,38 @@ class SellScreen extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: _dropDown(
-            CrossAxisAlignment.end,
-            "Select Currency",
-            _dropdownValueTo,
-            _dropDownValueToList,
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _dropDown(CrossAxisAlignment crossAxisAlignment, String text,
-      RxString dropdownInitValue, List<String> dropdownList) {
-    return Column(
-      crossAxisAlignment: crossAxisAlignment,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.grey.shade800,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(
-          height: 1.h,
-        ),
-        Obx(
-          () => Container(
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(1.h),
-              border: Border.all(
-                color: Colors.grey,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Selected Currency",
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
               ),
-            ),
-            child: /* DropdownButton<String>(
-              value: dropdownInitValue.value,
-              elevation: 16,
-              isDense: false,
-              isExpanded: true,
-              underline: Container(
-                color: Colors.transparent,
+              SizedBox(
+                height: 1.h,
               ),
-              style: TextStyle(color: Colors.black),
-              onChanged: (String? newValue) {
-                dropdownInitValue.value = newValue!;
-              },
-              items: dropdownList.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ), */Material(
-              color: Colors.transparent,
-              child: InkWell(
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.symmetric(
-                    vertical: 1.8.h,
-                    horizontal: 2.h,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        dropdownInitValue.value,
-                        textAlign: TextAlign.start,
-                      ),
-                      Icon(
-                        Icons.arrow_drop_down,
-                      ),
-                    ],
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 3.h),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(1.h),
+                  border: Border.all(
+                    color: Colors.grey,
                   ),
                 ),
-                onTap: () {
-                  Get.defaultDialog(
-                    title: "Select Crypto",
-                    content: Container(
-                      height: 35.h,
-                      width: 100.h,
-                      child: ListView.builder(
-                        itemBuilder: (context, index) {
-                          return ListTile(
-                            title: Text(
-                              dropdownList[index],
-                            ),
-                            onTap: () {
-                              dropdownInitValue.value = dropdownList[index];
-                              Get.back();
-                            },
-                          );
-                        },
-                        itemCount: dropdownList.length,
-                      ),
-                    ),
-                  );
-                },
-              ),
-            ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  child: Text(
+                    _controller.selectedCurrency.value,
+                  ),
+                ),
+              )
+            ],
           ),
-        )
+        ),
       ],
     );
   }
@@ -373,26 +333,32 @@ class SellScreen extends StatelessWidget {
   Container _continue() {
     return Container(
       width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            GlobalVals.buttonColor,
-          ),
-          elevation: MaterialStateProperty.all(0),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                5.h,
+      child: Obx(
+        () => ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              GlobalVals.buttonColor,
+            ),
+            elevation: MaterialStateProperty.all(0),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  5.h,
+                ),
               ),
             ),
           ),
-        ),
-        onPressed: () {
-          //
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 2.h),
-          child: const Text("Continue"),
+          onPressed: () {
+            _controller.sellCrypto();
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 2.h),
+            child: _controller.isBought.value == true
+                ? const Text("Continue")
+                : const CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+          ),
         ),
       ),
     );

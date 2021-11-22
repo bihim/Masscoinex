@@ -25,6 +25,7 @@ class BuyController extends GetxController {
   final _logger = Logger();
   var isRefreshed = false.obs;
   var isBought = true.obs;
+  var isTypeFinished = true.obs;
   /* Getting coin info's */
   var index = 0.obs;
 
@@ -46,13 +47,15 @@ class BuyController extends GetxController {
     _dashboardString.value = _box.get(GlobalVals.dashBoard);
     dashboardValue =
         DashboardModel.fromJson(json.decode(_dashboardString.value));
+    /* coinCode.value =
+        dashboardValue.cryptoData[index.value].coinName.toLowerCase(); */
     selectedCurrency.value = dashboardValue.wallet.currency;
   }
 
   buyCoin() async {
     if (!isRefreshed.value) {
       Fluttertoast.showToast(
-        msg: "Please refresh your buy amount",
+        msg: "Please enter your buy amount",
         backgroundColor: Colors.red,
       );
     } else {
@@ -115,11 +118,12 @@ class BuyController extends GetxController {
   }
 
   getBuy(String value, String bodyValue, String apiEndPoint) async {
+    isTypeFinished.value = false;
     isRefreshed.value = false;
-    Get.defaultDialog(
+    /* Get.defaultDialog(
       title: "Loading, Please wait",
       content: CircularProgressIndicator(),
-    );
+    ); */
     final _userInfo =
         UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
     final _token = _userInfo.result.token;
@@ -137,7 +141,8 @@ class BuyController extends GetxController {
         body: _body, headers: _header);
     _logger.d(_response.body);
     if (_response.statusCode == 200) {
-      Get.back();
+      isTypeFinished.value = true;
+      //Get.back();
       if (apiEndPoint == ApiRoutes.getFiatCryptoAmount) {
         var _result =
             BuyValueToAmountModel.fromJson(json.decode(_response.body));
@@ -191,7 +196,8 @@ class BuyController extends GetxController {
       }
       //_box.put(GlobalVals.buyCryptos, _response.body);
     } else {
-      Get.back();
+      isTypeFinished.value = true;
+      //Get.back();
       isRefreshed.value = true;
       Fluttertoast.showToast(
           msg: "Server Error. Please try again later.",

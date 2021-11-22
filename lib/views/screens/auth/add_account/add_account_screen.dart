@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:masscoinex/controllers/add_account_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
-import 'package:masscoinex/routes/route_list.dart';
 import 'package:masscoinex/views/screens/auth/add_account/add_card/card_fields_screen.dart';
 import 'package:masscoinex/views/screens/auth/add_account/add_card/card_picture_screen.dart';
 import 'package:masscoinex/views/screens/auth/add_account/add_card/card_video_screen.dart';

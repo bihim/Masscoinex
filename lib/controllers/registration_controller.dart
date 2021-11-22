@@ -1,13 +1,11 @@
 import 'dart:convert';
 
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:masscoinex/api/api_routes.dart';
 import 'package:masscoinex/global/global_vals.dart';
-import 'package:masscoinex/models/checking_user/checking_user_model.dart';
 import 'package:masscoinex/models/register_user/register_user_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 
@@ -19,8 +17,8 @@ class RegistrationController extends GetxController {
   registerUser(String fullname, String email, String password, String pin,
       String phone, String country) async {
     isRegistering.value = true;
-    final _getBox = GetStorage();
-    bool _isKyc = _getBox.read("isKyc");
+    var _box = await Hive.openBox(GlobalVals.hiveBox);
+    bool _isKyc = _box.get("isKyc");
     final Map<String, dynamic> _body = {
       "full_name": fullname,
       "email": email,
@@ -44,14 +42,14 @@ class RegistrationController extends GetxController {
         //var _error = RegisterModel.fromJsonError(json.decode(_response.body));
         GlobalVals.errorToast("Something went wrong");
       } else {
-        var _success =
-            RegisterModel.fromJsonSuccess(json.decode(_response.body));
+        /* var _success =
+            RegisterModel.fromJsonSuccess(json.decode(_response.body)); */
         var _box = await Hive.openBox(GlobalVals.hiveBox);
-        var _getBox = GetStorage();
+        //var _getBox = GetStorage();
         _box.put(GlobalVals.register, _response.body);
         _logger.d(_response.body);
         if (_isKyc) {
-          _getBox.write("isComingFromRegistration", true);
+          _box.put("isComingFromRegistration", true);
           Get.toNamed(Routes.registrationDetails);
         } else {
           Get.offAllNamed(Routes.loginEmail);

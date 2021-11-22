@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:hive/hive.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/models/checking_user/checking_user_model.dart';

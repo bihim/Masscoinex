@@ -5,7 +5,6 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
 class BankTransferScreen extends StatelessWidget {
-  final _selectedIndex = 0.obs;
   final _bankName = "".obs;
   final _bankAddress = "".obs;
   final _accountNo = "".obs;

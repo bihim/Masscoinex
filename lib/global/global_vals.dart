@@ -20,6 +20,7 @@ class GlobalVals {
   static const kycUploadModel = "kycUploadModel";
   static const profileInfo = "profileInfo";
   static const buyCryptos = "buyCryptos";
+  static const isLoggedIn = "isLoggedIn";
 
   //?ErrorToast
   static errorToast(String text) {

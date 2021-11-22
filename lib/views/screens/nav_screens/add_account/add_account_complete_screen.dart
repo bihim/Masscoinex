@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/global/global_vals.dart';
-import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:lottie/lottie.dart';
-import 'package:get_storage/get_storage.dart';
 
 class NavAddAccountCompleteScreen extends StatelessWidget {
   const NavAddAccountCompleteScreen({Key? key}) : super(key: key);

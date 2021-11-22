@@ -1,9 +1,7 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:masscoinex/controllers/login/login_controller_email.dart';
 import 'package:masscoinex/global/global_vals.dart';
-import 'package:masscoinex/routes/route_list.dart';
 import 'package:masscoinex/views/components/auth/login_no_account.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
@@ -11,6 +9,7 @@ import 'package:get/get.dart';
 class LoginEmailScreen extends StatelessWidget {
   final _emailTextController = TextEditingController();
   final _passwordTextController = TextEditingController();
+  final _isPasswordVisible = true.obs;
   final LoginControllerEmail _loginControllereEmail =
       Get.put(LoginControllerEmail());
 
@@ -216,21 +215,34 @@ class LoginEmailScreen extends StatelessWidget {
         ),
         Container(
           width: double.infinity,
-          child: TextField(
-            controller: _passwordTextController,
-            keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(
-                  5.h,
+          child: Obx(
+            () => TextField(
+              controller: _passwordTextController,
+              obscureText: _isPasswordVisible.value,
+              keyboardType: TextInputType.emailAddress,
+              decoration: InputDecoration(
+                suffixIcon: IconButton(
+                  onPressed: () {
+                    _isPasswordVisible.value = !_isPasswordVisible.value;
+                  },
+                  icon: Icon(
+                    _isPasswordVisible.value == true
+                        ? Icons.visibility_off_rounded
+                        : Icons.visibility_rounded,
+                  ),
                 ),
-                gapPadding: 1.0,
-              ),
-              hintText: "Password",
-              focusColor: Colors.blue,
-              contentPadding: EdgeInsets.symmetric(
-                vertical: 1.h,
-                horizontal: 2.h,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(
+                    5.h,
+                  ),
+                  gapPadding: 1.0,
+                ),
+                hintText: "Password",
+                focusColor: Colors.blue,
+                contentPadding: EdgeInsets.symmetric(
+                  vertical: 1.h,
+                  horizontal: 2.h,
+                ),
               ),
             ),
           ),

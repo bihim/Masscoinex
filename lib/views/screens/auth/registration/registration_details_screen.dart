@@ -89,7 +89,6 @@ class RegistrationDetailsScreen extends StatelessWidget {
     );
   }
   handleAppLifecycleState() {
-    AppLifecycleState _lastLifecyleState;
     SystemChannels.lifecycle.setMessageHandler((msg) {
 
       print('SystemChannels> $msg');
@@ -97,17 +96,13 @@ class RegistrationDetailsScreen extends StatelessWidget {
 
       switch (msg) {
         case "AppLifecycleState.paused":
-          _lastLifecyleState = AppLifecycleState.paused;
           break;
         case "AppLifecycleState.inactive":
-          _lastLifecyleState = AppLifecycleState.inactive;
           break;
         case "AppLifecycleState.resumed":
-          _lastLifecyleState = AppLifecycleState.resumed;
           Get.back();
           break;
         case "AppLifecycleState.suspending":
-          _lastLifecyleState = AppLifecycleState.detached;
           break;
         default:
       }

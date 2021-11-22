@@ -32,8 +32,9 @@ class ProfileScreen extends StatelessWidget {
   final _selectedDate = DateTime.now().obs;
   final isUpdated = true.obs;
   final _logger = Logger();
-  var image = XFile("").obs;
-  var isPicked = false.obs;
+  final image = XFile("").obs;
+  final isPicked = false.obs;
+  final isImageClicked = false.obs;
   @override
   Widget build(BuildContext context) {
     handleAppLifecycleState();
@@ -266,7 +267,7 @@ class ProfileScreen extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(
                                     5.h,
                                   ),
-                                  child: isPicked.value == true
+                                  child: isImageClicked.value == true
                                       ? Image.file(
                                           File(
                                             image.value.path,
@@ -389,6 +390,7 @@ class ProfileScreen extends StatelessWidget {
     var _response = await _request.send();
     _logger.d(_response.statusCode);
     _response.stream.transform(utf8.decoder).listen((event) {
+      isPicked.value = false;
       Get.back();
       getProfileInfo();
       Fluttertoast.showToast(
@@ -446,6 +448,7 @@ class ProfileScreen extends StatelessWidget {
               color: Colors.blue,
             ),
             onTap: () async {
+              isImageClicked.value = true;
               var _getGalleryImage =
                   await _picker.pickImage(source: ImageSource.gallery);
               if (_getGalleryImage != null) {
@@ -464,6 +467,7 @@ class ProfileScreen extends StatelessWidget {
               color: Colors.blue,
             ),
             onTap: () async {
+              isImageClicked.value = true;
               var _getGalleryImage =
                   await _picker.pickImage(source: ImageSource.camera);
               if (_getGalleryImage != null) {
@@ -484,30 +488,28 @@ class ProfileScreen extends StatelessWidget {
   }
 
   handleAppLifecycleState() {
-    AppLifecycleState _lastLifecyleState;
     SystemChannels.lifecycle.setMessageHandler((msg) {
       print('SystemChannels> $msg');
       _logger.d('SystemChannels> $msg');
 
       switch (msg) {
         case "AppLifecycleState.paused":
-          _lastLifecyleState = AppLifecycleState.paused;
           break;
         case "AppLifecycleState.inactive":
-          _lastLifecyleState = AppLifecycleState.inactive;
           break;
         case "AppLifecycleState.resumed":
-          _lastLifecyleState = AppLifecycleState.resumed;
-          Get.back();
           Future.delayed(Duration(milliseconds: 500), () {
             _logger.d("isPicked: ${isPicked.value}");
-            if (isPicked.value == true) {
-              updateProfilePicture();
+            if (isImageClicked.value == true) {
+              Get.back();
+              isImageClicked.value = false;
+              if (isPicked.value == true) {
+                updateProfilePicture();
+              }
             }
           });
           break;
         case "AppLifecycleState.suspending":
-          _lastLifecyleState = AppLifecycleState.detached;
           break;
         default:
       }

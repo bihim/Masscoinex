@@ -1,12 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:logger/logger.dart';
-import 'package:masscoinex/controllers/kyc/document_controller.dart';
 import 'package:masscoinex/controllers/nav_kyc/nav_document_controller.dart';
 import 'package:masscoinex/controllers/nav_kyc/verify_registration_details_controller.dart';
-import 'package:masscoinex/controllers/registration_details_controller.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 import 'component/nav_drawer_continue_button.dart';
@@ -39,6 +36,7 @@ class VerifyDocumentScreen extends StatelessWidget {
                   height: 5.h,
                 ),
                 _upload(() {
+                  registrationDetailsController.isCompleted.value = false;
                   _documentController.pickFrontSize();
                 }),
                 SizedBox(
@@ -68,7 +66,8 @@ class VerifyDocumentScreen extends StatelessWidget {
                     "${_documentController.isPicked.value} and ${_documentController.isPicked2.value}");
                 if (_documentController.isPicked.value == true &&
                     _documentController.isPicked2.value == true) {
-                  _logger.d("Document ${_documentController.isPicked.value} and ${_documentController.isPicked2.value}");
+                  _logger.d(
+                      "Document ${_documentController.isPicked.value} and ${_documentController.isPicked2.value}");
                   registrationDetailsController.uploadImageFront.value =
                       _documentController.image.value;
                   registrationDetailsController.uploadImageBack.value =

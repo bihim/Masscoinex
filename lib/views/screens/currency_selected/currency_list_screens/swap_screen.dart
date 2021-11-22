@@ -5,9 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
 class CurrencySwapScreen extends StatelessWidget {
-  final _dropdownValueFrom = 'BTC'.obs;
   final _dropdownValueTo = 'BTC'.obs;
-  final _dropDownValueFromList = ['BTC', 'RPL', 'EOS', 'ETH', 'ION'];
   final _dropDownValueToList = ['BTC', 'RPL', 'EOS', 'ETH', 'ION'];
   final TextEditingController _cryptoValueController =
       TextEditingController(text: "150000");
@@ -17,8 +15,8 @@ class CurrencySwapScreen extends StatelessWidget {
       TextEditingController(text: "1.98");
   final logger = Logger();
 
-  final String currentCurrencyText;
-  CurrencySwapScreen({Key? key, required this.currentCurrencyText})
+  final int index;
+  CurrencySwapScreen({Key? key, required this.index})
       : super(key: key);
 
   @override
@@ -269,7 +267,7 @@ class CurrencySwapScreen extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
                   child: Text(
-                    currentCurrencyText,
+                    "currentCurrencyText",
                   ),
                 ),
               )

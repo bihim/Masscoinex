@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:masscoinex/controllers/registration_details_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
-import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class ContinueButton extends StatelessWidget {

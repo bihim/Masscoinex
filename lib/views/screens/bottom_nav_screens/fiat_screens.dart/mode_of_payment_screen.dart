@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:masscoinex/controllers/fiat_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
-import 'package:masscoinex/models/fiat_history_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';

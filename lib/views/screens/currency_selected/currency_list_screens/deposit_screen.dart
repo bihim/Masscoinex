@@ -1,15 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:get/get.dart';
 
 class DepositScreen extends StatelessWidget {
-  final _dropdownValueFrom = 'BTC'.obs;
-  final _dropDownValueFromList = ['BTC', 'RPL', 'EOS', 'ETH', 'ION'];
   final _textEditingController =
       TextEditingController(text: "XhoP8eoo29fz3GXpkhT6XBkNamLsbbpolqGnKOLh");
-  final String currentCurrencyText;
-  DepositScreen({Key? key, required this.currentCurrencyText})
+  final int index;
+  DepositScreen({Key? key, required this.index})
       : super(key: key);
   @override
   Widget build(BuildContext context) {
@@ -65,7 +62,7 @@ class DepositScreen extends StatelessWidget {
                           child: Padding(
                             padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
                             child: Text(
-                              currentCurrencyText,
+                              "currentCurrencyText",
                             ),
                           ),
                         )
@@ -165,7 +162,7 @@ class DepositScreen extends StatelessWidget {
     );
   }
 
-  Widget _dropDown(CrossAxisAlignment crossAxisAlignment, String text,
+  /* Widget _dropDown(CrossAxisAlignment crossAxisAlignment, String text,
       RxString dropdownInitValue, List<String> dropdownList) {
     return Column(
       crossAxisAlignment: crossAxisAlignment,
@@ -213,5 +210,5 @@ class DepositScreen extends StatelessWidget {
         )
       ],
     );
-  }
+  } */
 }

@@ -1,12 +1,9 @@
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
-import 'package:masscoinex/controllers/kyc/selfie_controller.dart';
 import 'package:masscoinex/controllers/nav_kyc/nav_selfie_controller.dart';
 import 'package:masscoinex/controllers/nav_kyc/verify_registration_details_controller.dart';
-import 'package:masscoinex/controllers/registration_details_controller.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'component/nav_drawer_continue_button.dart';
 

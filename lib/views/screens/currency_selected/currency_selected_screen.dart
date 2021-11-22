@@ -22,23 +22,19 @@ class CurrencySelectedScreen extends StatelessWidget {
     final int _index = int.parse(Get.parameters["index"]!);
     var _currencyScreens = [
       CurrencySwapScreen(
-        currentCurrencyText: _currencySelectedController
-            .dashBoardCryptoStatusModels[_index].cryptoName,
+        index: _index,
       ),
       BuyScreen(
         index: _index,
       ),
       SellScreen(
-        currentCurrencyText: _currencySelectedController
-            .dashBoardCryptoStatusModels[_index].cryptoName,
+        index: _index,
       ),
       DepositScreen(
-        currentCurrencyText: _currencySelectedController
-            .dashBoardCryptoStatusModels[_index].cryptoName,
+        index: _index,
       ),
       WithdrawScreen(
-        currentCurrencyText: _currencySelectedController
-            .dashBoardCryptoStatusModels[_index].cryptoName,
+        index: _index,
       ),
     ];
     //?Add history. Work on history
@@ -92,11 +88,14 @@ class CurrencySelectedScreen extends StatelessWidget {
             });
           } else {
             //?Implement history here
-            Get.toNamed(Routes.transactionHistory, arguments: [
+            /* Get.toNamed(Routes.transactionHistory, arguments: [
               _currencySelectedController
                   .dashBoardCryptoStatusModels[_index].cryptoNameSmall,
               _currencySelectedController
                   .dashBoardCryptoStatusModels[_index].cryptoAsset,
+            ]); */
+            Get.toNamed(Routes.transactionHistory, arguments: [
+              _index,
             ]);
           }
         },

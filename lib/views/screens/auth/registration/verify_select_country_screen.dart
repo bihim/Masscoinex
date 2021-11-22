@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:masscoinex/controllers/select_country_controller.dart';
 import 'package:masscoinex/controllers/verify_select_country_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';

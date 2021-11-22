@@ -24,7 +24,7 @@ import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/mo
 import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/bank_transfer_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/card_payment_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/upi_payment_screen.dart';
-import 'package:masscoinex/views/screens/currency_selected/currency_screens/history_screen.dart';
+import 'package:masscoinex/views/screens/currency_selected/currency_screens/transaction_history_screen.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_selected_screen.dart';
 import 'package:masscoinex/views/screens/main_screen.dart';
 import 'package:masscoinex/views/screens/main_screen_copy.dart';

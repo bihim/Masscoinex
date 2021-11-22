@@ -11,7 +11,9 @@ class VerifyRegistrationDetailsScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    handleAppLifecycleState();
+    if (!_registrationDetailsController.isCompleted.value) {
+      handleAppLifecycleState();
+    }
     return Obx(
       () => WillPopScope(
         onWillPop: () {
@@ -141,25 +143,19 @@ class VerifyRegistrationDetailsScreen extends StatelessWidget {
   }
 
   handleAppLifecycleState() {
-    AppLifecycleState _lastLifecyleState;
     SystemChannels.lifecycle.setMessageHandler((msg) {
-
       print('SystemChannels> $msg');
       //_logger.d('SystemChannels> $msg');
 
       switch (msg) {
         case "AppLifecycleState.paused":
-          _lastLifecyleState = AppLifecycleState.paused;
           break;
         case "AppLifecycleState.inactive":
-          _lastLifecyleState = AppLifecycleState.inactive;
           break;
         case "AppLifecycleState.resumed":
-          _lastLifecyleState = AppLifecycleState.resumed;
           Get.back();
           break;
         case "AppLifecycleState.suspending":
-          _lastLifecyleState = AppLifecycleState.detached;
           break;
         default:
       }

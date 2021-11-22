@@ -8,7 +8,6 @@ import 'package:hive/hive.dart';
 import 'package:masscoinex/controllers/mobile_verification_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/models/register_user/register_user_model.dart';
-import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 

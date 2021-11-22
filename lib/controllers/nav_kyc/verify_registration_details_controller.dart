@@ -1,5 +1,4 @@
 import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
@@ -30,6 +29,7 @@ class VerifyRegistrationDetailsController extends GetxController {
   var isSelfieSelected = false.obs;
   var isDeclarationSelected = false.obs;
   var isUploaded = false.obs;
+  var isCompleted = false.obs;
   final _logger = Logger();
 
   List<StatelessWidget> screens(
@@ -51,13 +51,14 @@ class VerifyRegistrationDetailsController extends GetxController {
   }
 
   uploadImagesToKyc() async {
+    isCompleted.value = false;
     isUploaded.value = true;
     var _box = await Hive.openBox(GlobalVals.hiveBox);
     final _userInfo =
         UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
     final _token = _userInfo.result.token;
-    String _testToken =
-        "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk0YmZlNWViYzhjYjhhYjZiYzRkMWZjM2FjYjFkM2ExMmZlZmY4ZDNmYWUzNDNkY2RmNDhkNGIxMmNiMzMzZTRlOThiZTcxNzQ3MmYxMGRjIn0.eyJhdWQiOiIxIiwianRpIjoiOTRiZmU1ZWJjOGNiOGFiNmJjNGQxZmMzYWNiMWQzYTEyZmVmZjhkM2ZhZTM0M2RjZGY0OGQ0YjEyY2IzMzNlNGU5OGJlNzE3NDcyZjEwZGMiLCJpYXQiOjE2MzU4MjA2MTIsIm5iZiI6MTYzNTgyMDYxMiwiZXhwIjoxNjY3MzU2NjEyLCJzdWIiOiIxODA0Iiwic2NvcGVzIjpbXX0.Mxyg-d1YWlyujd1hKJ1ncQXPlWO_6IXFi7CW7sk-NnMaZRLGEg1yyS51gE9p6rjbg9SK02wWW0NyKEi21tTFGKffOvaChtStYjQYCg5B-b6IL3xEem5OnISmreFlxkeOVIk0IYutV-K_kKaq7RntbbqxYfMTfJ3qIaLW4oiSBaaDpG_8ndBGJyy3l5zmNjCtQmPDiDtF1T8lTlwF-KNvt0_MXmbeqA5_tvVF2DW5hKhwTacngWarNCWL9BzSfukqxD8C2c9p0f8s2Qt4IZLAYDyxYdPDfoIm7oFkiH2sYBcoSEK1ZLgX1MHKe_YbbmuEU5MGfBal4OQxqmX1gCTXYqImoiZgEemzQCohn6DtGC5WFLyKTIXn74MGpou2pyuyDmIse35zAVOsy5B9rvTUf3JfVQLHSQNfH8M6GNsc_hAH7r5W-q9bkweHxuoa0ptydxoCSTsFhP325D8lwA390kizQCDcczH1kXg-Ifoa3OPCDopwL_Idai-evAEVp2ZD7tmXMEFVvOq3GuJRi3P-G45tWtr6TWDFPBfHYM7muzDYT-k9_MOHm4LSJE5Lf9dZ2nidQ8z06nWIE3He2G3sdq16dO5s5C6GBRJfgLvpd-mPHVfCkutY8PO54UE1ytUtbUdailiN_tc5mzGpGdNqzfKNhFxXFyDKZSlNiNvdE-s";
+    /* String _testToken =
+        "eyJ0eXAiOiJKV1QiLCJhbGciOiJSUzI1NiIsImp0aSI6Ijk0YmZlNWViYzhjYjhhYjZiYzRkMWZjM2FjYjFkM2ExMmZlZmY4ZDNmYWUzNDNkY2RmNDhkNGIxMmNiMzMzZTRlOThiZTcxNzQ3MmYxMGRjIn0.eyJhdWQiOiIxIiwianRpIjoiOTRiZmU1ZWJjOGNiOGFiNmJjNGQxZmMzYWNiMWQzYTEyZmVmZjhkM2ZhZTM0M2RjZGY0OGQ0YjEyY2IzMzNlNGU5OGJlNzE3NDcyZjEwZGMiLCJpYXQiOjE2MzU4MjA2MTIsIm5iZiI6MTYzNTgyMDYxMiwiZXhwIjoxNjY3MzU2NjEyLCJzdWIiOiIxODA0Iiwic2NvcGVzIjpbXX0.Mxyg-d1YWlyujd1hKJ1ncQXPlWO_6IXFi7CW7sk-NnMaZRLGEg1yyS51gE9p6rjbg9SK02wWW0NyKEi21tTFGKffOvaChtStYjQYCg5B-b6IL3xEem5OnISmreFlxkeOVIk0IYutV-K_kKaq7RntbbqxYfMTfJ3qIaLW4oiSBaaDpG_8ndBGJyy3l5zmNjCtQmPDiDtF1T8lTlwF-KNvt0_MXmbeqA5_tvVF2DW5hKhwTacngWarNCWL9BzSfukqxD8C2c9p0f8s2Qt4IZLAYDyxYdPDfoIm7oFkiH2sYBcoSEK1ZLgX1MHKe_YbbmuEU5MGfBal4OQxqmX1gCTXYqImoiZgEemzQCohn6DtGC5WFLyKTIXn74MGpou2pyuyDmIse35zAVOsy5B9rvTUf3JfVQLHSQNfH8M6GNsc_hAH7r5W-q9bkweHxuoa0ptydxoCSTsFhP325D8lwA390kizQCDcczH1kXg-Ifoa3OPCDopwL_Idai-evAEVp2ZD7tmXMEFVvOq3GuJRi3P-G45tWtr6TWDFPBfHYM7muzDYT-k9_MOHm4LSJE5Lf9dZ2nidQ8z06nWIE3He2G3sdq16dO5s5C6GBRJfgLvpd-mPHVfCkutY8PO54UE1ytUtbUdailiN_tc5mzGpGdNqzfKNhFxXFyDKZSlNiNvdE-s"; */
     var _request = new http.MultipartRequest(
         "POST", Uri.parse(ApiRoutes.baseUrl + ApiRoutes.kycUpgrade));
     Map<String, String> _header = {
@@ -113,7 +114,14 @@ class VerifyRegistrationDetailsController extends GetxController {
       var _box = await Hive.openBox(GlobalVals.hiveBox);
       _box.put(GlobalVals.kycUploadModel, event);
       Get.offNamed(Routes.verifyKycUpload);
+      isCompleted.value = true;
       _logger.d(event);
     });
+  }
+
+  @override
+  void onClose() {
+    isCompleted.value = true;
+    super.onClose();
   }
 }

@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/controllers/dashboard/dashboard_controller.dart';
@@ -58,47 +59,53 @@ class DashboardScreen extends StatelessWidget {
                                             height: 6.h,
                                             width: 6.h,
                                             padding: EdgeInsets.all(1.5.h),
-                                            child: Image.network(
-                                              _result
+                                            child: CachedNetworkImage(
+                                              imageUrl: _result
                                                   .cryptoData[index].coinImage,
                                               fit: BoxFit.fill,
+                                              errorWidget:
+                                                  (context, url, error) =>
+                                                      Icon(Icons.error),
                                             ),
                                           ),
                                         ),
                                         SizedBox(
                                           width: 4.w,
                                         ),
-                                        RichText(
-                                          text: TextSpan(
-                                            style: TextStyle(
-                                              color: Colors.black,
+                                        Expanded(
+                                          child: RichText(
+                                            overflow: TextOverflow.fade,
+                                            text: TextSpan(
+                                              style: TextStyle(
+                                                color: Colors.black,
+                                              ),
+                                              children: [
+                                                TextSpan(
+                                                  text: _result
+                                                      .cryptoData[index].coinName,
+                                                  style: TextStyle(
+                                                    fontSize: 17.sp,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text:
+                                                      "(${_result.cryptoData[index].coinSymbol})" +
+                                                          "\n",
+                                                  style: TextStyle(
+                                                    fontSize: 15.sp,
+                                                  ),
+                                                ),
+                                                TextSpan(
+                                                  text: _result.cryptoData[index]
+                                                      .cryptoWallet
+                                                      .toString(),
+                                                  style: TextStyle(
+                                                    fontWeight: FontWeight.bold,
+                                                    color: Colors.green,
+                                                  ),
+                                                ),
+                                              ],
                                             ),
-                                            children: [
-                                              TextSpan(
-                                                text: _result
-                                                    .cryptoData[index].coinName,
-                                                style: TextStyle(
-                                                  fontSize: 17.sp,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text:
-                                                    "(${_result.cryptoData[index].coinSymbol})" +
-                                                        "\n",
-                                                style: TextStyle(
-                                                  fontSize: 15.sp,
-                                                ),
-                                              ),
-                                              TextSpan(
-                                                text: _result.cryptoData[index]
-                                                    .cryptoWallet
-                                                    .toString(),
-                                                style: TextStyle(
-                                                  fontWeight: FontWeight.bold,
-                                                  color: Colors.green,
-                                                ),
-                                              ),
-                                            ],
                                           ),
                                         ),
                                       ],
@@ -179,8 +186,8 @@ class DashboardScreen extends StatelessWidget {
                               ),
                             ),
                             onTap: () {
-                              Get.toNamed(Routes.currencySelected,
-                                  parameters: {'index': "0"});
+                              /* Get.toNamed(Routes.currencySelected,
+                                  parameters: {'index': "0"}); */
                             },
                           ),
                         );

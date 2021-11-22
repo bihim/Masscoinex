@@ -8,9 +8,7 @@ import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
 import 'package:logger/logger.dart';
 import 'package:masscoinex/api/api_routes.dart';
-import 'package:masscoinex/models/register_user/register_user_model.dart';
 import 'package:masscoinex/models/user_model.dart';
-import 'package:masscoinex/routes/route_list.dart';
 
 class VerifySelectCountryController extends GetxController {
   var selectedIndex = 0.obs;

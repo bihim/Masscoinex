@@ -1,14 +1,12 @@
 import 'package:get/get.dart';
+import 'package:logger/logger.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'dart:convert';
 import 'package:hive/hive.dart';
 import 'package:http/http.dart' as http;
-import 'package:logger/logger.dart';
 import 'package:masscoinex/api/api_routes.dart';
-import 'package:masscoinex/models/checking_user/checking_user_model.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/models/user_model.dart';
-import 'package:masscoinex/routes/route_list.dart';
 import 'package:masscoinex/models/dashboard_crypto_status_model.dart';
 
 class DashBoardControllerCopy extends GetxController {
@@ -97,4 +95,14 @@ class DashBoardControllerCopy extends GetxController {
       priceColor: GlobalVals.downColor,
     ),
   ];
+  @override
+  void onReady() {
+    super.onReady();
+    _logger.d("On ready");
+  }
+  @override
+  void onClose() {
+    super.onClose();
+    _logger.d("On close");
+  }
 }

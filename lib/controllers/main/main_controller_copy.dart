@@ -1,9 +1,7 @@
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:logger/logger.dart';
 import 'package:masscoinex/controllers/dashboard/dashboard_controller_copy.dart';
-import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screen_copy.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/fiat_main/fiat_wallet_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/profile_screen.dart';

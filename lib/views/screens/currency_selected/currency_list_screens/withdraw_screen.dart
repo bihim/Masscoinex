@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
-import 'package:get/get.dart';
 
 class WithdrawScreen extends StatelessWidget {
-  final _dropdownValueFrom = 'BTC'.obs;
-  final _dropDownValueFromList = ['BTC', 'RPL', 'EOS', 'ETH', 'ION'];
   final _textEditingController = TextEditingController(text: "test@mail.com");
   final TextEditingController _cryptoValueController =
       TextEditingController(text: "1");
@@ -15,8 +12,8 @@ class WithdrawScreen extends StatelessWidget {
       TextEditingController(text: "1200");
   final TextEditingController _receivingCryptoController =
       TextEditingController(text: "1634568");
-  final String currentCurrencyText;
-  WithdrawScreen({Key? key, required this.currentCurrencyText})
+  final int index;
+  WithdrawScreen({Key? key, required this.index})
       : super(key: key);
 
   @override
@@ -71,7 +68,7 @@ class WithdrawScreen extends StatelessWidget {
                         child: Padding(
                           padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
                           child: Text(
-                            currentCurrencyText,
+                            "currentCurrencyText",
                           ),
                         ),
                       )
@@ -172,7 +169,7 @@ class WithdrawScreen extends StatelessWidget {
     );
   }
 
-  Widget _dropDown(CrossAxisAlignment crossAxisAlignment, String text,
+  /* Widget _dropDown(CrossAxisAlignment crossAxisAlignment, String text,
       RxString dropdownInitValue, List<String> dropdownList) {
     return Column(
       crossAxisAlignment: crossAxisAlignment,
@@ -220,7 +217,7 @@ class WithdrawScreen extends StatelessWidget {
         )
       ],
     );
-  }
+  } */
 
   Row _cryptoValueConvt() {
     return Row(

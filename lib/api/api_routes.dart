@@ -16,4 +16,10 @@ class ApiRoutes {
   static const getFiatCryptoValue = "get-fiat-crypto-value";
   static const getFiatCryptoAmount = "get-fiat-crypto-amount";
   static const buyFiatToCrypto = "buy-fiat-to-crypto";
+  static const history = "crypto-transaction-history";
+
+  /*Sell*/
+  static const getFiatSellCryptoValue = "get-fiat-sell-crypto-value";
+  static const getFiatSellCryptoAmount = "get-fiat-sell-crypto-amount";
+  static const saveSellCrypto = "save-sell-crypto";
 }

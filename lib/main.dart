@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:masscoinex/routes/pages.dart';
 import 'package:masscoinex/routes/route_list.dart';
@@ -11,7 +10,7 @@ import 'package:path_provider/path_provider.dart' as path_provider;
 import 'global/global_vals.dart';
 
 void main() async {
-  await GetStorage.init();
+  WidgetsFlutterBinding.ensureInitialized();
   final appDocumentDir = await path_provider.getApplicationDocumentsDirectory();
   Hive.init(appDocumentDir.path);
   await Hive.openBox(GlobalVals.hiveBox);

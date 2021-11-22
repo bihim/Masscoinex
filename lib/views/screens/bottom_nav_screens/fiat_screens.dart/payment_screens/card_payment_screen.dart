@@ -157,7 +157,7 @@ class CardPaymentScreen extends StatelessWidget {
     );
   }
 
-  Text _bankNames(String initText, RxString text) {
+  /* Text _bankNames(String initText, RxString text) {
     return Text(
       "$initText: ${text.value}",
       style: TextStyle(
@@ -166,7 +166,7 @@ class CardPaymentScreen extends StatelessWidget {
         fontSize: 16.sp,
       ),
     );
-  }
+  } */
 
   Container _bankdropdown() {
     List<String> _bankNames = [];

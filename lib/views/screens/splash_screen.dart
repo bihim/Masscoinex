@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get_storage/get_storage.dart';
 import 'package:hive/hive.dart';
 import 'package:logger/logger.dart';
 import 'package:masscoinex/api/api_routes.dart';
@@ -55,10 +54,16 @@ class _MyStatefulWidgetState extends State<SplashScreen>
 
   @override
   void initState() {
-    final box = GetStorage();
-    isLoggedIn = box.read("loggedIn") ?? false;
-    _logger.d(isLoggedIn);
+    /* final box = GetStorage(); */
+    //isLoggedIn = box.read("loggedIn") ?? false;
+    getLoginStatus();
     super.initState();
+  }
+
+  void getLoginStatus() async {
+    final _box = await Hive.openBox(GlobalVals.hiveBox);
+    isLoggedIn = _box.get(GlobalVals.isLoggedIn) ?? false;
+    _logger.d(isLoggedIn);
   }
 
   @override
@@ -69,10 +74,10 @@ class _MyStatefulWidgetState extends State<SplashScreen>
 
   @override
   Widget build(BuildContext context) {
-    /* Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(Duration(seconds: 3), () {
       Get.offAllNamed(
           isLoggedIn == true ? Routes.mainScreenCopy : Routes.mainScreen);
-    }); */
+    });
     getProfileInfo();
     return Scaffold(
       backgroundColor: GlobalVals.backgroundColor,
@@ -94,11 +99,10 @@ class _MyStatefulWidgetState extends State<SplashScreen>
 
   getProfileInfo() async {
     final _box = await Hive.openBox(GlobalVals.hiveBox);
-    if (_box.get(GlobalVals.user).toString().isEmpty) {
-      Future.delayed(Duration(seconds: 3), () {
-      Get.toNamed(Routes.mainScreen);
-    });
-      
+    if (!isLoggedIn) {
+      /* Future.delayed(Duration(seconds: 3), () {
+        Get.toNamed(Routes.mainScreen);
+      }); */
     } else {
       final _userInfo =
           UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
@@ -116,14 +120,14 @@ class _MyStatefulWidgetState extends State<SplashScreen>
       _logger.d(_response.body);
       if (_response.statusCode == 200) {
         _box.put(GlobalVals.profileInfo, _response.body);
-        Get.toNamed(Routes.mainScreenCopy);
+        //Get.offAllNamed(Routes.mainScreenCopy);
         //responseResult.value = _response.body;
         // var _result = DashboardModel.fromJson(json.decode(_response.body));
         //resultLength.value = _result.cryptoData.length;
         /* 
       _logger.d(_token); */
       } else {
-        Get.toNamed(Routes.mainScreen);
+        //Get.offAllNamed(Routes.mainScreen);
         GlobalVals.errorToast("Server Error");
       }
     }

@@ -6,11 +6,6 @@ import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/models/currency_selector_list_model.dart';
 import 'package:masscoinex/models/dashboard_crypto_status_model.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
-import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/buy_screen.dart';
-import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/deposit_screen.dart';
-import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/sell_screen.dart';
-import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/swap_screen.dart';
-import 'package:masscoinex/views/screens/currency_selected/currency_list_screens/withdraw_screen.dart';
 import 'package:flutter/material.dart';
 
 class CurrencySelectedController extends GetxController {

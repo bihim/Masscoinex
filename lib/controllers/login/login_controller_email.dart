@@ -14,11 +14,14 @@ class LoginControllerEmail extends GetxController {
   final _logger = Logger();
 
   checkUserCredentials(String email, String password) async {
+    _logger.d("This Api Called");
     isLoggingLoading.value = true;
     final Map<String, dynamic> _body = {"email": email, "password": password};
     var _response = await http.post(
         Uri.parse(ApiRoutes.baseUrl + ApiRoutes.checkingUser),
         body: _body);
+
+    _logger.d(_response.body);
 
     if (_response.statusCode == 200) {
       isLoggingLoading.value = false;
@@ -39,7 +42,9 @@ class LoginControllerEmail extends GetxController {
       }
     } else {
       isLoggingLoading.value = false;
-      GlobalVals.errorToast("Server Error",);
+      GlobalVals.errorToast(
+        "Server Error",
+      );
       /* Fluttertoast.showToast(
           msg: "Server Error",
           backgroundColor: Colors.red,

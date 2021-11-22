@@ -9,12 +9,12 @@ import 'package:get/get.dart';
 class BuyScreen extends StatelessWidget {
   final _logger = Logger();
   final int index;
-  final _buyController = Get.put(BuyController());
+  final _controller = Get.put(BuyController());
   BuyScreen({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    _buyController.index.value = index;
+    _controller.index.value = index;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 1.h,
@@ -60,11 +60,13 @@ class BuyScreen extends StatelessWidget {
             ),
             Container(
               width: double.infinity,
-              child: Text(
-                "(Fee 16.40 USD)",
-                style: TextStyle(
-                  color: Colors.grey,
-                  fontSize: 14.sp,
+              child: Obx(
+                () => Text(
+                  "(Fee ${_controller.transactionFeeRate.value}${_controller.dashboardValue.wallet.currency})",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14.sp,
+                  ),
                 ),
               ),
             ),
@@ -72,6 +74,16 @@ class BuyScreen extends StatelessWidget {
               height: 3.h,
             ),
             _denominated(),
+            SizedBox(
+              height: 2.h,
+            ),
+            Obx(
+              () => SizedBox(
+                child: _controller.isTypeFinished.value == true
+                    ? SizedBox()
+                    : CircularProgressIndicator(),
+              ),
+            ),
           ],
         ),
       ),
@@ -105,7 +117,7 @@ class BuyScreen extends StatelessWidget {
           child: TextField(
             enabled: false,
             cursorColor: GlobalVals.appbarColor,
-            controller: _buyController.denominatedValue,
+            controller: _controller.denominatedValue,
             decoration: InputDecoration(
               hintText: "Denomitated Value",
               border: UnderlineInputBorder(
@@ -154,14 +166,15 @@ class BuyScreen extends StatelessWidget {
                   textAlign: TextAlign.start,
                   keyboardType: TextInputType.number,
                   cursorColor: GlobalVals.appbarColor,
-                  controller: _buyController.cryptoValueController,
+                  controller: _controller.cryptoValueController,
                   decoration: InputDecoration(
-                    prefixIcon: IconButton(
+                    prefix: Text("     "),
+                    /* prefixIcon: IconButton(
                       padding: EdgeInsets.zero,
                       iconSize: 2.h,
                       onPressed: () {
-                        _buyController.getBuy(
-                            _buyController.cryptoValueController.text,
+                        _controller.getBuy(
+                            _controller.cryptoValueController.text,
                             "crypto_value",
                             ApiRoutes.getFiatCryptoAmount);
                       },
@@ -169,11 +182,22 @@ class BuyScreen extends StatelessWidget {
                         Icons.refresh,
                         size: 2.h,
                       ),
-                    ),
+                    ), */
                     border: UnderlineInputBorder(
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  onChanged: (text) {
+                    Future.delayed(Duration(milliseconds: 800), () {
+                      if (text == _controller.cryptoValueController.text) {
+                        _controller.getBuy(
+                            _controller.cryptoValueController.text,
+                            "crypto_value",
+                            ApiRoutes.getFiatCryptoAmount);
+                        _logger.d(_controller.cryptoValueController.text);
+                      }
+                    });
+                  },
                 ),
               ),
             ],
@@ -210,16 +234,16 @@ class BuyScreen extends StatelessWidget {
                   keyboardType: TextInputType.number,
                   textAlign: TextAlign.end,
                   cursorColor: GlobalVals.appbarColor,
-                  controller: _buyController.amountController,
+                  controller: _controller.amountController,
                   decoration: InputDecoration(
                     suffix: Text(
-                        "${_buyController.dashboardValue.wallet.currency}  "),
-                    suffixIcon: IconButton(
+                        "${_controller.dashboardValue.wallet.currency}        "),
+                    /* suffixIcon: IconButton(
                       padding: EdgeInsets.zero,
                       iconSize: 2.h,
                       onPressed: () {
-                        _buyController.getBuy(
-                            _buyController.amountController.text,
+                        _controller.getBuy(
+                            _controller.amountController.text,
                             "crypto_amount",
                             ApiRoutes.getFiatCryptoValue);
                       },
@@ -227,11 +251,22 @@ class BuyScreen extends StatelessWidget {
                         Icons.refresh,
                         size: 2.h,
                       ),
-                    ),
+                    ), */
                     border: UnderlineInputBorder(
                       borderSide: BorderSide.none,
                     ),
                   ),
+                  onChanged: (text) {
+                    Future.delayed(Duration(milliseconds: 800), () {
+                      if (text == _controller.amountController.text) {
+                        _controller.getBuy(
+                            _controller.amountController.text,
+                            "crypto_amount",
+                            ApiRoutes.getFiatCryptoValue);
+                        _logger.d(_controller.amountController.text);
+                      }
+                    });
+                  },
                 ),
               ),
             ],
@@ -273,7 +308,7 @@ class BuyScreen extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
                   child: Text(
-                    _buyController.dashboardValue.cryptoData[index].coinName,
+                    _controller.dashboardValue.cryptoData[index].coinName,
                   ),
                 ),
               )
@@ -316,7 +351,7 @@ class BuyScreen extends StatelessWidget {
                 child: Padding(
                   padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
                   child: Text(
-                    _buyController.selectedCurrency.value,
+                    _controller.selectedCurrency.value,
                   ),
                 ),
               )
@@ -355,11 +390,11 @@ class BuyScreen extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            _buyController.buyCoin();
+            _controller.buyCoin();
           },
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 2.h),
-            child: _buyController.isBought.value == true
+            child: _controller.isBought.value == true
                 ? const Text("Continue")
                 : const CircularProgressIndicator(
                     color: Colors.white,
