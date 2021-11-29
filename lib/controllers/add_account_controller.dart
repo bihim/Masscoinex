@@ -1,8 +1,22 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:get/get.dart';
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:logger/logger.dart';
+import 'package:masscoinex/api/api_routes.dart';
 import 'package:masscoinex/global/global_vals.dart';
+import 'package:masscoinex/models/card/add/add_card_fields_model.dart';
+import 'package:masscoinex/models/card/add/add_card_fields_success_model.dart';
+import 'package:masscoinex/routes/route_list.dart';
+import 'package:path/path.dart';
+import 'package:masscoinex/models/user_model.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
+import 'package:http/http.dart' as http;
+import 'package:video_player/video_player.dart';
 
 class AddAccountController extends GetxController {
   final currentIndex = 0.obs;
@@ -12,22 +26,94 @@ class AddAccountController extends GetxController {
   final RxList<Column> addCard = [Column()].obs;
   var avatar = "assets/avatar.jpg".obs;
   var avatar2 = "assets/avatar.jpg".obs;
+  var avatar4 = "assets/avatar.jpg".obs;
+  var video3 = "assets/avatar.jpg".obs;
   var isFromAsset = true.obs;
   var isFromAsset2 = true.obs;
+  var isFromAsset4 = true.obs;
+  var isFromAsset3 = true.obs;
+  var isUploaded = true.obs;
+  var isVisible = false.obs;
+  late VideoPlayerController videoPlayerController;
   var size = Size(10.h, 10.h);
   var tabBar = TabBar(
     tabs: [],
   );
   var cardScreenIndex = 0.obs;
+  final _logger = Logger();
+  final _box = Hive.box(GlobalVals.hiveBox);
 
-  var addAccountScreens = [
-    
-  ];
+  var isCardAdded = true.obs;
+
+  /*Add bank text controller fields*/
+  var nameOnCardController = TextEditingController();
+  var billingAddressController = TextEditingController();
+  var telephoneNumberController = TextEditingController();
+  var countryController = TextEditingController();
+  var cardNumberController = TextEditingController();
+  var cardTypeController = TextEditingController();
+  var cardExpiryController = TextEditingController();
+  var cardCVCController = TextEditingController();
+
+  addCardDetails() async {
+    isCardAdded.value = false;
+    final _userInfo =
+        UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
+    final _token = _userInfo.result.token;
+    Map<String, String> _header = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    final Map<String, dynamic> _body = {
+      "name_on_card": nameOnCardController.text,
+      "billing_address": billingAddressController.text,
+      "telephone": telephoneNumberController.text,
+      "country": countryController.text,
+      "card_number": cardNumberController.text,
+      "card_type": cardTypeController.text,
+      "card_expiry": cardExpiryController.text,
+      "card_cvc": cardCVCController.text,
+    };
+
+    var _response = await http.post(
+        Uri.parse(ApiRoutes.baseUrl + ApiRoutes.addCard),
+        body: _body,
+        headers: _header);
+
+    _logger.d(_response.body);
+    if (_response.statusCode == 200) {
+      isCardAdded.value = true;
+      var _status = addCardFieldsModelFromJson(_response.body);
+      if (_status.code == "1") {
+        //var _result = addCardFieldsSuccessModelFromJson(_response.body);
+        _box.put(GlobalVals.addCard, _response.body);
+        cardScreenIndex.value = 1;
+      } else {
+        Fluttertoast.showToast(
+            msg: _status.message, backgroundColor: Colors.red);
+      }
+    } else {
+      isCardAdded.value = true;
+      Fluttertoast.showToast(
+          msg: "Server error: ${_response.statusCode}",
+          backgroundColor: Colors.red);
+    }
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    videoPlayerController.dispose();
+  }
 
   @override
   void onInit() {
     addBank.add(_bankFields());
     addCard.add(_cardFields());
+    /*videoPlayerController = VideoPlayerController.network(
+        "https://flutter.github.io/assets-for-api-docs/assets/videos/bee.mp4");
+    videoPlayerController.initialize();
+    videoPlayerController.play();*/
     tabBar = TabBar(
       onTap: (index) {
         currentIndex.value = index;
@@ -74,21 +160,220 @@ class AddAccountController extends GetxController {
   }
 
   pickImage() async {
-    final ImagePicker _picker = ImagePicker();
+    /*final ImagePicker _picker = ImagePicker();
     final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
     if (photo != null) {
       isFromAsset.value = false;
       avatar.value = photo.path;
-    }
+    }*/
+    Get.defaultDialog(
+      title: "Choose Option",
+      middleText: "Pick one of the option to pick",
+      content: Column(
+        children: [
+          ListTile(
+            title: Text("Choose from gallery"),
+            leading: Icon(
+              Icons.photo_size_select_actual_rounded,
+              color: Colors.blue,
+            ),
+            onTap: () async {
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickImage(source: ImageSource.gallery);
+              if (photo != null) {
+                isFromAsset.value = false;
+                avatar.value = photo.path;
+                Get.back();
+              }
+            },
+          ),
+          ListTile(
+            title: Text("Capture image"),
+            leading: Icon(
+              Icons.camera_rounded,
+              color: Colors.blue,
+            ),
+            onTap: () async {
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickImage(source: ImageSource.camera);
+              if (photo != null) {
+                isFromAsset.value = false;
+                avatar.value = photo.path;
+                Get.back();
+              }
+            },
+          ),
+        ],
+      ),
+      barrierDismissible: true,
+    );
+  }
+
+  pickImage4() async {
+    /*final ImagePicker _picker = ImagePicker();
+    final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
+    if (photo != null) {
+      isFromAsset.value = false;
+      avatar.value = photo.path;
+    }*/
+    Get.defaultDialog(
+      title: "Choose Option",
+      middleText: "Pick one of the option to pick",
+      content: Column(
+        children: [
+          ListTile(
+            title: Text("Choose from gallery"),
+            leading: Icon(
+              Icons.photo_size_select_actual_rounded,
+              color: Colors.blue,
+            ),
+            onTap: () async {
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickImage(source: ImageSource.gallery);
+              if (photo != null) {
+                isFromAsset4.value = false;
+                avatar4.value = photo.path;
+                Get.back();
+              }
+            },
+          ),
+          ListTile(
+            title: Text("Capture image"),
+            leading: Icon(
+              Icons.camera_rounded,
+              color: Colors.blue,
+            ),
+            onTap: () async {
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickImage(source: ImageSource.camera);
+              if (photo != null) {
+                isFromAsset4.value = false;
+                avatar4.value = photo.path;
+                Get.back();
+              }
+            },
+          ),
+        ],
+      ),
+      barrierDismissible: true,
+    );
   }
 
   pickImage2() async {
-    final ImagePicker _picker = ImagePicker();
+    /*final ImagePicker _picker = ImagePicker();
     final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
     if (photo != null) {
       isFromAsset2.value = false;
       avatar2.value = photo.path;
-    }
+    }*/
+    Get.defaultDialog(
+      title: "Choose Option",
+      middleText: "Pick one of the option to pick",
+      content: Column(
+        children: [
+          ListTile(
+            title: Text("Choose from gallery"),
+            leading: Icon(
+              Icons.photo_size_select_actual_rounded,
+              color: Colors.blue,
+            ),
+            onTap: () async {
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickImage(source: ImageSource.gallery);
+              if (photo != null) {
+                isFromAsset2.value = false;
+                avatar2.value = photo.path;
+                Get.back();
+              }
+            },
+          ),
+          ListTile(
+            title: Text("Capture image"),
+            leading: Icon(
+              Icons.camera_rounded,
+              color: Colors.blue,
+            ),
+            onTap: () async {
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickImage(source: ImageSource.camera);
+              if (photo != null) {
+                isFromAsset2.value = false;
+                avatar2.value = photo.path;
+                Get.back();
+              }
+            },
+          ),
+        ],
+      ),
+      barrierDismissible: true,
+    );
+  }
+
+  pickVideo() async {
+    /*final ImagePicker _picker = ImagePicker();
+    final XFile? photo = await _picker.pickImage(source: ImageSource.gallery);
+    if (photo != null) {
+      isFromAsset.value = false;
+      avatar.value = photo.path;
+    }*/
+    Get.defaultDialog(
+      title: "Choose Option",
+      middleText: "Pick one of the option to pick",
+      content: Column(
+        children: [
+          ListTile(
+            title: Text("Choose from gallery"),
+            leading: Icon(
+              Icons.photo_size_select_actual_rounded,
+              color: Colors.blue,
+            ),
+            onTap: () async {
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickVideo(source: ImageSource.gallery);
+              if (photo != null) {
+                isFromAsset3.value = false;
+                video3.value = photo.path;
+                videoPlayerController =
+                    VideoPlayerController.file(File(video3.value));
+                videoPlayerController.initialize();
+                videoPlayerController.play();
+                Get.back();
+              }
+            },
+          ),
+          ListTile(
+            title: Text("Capture Video"),
+            leading: Icon(
+              Icons.videocam_rounded,
+              color: Colors.blue,
+            ),
+            onTap: () async {
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickVideo(source: ImageSource.camera);
+              if (photo != null) {
+                isFromAsset3.value = false;
+                video3.value = photo.path;
+                videoPlayerController = VideoPlayerController.file(
+                  File(video3.value),
+                );
+                videoPlayerController.initialize();
+                videoPlayerController.play();
+                Get.back();
+              }
+            },
+          ),
+        ],
+      ),
+      barrierDismissible: true,
+    );
   }
 
   Column _bankFields() {
@@ -306,5 +591,72 @@ class AddAccountController extends GetxController {
         ),
       ),
     );
+  }
+
+  addDocument() async {
+    isUploaded.value = false;
+    Future.delayed(Duration(seconds: 2), () {
+      isVisible.value = true;
+    });
+    final _userInfo =
+        UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
+    final _cardInfo =
+        addCardFieldsSuccessModelFromJson(_box.get(GlobalVals.addCard));
+    final _token = _userInfo.result.token;
+    var _request = new http.MultipartRequest(
+        "POST", Uri.parse(ApiRoutes.baseUrl + ApiRoutes.cardDocument));
+    Map<String, String> _header = {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    var _frontFile = File(avatar.value);
+    var _frontStream = new http.ByteStream(_frontFile.openRead()..cast());
+    var _frontLength = await _frontFile.length();
+    var _frontFileBody = new http.MultipartFile(
+        'card', _frontStream, _frontLength,
+        filename: basename(_frontFile.path));
+
+    var _frontSelfieFile = File(avatar2.value);
+    var _frontSelfieStream =
+        new http.ByteStream(_frontSelfieFile.openRead()..cast());
+    var _frontSelfieLength = await _frontSelfieFile.length();
+    var _frontSelfieFileBody = new http.MultipartFile(
+        'card_with_selfie', _frontSelfieStream, _frontSelfieLength,
+        filename: basename(_frontSelfieFile.path));
+
+    var _statementFile = File(avatar2.value);
+    var _statementStream =
+        new http.ByteStream(_statementFile.openRead()..cast());
+    var _statementLength = await _statementFile.length();
+    var _statementFileBody = new http.MultipartFile(
+        'statement', _statementStream, _statementLength,
+        filename: basename(_frontSelfieFile.path));
+
+    var _videoFile = File(video3.value);
+    var _videoStream = new http.ByteStream(_videoFile.openRead()..cast());
+    var _videoLength = await _videoFile.length();
+    var _videoFileBody = new http.MultipartFile(
+      'cardVideo',
+      _videoStream,
+      _videoLength,
+      filename: basename(_videoFile.path),
+    );
+    _request.headers.addAll(_header);
+    _request.files.add(_frontFileBody);
+    _request.files.add(_frontSelfieFileBody);
+    _request.files.add(_statementFileBody);
+    _request.files.add(_videoFileBody);
+    _request.fields["card_id"] = _cardInfo.result.cardId.toString();
+    var _response = await _request.send();
+    _logger.d(_response.statusCode);
+    _response.stream.transform(utf8.decoder).listen((event) async {
+      isUploaded.value = true;
+      var _box = await Hive.openBox(GlobalVals.hiveBox);
+      _box.put(GlobalVals.kycUploadModel, event);
+      //Get.offNamed(Routes.verifyKycUpload);
+      Get.offNamed(Routes.addAccountSuccessful);
+      _logger.d(event);
+    });
   }
 }

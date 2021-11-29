@@ -330,7 +330,7 @@ class SellScreen extends StatelessWidget {
     );
   }
 
-  Container _continue() {
+  Widget _continue() {
     return Container(
       width: double.infinity,
       child: Obx(

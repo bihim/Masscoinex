@@ -21,6 +21,7 @@ class GlobalVals {
   static const profileInfo = "profileInfo";
   static const buyCryptos = "buyCryptos";
   static const isLoggedIn = "isLoggedIn";
+  static const addCard = "add-card";
 
   //?ErrorToast
   static errorToast(String text) {

@@ -22,4 +22,16 @@ class ApiRoutes {
   static const getFiatSellCryptoValue = "get-fiat-sell-crypto-value";
   static const getFiatSellCryptoAmount = "get-fiat-sell-crypto-amount";
   static const saveSellCrypto = "save-sell-crypto";
+
+  /*Withdraw*/
+  static const getFiatWithdrawCryptoValue = "get-fiat-withdraw-crypto-value";
+  static const saveWithdrawCrypto = "save-withdraw-crypto";
+
+  /*Deposit*/
+  static const getFiatRequestCryptoAmount = "get-fiat-request-crypto-amount";
+  static const saveRequestCrypto = "save-request-crypto";
+
+  /*Add Card*/
+  static const addCard = "add-card";
+  static const cardDocument = "card-document";
 }

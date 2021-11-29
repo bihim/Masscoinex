@@ -5,6 +5,7 @@ import 'package:responsive_sizer/responsive_sizer.dart';
 
 class NavCardFieldsScreen extends StatelessWidget {
   final AddAccountController addAccountController;
+//No Need
   const NavCardFieldsScreen({Key? key, required this.addAccountController})
       : super(key: key);
 
@@ -39,15 +40,6 @@ class NavCardFieldsScreen extends StatelessWidget {
               ),
             ),
           ),
-          _textFields("City"),
-          SizedBox(
-            height: 2.h,
-          ),
-          _textFields("State"),
-          SizedBox(
-            height: 2.h,
-          ),
-          _textFields("Post/Zip Code"),
           SizedBox(
             height: 2.h,
           ),

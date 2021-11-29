@@ -1,95 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:logger/logger.dart';
+import 'package:masscoinex/controllers/dashboard/currency_select/withdraw_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class WithdrawScreen extends StatelessWidget {
-  final _textEditingController = TextEditingController(text: "test@mail.com");
-  final TextEditingController _cryptoValueController =
-      TextEditingController(text: "1");
-  final TextEditingController _amountController =
-      TextEditingController(text: "1634568");
-  final TextEditingController _transactionFeesController =
-      TextEditingController(text: "1200");
-  final TextEditingController _receivingCryptoController =
-      TextEditingController(text: "1634568");
+  final _logger = Logger();
+  final _controller = Get.put(WithdrawController());
   final int index;
-  WithdrawScreen({Key? key, required this.index})
-      : super(key: key);
+
+  WithdrawScreen({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    _controller.index.value = index;
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 1.h,
       ),
       child: Column(
         children: [
-          Card(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(2.h),
-            ),
-            elevation: 0.5.h,
-            child: Container(
-              padding: EdgeInsets.all(2.h),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2.h),
-              ),
-              child: Column(
-                children: [
-                  /* _dropDown(
-                    CrossAxisAlignment.start,
-                    "Crypto Currency",
-                    _dropdownValueFrom,
-                    _dropDownValueFromList,
-                  ) */
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Crypto Currency",
-                        style: TextStyle(
-                          color: Colors.grey.shade800,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                      SizedBox(
-                        height: 1.h,
-                      ),
-                      Container(
-                        width: double.infinity,
-                        padding: EdgeInsets.symmetric(horizontal: 2.h),
-                        decoration: BoxDecoration(
-                          color: Colors.grey.shade200,
-                          borderRadius: BorderRadius.circular(1.h),
-                          border: Border.all(
-                            color: Colors.grey,
-                          ),
-                        ),
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
-                          child: Text(
-                            "currentCurrencyText",
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                  SizedBox(
-                    height: 3.h,
-                  ),
-                  _cryptoValueConvt(),
-                  SizedBox(
-                    height: 3.h,
-                  ),
-                  _cryptoValueConvt2(),
-                  SizedBox(
-                    height: 3.h,
-                  ),
-                  _walletAddress()
-                ],
-              ),
-            ),
-          ),
+          _swap(),
           SizedBox(
             height: 3.h,
           ),
@@ -102,40 +34,68 @@ class WithdrawScreen extends StatelessWidget {
     );
   }
 
-  Container _continue() {
-    return Container(
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            GlobalVals.buttonColor,
-          ),
-          elevation: MaterialStateProperty.all(0),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                5.h,
+  Widget _swap() {
+    return Card(
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(2.h),
+      ),
+      elevation: 0.5.h,
+      child: Container(
+        padding: EdgeInsets.all(2.h),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(2.h),
+        ),
+        child: Column(
+          children: [
+            _converter(),
+            SizedBox(
+              height: 3.h,
+            ),
+            _cryptoValueConvt(),
+            /* Obx(
+              () => _cryptoValueConvt(),
+            ), */
+            SizedBox(
+              height: 2.h,
+            ),
+            Container(
+              width: double.infinity,
+              child: Obx(
+                () => Text(
+                  "(Fee ${_controller.transactionFeeRate.value}${_controller.dashboardValue.wallet.currency})",
+                  style: TextStyle(
+                    color: Colors.grey,
+                    fontSize: 14.sp,
+                  ),
+                ),
               ),
             ),
-          ),
-        ),
-        onPressed: () {
-          //
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 2.h),
-          child: const Text("Continue"),
+            SizedBox(
+              height: 3.h,
+            ),
+            _denominated(),
+            SizedBox(
+              height: 2.h,
+            ),
+            Obx(
+              () => SizedBox(
+                child: _controller.isTypeFinished.value == true
+                    ? SizedBox()
+                    : CircularProgressIndicator(),
+              ),
+            ),
+          ],
         ),
       ),
     );
   }
 
-  Column _walletAddress() {
+  Column _denominated() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          "Enter Wallet Address",
+          "Receiving Crypto Value",
           style: TextStyle(
             color: Colors.grey.shade800,
             fontWeight: FontWeight.bold,
@@ -155,10 +115,11 @@ class WithdrawScreen extends StatelessWidget {
             ),
           ),
           child: TextField(
+            enabled: false,
             cursorColor: GlobalVals.appbarColor,
-            controller: _textEditingController,
+            controller: _controller.denominatedValue,
             decoration: InputDecoration(
-              hintText: "Enter Crypto Value",
+              hintText: "Denomitated Value",
               border: UnderlineInputBorder(
                 borderSide: BorderSide.none,
               ),
@@ -168,56 +129,6 @@ class WithdrawScreen extends StatelessWidget {
       ],
     );
   }
-
-  /* Widget _dropDown(CrossAxisAlignment crossAxisAlignment, String text,
-      RxString dropdownInitValue, List<String> dropdownList) {
-    return Column(
-      crossAxisAlignment: crossAxisAlignment,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.grey.shade800,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(
-          height: 1.h,
-        ),
-        Obx(
-          () => Container(
-            padding: EdgeInsets.symmetric(horizontal: 2.h),
-            decoration: BoxDecoration(
-              color: Colors.grey.shade200,
-              borderRadius: BorderRadius.circular(1.h),
-              border: Border.all(
-                color: Colors.grey,
-              ),
-            ),
-            child: DropdownButton<String>(
-              value: dropdownInitValue.value,
-              elevation: 16,
-              isDense: false,
-              isExpanded: true,
-              underline: Container(
-                color: Colors.transparent,
-              ),
-              style: TextStyle(color: Colors.black),
-              onChanged: (String? newValue) {
-                dropdownInitValue.value = newValue!;
-              },
-              items: dropdownList.map<DropdownMenuItem<String>>((String value) {
-                return DropdownMenuItem<String>(
-                  value: value,
-                  child: Text(value),
-                );
-              }).toList(),
-            ),
-          ),
-        )
-      ],
-    );
-  } */
 
   Row _cryptoValueConvt() {
     return Row(
@@ -225,113 +136,232 @@ class WithdrawScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          flex: 1,
-          child: _cryptoValue(
-              CrossAxisAlignment.start,
-              "Crypto Value",
-              _cryptoValueController,
-              BorderRadius.circular(1.h),
-              Colors.grey.shade200,
-              TextAlign.start,
-              null),
-        ),
-        SizedBox(
-          width: 10.w,
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Crypto Value",
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              Container(
+                height: 6.h,
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(1.h),
+                    bottomLeft: Radius.circular(1.h),
+                  ),
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                ),
+                child: TextField(
+                  enabled: false,
+                  textAlign: TextAlign.start,
+                  keyboardType: TextInputType.number,
+                  cursorColor: GlobalVals.appbarColor,
+                  controller: _controller.cryptoValueController,
+                  decoration: InputDecoration(
+                    prefix: Text("     "),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onChanged: (text) {
+                    /*Future.delayed(Duration(milliseconds: 800), () {
+                      if (text == _controller.cryptoValueController.text) {
+                        _controller.insertValue(
+                            _controller.cryptoValueController.text);
+                        _logger.d(_controller.cryptoValueController.text);
+                      }
+                    });*/
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
         Expanded(
-          flex: 1,
-          child: _cryptoValue(
-              CrossAxisAlignment.end,
-              "Amount",
-              _amountController,
-              BorderRadius.circular(1.h),
-              Colors.grey.shade200,
-              TextAlign.end,
-              "INR"),
+          flex: 3,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Amount",
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              Container(
+                height: 6.h,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.only(
+                    topRight: Radius.circular(1.h),
+                    bottomRight: Radius.circular(1.h),
+                  ),
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                ),
+                child: TextField(
+                  keyboardType: TextInputType.number,
+                  textAlign: TextAlign.end,
+                  cursorColor: GlobalVals.appbarColor,
+                  controller: _controller.amountController,
+                  decoration: InputDecoration(
+                    suffix: Text(
+                        "${_controller.dashboardValue.wallet.currency}        "),
+                    border: UnderlineInputBorder(
+                      borderSide: BorderSide.none,
+                    ),
+                  ),
+                  onChanged: (text) {
+                    Future.delayed(Duration(milliseconds: 800), () {
+                      if (text == _controller.amountController.text) {
+                        _controller
+                            .insertAmount(_controller.amountController.text);
+                        _logger.d(_controller.amountController.text);
+                      }
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
         ),
       ],
     );
   }
 
-  Row _cryptoValueConvt2() {
+  Widget _converter() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Expanded(
-          flex: 1,
-          child: _cryptoValue(
-              CrossAxisAlignment.start,
-              "Transaction Fees",
-              _transactionFeesController,
-              BorderRadius.circular(1.h),
-              Colors.grey.shade200,
-              TextAlign.start,
-              null),
-        ),
-        SizedBox(
-          width: 10.w,
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                "Crypto Currency",
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 2.h),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(1.h),
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  child: Text(
+                    _controller.dashboardValue.cryptoData[index].coinName,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
         Expanded(
           flex: 1,
-          child: _cryptoValue(
-              CrossAxisAlignment.end,
-              "Receiving Crypto",
-              _receivingCryptoController,
-              BorderRadius.circular(1.h),
-              Colors.grey.shade200,
-              TextAlign.end,
-              null),
+          child: Container(
+            padding: EdgeInsets.only(top: 3.h),
+            child: Icon(
+              Icons.shuffle,
+            ),
+          ),
+        ),
+        Expanded(
+          flex: 2,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Text(
+                "Selected Currency",
+                style: TextStyle(
+                  color: Colors.grey.shade800,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+              SizedBox(
+                height: 1.h,
+              ),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 3.h),
+                decoration: BoxDecoration(
+                  color: Colors.grey.shade200,
+                  borderRadius: BorderRadius.circular(1.h),
+                  border: Border.all(
+                    color: Colors.grey,
+                  ),
+                ),
+                child: Padding(
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  child: Text(
+                    _controller.selectedCurrency.value,
+                  ),
+                ),
+              )
+            ],
+          ),
         ),
       ],
     );
   }
 
-  Column _cryptoValue(
-      CrossAxisAlignment crossAxisAlignment,
-      String text,
-      TextEditingController textEditingController,
-      BorderRadius borderRadius,
-      Color color,
-      TextAlign textAlign,
-      String? prefixText) {
-    return Column(
-      crossAxisAlignment: crossAxisAlignment,
-      children: [
-        Text(
-          text,
-          style: TextStyle(
-            color: Colors.grey.shade800,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        SizedBox(
-          height: 1.h,
-        ),
-        Container(
-          height: 6.h,
-          padding: EdgeInsets.symmetric(horizontal: 2.h),
-          decoration: BoxDecoration(
-            color: color,
-            borderRadius: borderRadius,
-            border: Border.all(
-              color: Colors.grey,
+  Widget _continue() {
+    return Container(
+      width: double.infinity,
+      child: Obx(
+        () => ElevatedButton(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(
+              GlobalVals.buttonColor,
             ),
-          ),
-          child: TextField(
-            textAlign: textAlign,
-            cursorColor: GlobalVals.appbarColor,
-            controller: textEditingController,
-            decoration: InputDecoration(
-              prefix: prefixText != null ? Text(prefixText) : SizedBox(),
-              hintText: "Enter Crypto Value",
-              border: UnderlineInputBorder(
-                borderSide: BorderSide.none,
+            elevation: MaterialStateProperty.all(0),
+            shape: MaterialStateProperty.all(
+              RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(
+                  5.h,
+                ),
               ),
             ),
           ),
+          onPressed: () {
+            _controller.saveWithdraw();
+          },
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 2.h),
+            child: _controller.isBought.value == true
+                ? const Text("Continue")
+                : const CircularProgressIndicator(
+                    color: Colors.white,
+                  ),
+          ),
         ),
-      ],
+      ),
     );
   }
 }
