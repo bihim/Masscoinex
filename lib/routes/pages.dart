@@ -20,10 +20,10 @@ import 'package:masscoinex/views/screens/auth/registration/verify_select_country
 import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screens/dashboard_deposit_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screens/dashboard_history_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screens/dashboard_withdraw_screen.dart';
-import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/mode_of_payment_screen.dart';
-import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/bank_transfer_screen.dart';
-import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/card_payment_screen.dart';
-import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens.dart/payment_screens/upi_payment_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens/mode_of_payment_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens/payment_screens/bank/bank_transfer_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens/payment_screens/card/card_payment_screen.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens/payment_screens/upi/upi_payment_method_details_screen.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_screens/transaction_history_screen.dart';
 import 'package:masscoinex/views/screens/currency_selected/currency_selected_screen.dart';
 import 'package:masscoinex/views/screens/main_screen.dart';
@@ -115,18 +115,18 @@ class Pages {
       name: Routes.modeOfPayment,
       page: () => ModeOfPaymentScreen(),
     ),
-    GetPage(
+    /*GetPage(
       name: Routes.upiPayment,
       page: () => UPIPaymentScreen(),
-    ),
+    ),*/
     GetPage(
       name: Routes.bankPayment,
       page: () => BankTransferScreen(),
     ),
-    GetPage(
+    /*GetPage(
       name: Routes.cardPayment,
       page: () => CardPaymentScreen(),
-    ),
+    ),*/
     GetPage(
       name: Routes.security,
       page: () => SecurityScreen(),

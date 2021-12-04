@@ -9,6 +9,7 @@ import 'package:masscoinex/api/api_routes.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/models/currency/sell/insert_amount_model.dart';
 import 'package:masscoinex/models/currency/sell/save_sell_model.dart';
+import 'package:masscoinex/models/currency/withdraw_percent_model.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/models/user_model.dart';
 import 'package:http/http.dart' as http;
@@ -21,6 +22,7 @@ class WithdrawController extends GetxController {
   var cryptoValueController = TextEditingController(text: "0");
   var amountController = TextEditingController(text: "0");
   var denominatedValue = TextEditingController(text: "0");
+  var percentValue = TextEditingController(text: "0");
   final _logger = Logger();
   var isRefreshed = false.obs;
   var isBought = true.obs;
@@ -51,6 +53,58 @@ class WithdrawController extends GetxController {
         DashboardModel.fromJson(json.decode(_dashboardString.value));
     selectedCurrency.value = dashboardValue.wallet.currency;
     settingTextFieldsToZero();
+  }
+
+
+  insertPercentage(String percentage) async {
+    isTypeFinished.value = false;
+    isRefreshed.value = false;
+    final _userInfo =
+    UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
+    final _token = _userInfo.result.token;
+    Map<String, String> _header = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    _logger.d(dashboardValue.cryptoData[index.value].coinName.toLowerCase());
+    final Map<String, dynamic> _body = {
+      "coin_code":
+      dashboardValue.cryptoData[index.value].coinName.toLowerCase(),
+      "crypto_percent": percentage,
+    };
+    var _response = await http.post(
+        Uri.parse(ApiRoutes.baseUrl +
+            ApiRoutes.getPercentWithdrawCryptoValue),
+        body: _body,
+        headers: _header);
+    _logger.d(_response.body);
+
+    if (_response.statusCode == 200) {
+      isTypeFinished.value = true;
+      var _result = withdrawPercentModelFromJson(_response.body);
+      if (_result.code.toString() == "1") {
+        isRefreshed.value = true;
+        coinCode.value =
+            dashboardValue.cryptoData[index.value].coinName.toLowerCase();
+        coinValue.value = _result.result.cryptoAmount.toString();
+        cryptoAmount.value = _result.result.cryptoAmount.toString();
+        transactionFeeRate.value =
+            _result.result.transactionFeeRate.toString();
+        transactionFee.value =
+            _result.result.transactionFee.toString();
+        cryptoValue.value = _result.result.cryptoValue.toString();
+        /* Prepare for buy */
+        amountController.text = _result.result.cryptoAmount.toString();
+        denominatedValue.text = _result.result.cryptoValue.toString();
+        cryptoValueController.text = _result.result.cryptoValue.toString();
+      } else {
+        GlobalVals.errorToast(_result.message);
+        settingTextFieldsToZero();
+      }
+    } else {
+      GlobalVals.errorToast("Server Error: ${_response.statusCode}");
+      settingTextFieldsToZero();
+    }
   }
 
   insertAmount(String amount) async {
@@ -110,6 +164,7 @@ class WithdrawController extends GetxController {
           msg: _result.result.message,
           backgroundColor: Colors.red,
         );
+        settingTextFieldsToZero();
       }
     } else {
       isTypeFinished.value = true;
@@ -227,7 +282,6 @@ class WithdrawController extends GetxController {
               msg: _saveSell.message.toString(),
               backgroundColor: Colors.green,
             );
-            coinCode.value = "";
             coinValue.value = "";
             cryptoAmount.value = "";
             transactionFeeRate.value = "";

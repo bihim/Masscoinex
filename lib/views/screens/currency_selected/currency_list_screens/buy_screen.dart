@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:masscoinex/api/api_routes.dart';
 import 'package:masscoinex/controllers/dashboard/currency_select/buy_controller.dart';
@@ -10,11 +11,14 @@ class BuyScreen extends StatelessWidget {
   final _logger = Logger();
   final int index;
   final _controller = Get.put(BuyController());
+
   BuyScreen({Key? key, required this.index}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     _controller.index.value = index;
+    _controller.coinCode.value =
+        _controller.dashboardValue.cryptoData[index].coinName.toLowerCase();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 1.h,
@@ -70,6 +74,10 @@ class BuyScreen extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(
+              height: 3.h,
+            ),
+            _percent(),
             SizedBox(
               height: 3.h,
             ),
@@ -130,6 +138,62 @@ class BuyScreen extends StatelessWidget {
     );
   }
 
+  Column _percent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Percent",
+          style: TextStyle(
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(
+          height: 1.h,
+        ),
+        Container(
+          height: 6.h,
+          padding: EdgeInsets.symmetric(horizontal: 2.h),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(1.h),
+            border: Border.all(
+              color: Colors.grey,
+            ),
+          ),
+          child: TextField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(3),
+            ],
+            keyboardType: TextInputType.number,
+            cursorColor: GlobalVals.appbarColor,
+            controller: _controller.percentValue,
+            decoration: InputDecoration(
+              prefix: Text("%   "),
+              hintText: "Percent Value",
+              border: UnderlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+            ),
+            onChanged: (text) {
+              if (int.parse(text) <= 100) {
+                Future.delayed(Duration(milliseconds: 800), () {
+                  if (text == _controller.percentValue.text) {
+                    _controller.getPercent(_controller.percentValue.text);
+                    _logger.d(_controller.amountController.text);
+                  }
+                });
+              } else {
+                GlobalVals.errorToast("Percentage can't be more than 100");
+              }
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
   Row _cryptoValueConvt() {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -169,20 +233,6 @@ class BuyScreen extends StatelessWidget {
                   controller: _controller.cryptoValueController,
                   decoration: InputDecoration(
                     prefix: Text("     "),
-                    /* prefixIcon: IconButton(
-                      padding: EdgeInsets.zero,
-                      iconSize: 2.h,
-                      onPressed: () {
-                        _controller.getBuy(
-                            _controller.cryptoValueController.text,
-                            "crypto_value",
-                            ApiRoutes.getFiatCryptoAmount);
-                      },
-                      icon: Icon(
-                        Icons.refresh,
-                        size: 2.h,
-                      ),
-                    ), */
                     border: UnderlineInputBorder(
                       borderSide: BorderSide.none,
                     ),
@@ -238,20 +288,6 @@ class BuyScreen extends StatelessWidget {
                   decoration: InputDecoration(
                     suffix: Text(
                         "${_controller.dashboardValue.wallet.currency}        "),
-                    /* suffixIcon: IconButton(
-                      padding: EdgeInsets.zero,
-                      iconSize: 2.h,
-                      onPressed: () {
-                        _controller.getBuy(
-                            _controller.amountController.text,
-                            "crypto_amount",
-                            ApiRoutes.getFiatCryptoValue);
-                      },
-                      icon: Icon(
-                        Icons.refresh,
-                        size: 2.h,
-                      ),
-                    ), */
                     border: UnderlineInputBorder(
                       borderSide: BorderSide.none,
                     ),
@@ -259,10 +295,8 @@ class BuyScreen extends StatelessWidget {
                   onChanged: (text) {
                     Future.delayed(Duration(milliseconds: 800), () {
                       if (text == _controller.amountController.text) {
-                        _controller.getBuy(
-                            _controller.amountController.text,
-                            "crypto_amount",
-                            ApiRoutes.getFiatCryptoValue);
+                        _controller.getBuy(_controller.amountController.text,
+                            "crypto_amount", ApiRoutes.getFiatCryptoValue);
                         _logger.d(_controller.amountController.text);
                       }
                     });

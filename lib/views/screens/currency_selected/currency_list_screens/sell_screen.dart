@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:logger/logger.dart';
 import 'package:masscoinex/controllers/dashboard/currency_select/sell_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
@@ -15,6 +16,7 @@ class SellScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _controller.index.value = index;
+    _controller.coinCode.value = _controller.dashboardValue.cryptoData[index].coinName.toLowerCase();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 1.h,
@@ -73,6 +75,10 @@ class SellScreen extends StatelessWidget {
             SizedBox(
               height: 3.h,
             ),
+            _percent(),
+            SizedBox(
+              height: 3.h,
+            ),
             _denominated(),
             SizedBox(
               height: 2.h,
@@ -87,6 +93,62 @@ class SellScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Column _percent() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Percent",
+          style: TextStyle(
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(
+          height: 1.h,
+        ),
+        Container(
+          height: 6.h,
+          padding: EdgeInsets.symmetric(horizontal: 2.h),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(1.h),
+            border: Border.all(
+              color: Colors.grey,
+            ),
+          ),
+          child: TextField(
+            inputFormatters: [
+              LengthLimitingTextInputFormatter(3),
+            ],
+            keyboardType: TextInputType.number,
+            cursorColor: GlobalVals.appbarColor,
+            controller: _controller.percentValue,
+            decoration: InputDecoration(
+              prefix: Text("%   "),
+              hintText: "Percent Value",
+              border: UnderlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+            ),
+            onChanged: (text) {
+              if (int.parse(text) <= 100) {
+                Future.delayed(Duration(milliseconds: 800), () {
+                  if (text == _controller.percentValue.text) {
+                    _controller.insertPercentage(_controller.percentValue.text);
+                    _logger.d(_controller.amountController.text);
+                  }
+                });
+              } else {
+                GlobalVals.errorToast("Percentage can't be more than 100");
+              }
+            },
+          ),
+        ),
+      ],
     );
   }
 

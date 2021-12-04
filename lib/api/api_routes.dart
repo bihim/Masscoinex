@@ -15,6 +15,7 @@ class ApiRoutes {
   /* Buy */
   static const getFiatCryptoValue = "get-fiat-crypto-value";
   static const getFiatCryptoAmount = "get-fiat-crypto-amount";
+  static const getBuyCryptoFiatPercentValueGetFiatCryptoAmount = "get-buy-crypto-fiat-percent-value";
   static const buyFiatToCrypto = "buy-fiat-to-crypto";
   static const history = "crypto-transaction-history";
 
@@ -22,16 +23,45 @@ class ApiRoutes {
   static const getFiatSellCryptoValue = "get-fiat-sell-crypto-value";
   static const getFiatSellCryptoAmount = "get-fiat-sell-crypto-amount";
   static const saveSellCrypto = "save-sell-crypto";
+  static const getPercentSellCryptoValue = "get-percent-sell-crypto-value";
 
   /*Withdraw*/
   static const getFiatWithdrawCryptoValue = "get-fiat-withdraw-crypto-value";
   static const saveWithdrawCrypto = "save-withdraw-crypto";
+  static const getPercentWithdrawCryptoValue = "get-percent-withdraw-crypto-value";
 
   /*Deposit*/
   static const getFiatRequestCryptoAmount = "get-fiat-request-crypto-amount";
   static const saveRequestCrypto = "save-request-crypto";
 
+  /*Swap*/
+  static const getUserCryptoCoins = "get-user-crypto-coins";
+  static const getFiatSwapCryptoAmount = "get-fiat-swap-crypto-amount";
+  static const saveSwapCrypto = "save-swap-crypto";
+  static const getPercentSwapCryptoAmount = "get-percent-swap-crypto-value";
+
+  /*Fiat*/
+  static const fiatTransactionHistory = "fiat-transaction-history";
+  /*Deposit*/
+  static const deposit = "deposit";
+  static const getDepositFee = "get-deposit-fee";
+
+  /*Withdraw*/
+  static const getWithdrawFee = "get-withdraw-fee";
+  static const withdrawConfirmation = "withdraw-confirmation";
+  static const saveWithdraw = "save-withdraw";
+
+  /*Payment Mode List*/
+  static const paymentModeList = "payment-mode-list";
+
   /*Add Card*/
   static const addCard = "add-card";
   static const cardDocument = "card-document";
+
+  /*Payment Method*/
+  static const paymentMethod = "payment-method";
+  static const paymentMethodDetails = "payment-method-details";
+  static const depositConfirmation = "deposit-confirmation";
+  static const saveDeposit = "save-deposit";
+
 }

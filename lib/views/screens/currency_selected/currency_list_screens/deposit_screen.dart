@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:logger/logger.dart';
 import 'package:masscoinex/controllers/dashboard/currency_select/deposit_controller.dart';
@@ -6,8 +7,6 @@ import 'package:masscoinex/global/global_vals.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class DepositScreen extends StatelessWidget {
-  final _textEditingController =
-      TextEditingController(text: "XhoP8eoo29fz3GXpkhT6XBkNamLsbbpolqGnKOLh");
   final _controller = Get.put(DepositController());
   final _logger = Logger();
   final int index;
@@ -17,6 +16,8 @@ class DepositScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _controller.index.value = index;
+    _controller.coinCode.value =
+        _controller.dashboardValue.cryptoData[index].coinName.toLowerCase();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 1.h,
@@ -40,7 +41,7 @@ class DepositScreen extends StatelessWidget {
     return Container(
       width: double.infinity,
       child: Obx(
-            () => ElevatedButton(
+        () => ElevatedButton(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(
               GlobalVals.buttonColor,
@@ -62,8 +63,8 @@ class DepositScreen extends StatelessWidget {
             child: _controller.isBought.value == true
                 ? const Text("Continue")
                 : const CircularProgressIndicator(
-              color: Colors.white,
-            ),
+                    color: Colors.white,
+                  ),
           ),
         ),
       ),

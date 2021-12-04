@@ -82,7 +82,8 @@ class DashboardScreen extends StatelessWidget {
                                               children: [
                                                 TextSpan(
                                                   text: _result
-                                                      .cryptoData[index].coinName,
+                                                      .cryptoData[index]
+                                                      .coinName,
                                                   style: TextStyle(
                                                     fontSize: 17.sp,
                                                   ),
@@ -96,7 +97,8 @@ class DashboardScreen extends StatelessWidget {
                                                   ),
                                                 ),
                                                 TextSpan(
-                                                  text: _result.cryptoData[index]
+                                                  text: _result
+                                                      .cryptoData[index]
                                                       .cryptoWallet
                                                       .toString(),
                                                   style: TextStyle(

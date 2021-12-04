@@ -22,6 +22,12 @@ class GlobalVals {
   static const buyCryptos = "buyCryptos";
   static const isLoggedIn = "isLoggedIn";
   static const addCard = "add-card";
+  static const deposit = "deposit";
+  static const withdrawAmount = "withdrawAmount";
+  static const selectedPaymentMode = "selectedPaymentMode";
+  static const paymentMethodId = "payment-method-id";
+  static const paymentMethodName = "payment-method-name";
+  static const referenceNo = "referenceNo";
 
   //?ErrorToast
   static errorToast(String text) {

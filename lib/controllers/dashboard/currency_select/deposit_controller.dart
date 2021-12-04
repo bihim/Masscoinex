@@ -54,72 +54,6 @@ class DepositController extends GetxController {
     settingTextFieldsToZero();
   }
 
-  /*insertAmount(String amount) async {
-    isTypeFinished.value = false;
-    isRefreshed.value = false;
-    final _userInfo =
-        UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
-    final _token = _userInfo.result.token;
-    Map<String, String> _header = {
-      'Accept': 'application/json',
-      'Authorization': 'Bearer $_token',
-    };
-    _logger.d(dashboardValue.cryptoData[index.value].coinName.toLowerCase());
-    final Map<String, dynamic> _body = {
-      "coin_code":
-          dashboardValue.cryptoData[index.value].coinName.toLowerCase(),
-      "crypto_amount": amount,
-    };
-
-    var _response = await http.post(
-        Uri.parse(ApiRoutes.baseUrl + ApiRoutes.getFiatSellCryptoValue),
-        body: _body,
-        headers: _header);
-
-    _logger.d(_response.body);
-
-    if (_response.statusCode == 200) {
-      isTypeFinished.value = true;
-      var _result = insertAmountModelFromJson(_response.body);
-      if (_result.code == "1") {
-        if (!_result.result.status) {
-          isRefreshed.value = false;
-          Fluttertoast.showToast(
-            msg: _result.result.message,
-            backgroundColor: Colors.red,
-          );
-        } else {
-          isRefreshed.value = true;
-          *//*Setting values*//*
-          cryptoAmount.value = amount;
-          cryptoValue.value = _result.result.userCoinAmount;
-          transactionFeeRate.value =
-              _result.result.coinSellTransactionRate.toString();
-          transactionFee.value =
-              _result.result.coinSellTransactionVolumeFees.toString();
-          coinValue.value = _result.result.userCoinAmountAfterFees.toString();
-          *//*userCoinAmountAfterFees.value =
-              _result.result.userCoinAmountAfterFees.toString();*//*
-
-          amountController.text = amount;
-          cryptoValueController.text = cryptoValue.value;
-          *//*denominatedValue.text = userCoinAmountAfterFees.value;*//*
-        }
-      } else {
-        isRefreshed.value = false;
-        Fluttertoast.showToast(
-          msg: _result.result.message,
-          backgroundColor: Colors.red,
-        );
-      }
-    } else {
-      isTypeFinished.value = true;
-      settingTextFieldsToZero();
-      isRefreshed.value = true;
-      Fluttertoast.showToast(msg: "Server error: ${_response.statusCode}");
-    }
-  }*/
-
   insertValue(String cryptoValues) async {
     isTypeFinished.value = false;
     isRefreshed.value = false;
@@ -169,6 +103,7 @@ class DepositController extends GetxController {
           msg: _result.message,
           backgroundColor: Colors.red,
         );
+        settingTextFieldsToZero();
       }
     } else {
       isTypeFinished.value = true;
@@ -217,7 +152,6 @@ class DepositController extends GetxController {
             msg: _saveSell.message.toString(),
             backgroundColor: Colors.green,
           );
-          coinCode.value = "";
           coinValue.value = "";
           cryptoAmount.value = "";
           transactionFeeRate.value = "";

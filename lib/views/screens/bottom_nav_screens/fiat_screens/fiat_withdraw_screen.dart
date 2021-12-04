@@ -1,24 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:masscoinex/controllers/fiat_controller.dart';
+import 'package:hive/hive.dart';
+import 'package:masscoinex/controllers/fiat/fiat_controller.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/routes/route_list.dart';
+import 'package:masscoinex/views/screens/bottom_nav_screens/fiat_screens/payment_screens/bank/bank_transfer_screen_withdraw.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
 class FiatWithdrawScreen extends StatelessWidget {
-  final _dropdownValueFrom = '40000'.obs;
-  final _dropdownValueTo = 'USD'.obs;
-  final _dropDownValueFromList = ['40000', '30000', '20000', '10000', '5000'];
-  final _dropDownValueToList = ['USD', 'INR', 'BDT', 'RMB'];
-  final TextEditingController _cryptoValueController =
-      TextEditingController(text: "1");
-  final TextEditingController _amountController =
-      TextEditingController(text: "1634568");
-  final TextEditingController _denominatedValue =
-      TextEditingController(text: "42000");
-  final FiatController fiatController;  
-  FiatWithdrawScreen({Key? key, required this.fiatController})
-      : super(key: key);
+  final FiatController controller;
+  final _box = Hive.box(GlobalVals.hiveBox);
+
+  FiatWithdrawScreen({Key? key, required this.controller}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -39,6 +33,16 @@ class FiatWithdrawScreen extends StatelessWidget {
           SizedBox(
             height: 2.h,
           ),
+          Obx(
+            () => SizedBox(
+              child: controller.isTypeFinished.value == true
+                  ? SizedBox()
+                  : CircularProgressIndicator(),
+            ),
+          ),
+          SizedBox(
+            height: 2.h,
+          ),
           _buttons(),
           SizedBox(
             height: 2.h,
@@ -55,7 +59,14 @@ class FiatWithdrawScreen extends StatelessWidget {
           flex: 1,
           child: _continue(
             "Continue",
-            () => Get.toNamed(Routes.modeOfPayment),
+            /*() => Get.toNamed(Routes.modeOfPayment),*/
+            () {
+              _box.put(GlobalVals.withdrawAmount, controller.amountController.text);
+              Get.to(
+                () => BankTransferScreenWithdraw(),
+              );
+
+            },
           ),
         ),
         SizedBox(
@@ -64,8 +75,8 @@ class FiatWithdrawScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: _continue("Back", () {
-            print(fiatController.fiatIndex.value);
-            fiatController.fiatIndex.value = 0;
+            print(controller.fiatIndex.value);
+            controller.fiatIndex.value = 0;
           }),
         ),
       ],
@@ -81,13 +92,13 @@ class FiatWithdrawScreen extends StatelessWidget {
           flex: 1,
           child: _cryptoValue(
               CrossAxisAlignment.start,
-              "Transaction Rate",
-              _cryptoValueController,
+              "Transaction Fee",
+              controller.transactionFeeController,
               BorderRadius.circular(1.h),
               Colors.grey.shade200,
               TextAlign.start,
               null,
-              "%"),
+              ""),
         ),
         SizedBox(
           width: 10.w,
@@ -96,12 +107,12 @@ class FiatWithdrawScreen extends StatelessWidget {
           flex: 1,
           child: _cryptoValue(
               CrossAxisAlignment.end,
-              "Transaction Fee",
-              _amountController,
+              "Transaction Fee Rate",
+              controller.transactionFeeRateController,
               BorderRadius.circular(1.h),
               Colors.grey.shade200,
               TextAlign.end,
-              "INR",
+              "",
               null),
         ),
       ],
@@ -141,6 +152,7 @@ class FiatWithdrawScreen extends StatelessWidget {
             ),
           ),
           child: TextField(
+            enabled: false,
             textAlign: textAlign,
             cursorColor: GlobalVals.appbarColor,
             controller: textEditingController,
@@ -158,12 +170,19 @@ class FiatWithdrawScreen extends StatelessWidget {
     );
   }
 
-  Column _denominated() {
+  Widget _amountAndCurrency(
+      CrossAxisAlignment crossAxisAlignment,
+      String text,
+      TextAlign textAlign,
+      TextEditingController textEditingController,
+      String? prefixText,
+      String? suffixTest,
+      bool isEnabled) {
     return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
+      crossAxisAlignment: crossAxisAlignment,
       children: [
         Text(
-          "Receiving Crypto Value",
+          text,
           style: TextStyle(
             color: Colors.grey.shade800,
             fontWeight: FontWeight.bold,
@@ -183,8 +202,111 @@ class FiatWithdrawScreen extends StatelessWidget {
             ),
           ),
           child: TextField(
+            enabled: isEnabled,
+            textAlign: textAlign,
+            keyboardType: TextInputType.number,
             cursorColor: GlobalVals.appbarColor,
-            controller: _denominatedValue,
+            controller: textEditingController,
+            decoration: InputDecoration(
+              prefix: prefixText != null ? Text(prefixText) : SizedBox(),
+              suffix: suffixTest != null ? Text(suffixTest) : SizedBox(),
+              hintText: "Enter Amount",
+              border: UnderlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+            ),
+            onChanged: (text) {
+              Future.delayed(Duration(milliseconds: 800), () {
+                if (text == controller.amountController.text) {
+                  controller
+                      .insertValueWithdraw(controller.amountController.text);
+                }
+              });
+            },
+          ),
+        ),
+      ],
+    );
+  }
+
+  Widget _amountAndCurrency2(
+      CrossAxisAlignment crossAxisAlignment,
+      String text,
+      TextAlign textAlign,
+      TextEditingController textEditingController,
+      String? prefixText,
+      String? suffixTest,
+      bool isEnabled) {
+    return Column(
+      crossAxisAlignment: crossAxisAlignment,
+      children: [
+        Text(
+          text,
+          style: TextStyle(
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(
+          height: 1.h,
+        ),
+        Container(
+          height: 6.h,
+          padding: EdgeInsets.symmetric(horizontal: 2.h),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(1.h),
+            border: Border.all(
+              color: Colors.grey,
+            ),
+          ),
+          child: TextField(
+            enabled: isEnabled,
+            textAlign: textAlign,
+            cursorColor: GlobalVals.appbarColor,
+            controller: textEditingController,
+            decoration: InputDecoration(
+              prefix: prefixText != null ? Text(prefixText) : SizedBox(),
+              suffix: suffixTest != null ? Text(suffixTest) : SizedBox(),
+              hintText: "Enter Amount",
+              border: UnderlineInputBorder(
+                borderSide: BorderSide.none,
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+
+  Column _denominated() {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Get Amount",
+          style: TextStyle(
+            color: Colors.grey.shade800,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        SizedBox(
+          height: 1.h,
+        ),
+        Container(
+          height: 6.h,
+          padding: EdgeInsets.symmetric(horizontal: 2.h),
+          decoration: BoxDecoration(
+            color: Colors.grey.shade200,
+            borderRadius: BorderRadius.circular(1.h),
+            border: Border.all(
+              color: Colors.grey,
+            ),
+          ),
+          child: TextField(
+            enabled: false,
+            cursorColor: GlobalVals.appbarColor,
+            controller: controller.payAmountController,
             decoration: InputDecoration(
               hintText: "Denomitated Value",
               border: UnderlineInputBorder(
@@ -204,11 +326,14 @@ class FiatWithdrawScreen extends StatelessWidget {
       children: [
         Expanded(
           flex: 2,
-          child: _dropDown(
+          child: _amountAndCurrency(
             CrossAxisAlignment.start,
             "Amount to Withdraw",
-            _dropdownValueFrom,
-            _dropDownValueFromList,
+            TextAlign.start,
+            controller.amountController,
+            null,
+            "",
+            true,
           ),
         ),
         Expanded(
@@ -222,11 +347,14 @@ class FiatWithdrawScreen extends StatelessWidget {
         ),
         Expanded(
           flex: 2,
-          child: _dropDown(
+          child: _amountAndCurrency2(
             CrossAxisAlignment.end,
             "Currency",
-            _dropdownValueTo,
-            _dropDownValueToList,
+            TextAlign.end,
+            controller.currencyController,
+            "",
+            null,
+            false,
           ),
         ),
       ],
@@ -275,7 +403,8 @@ class FiatWithdrawScreen extends StatelessWidget {
                   child: Text(value),
                 );
               }).toList(),
-            ), */Material(
+            ), */
+                Material(
               color: Colors.transparent,
               child: InkWell(
                 child: Container(
@@ -348,7 +477,15 @@ class FiatWithdrawScreen extends StatelessWidget {
         onPressed: voidCallback,
         child: Padding(
           padding: EdgeInsets.symmetric(vertical: 2.h),
-          child: Text(text),
+          child: text == "Continue"
+              ? Obx(() {
+                  return controller.hasDepositSaved.value == true
+                      ? Text(text)
+                      : const CircularProgressIndicator(
+                          color: Colors.white,
+                        );
+                })
+              : Text(text),
         ),
       ),
     );

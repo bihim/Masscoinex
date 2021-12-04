@@ -1,5 +1,5 @@
 import 'package:get/get.dart';
 
-class FiatController extends GetxController {
+class FiatDepositController extends GetxController {
   var fiatIndex = 0.obs;
 }

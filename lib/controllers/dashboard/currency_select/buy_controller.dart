@@ -9,6 +9,7 @@ import 'package:masscoinex/api/api_routes.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/models/currency/buy/buy_amount_to_value_model.dart';
 import 'package:masscoinex/models/currency/buy/buy_model.dart';
+import 'package:masscoinex/models/currency/buy/buy_percent_model.dart';
 import 'package:masscoinex/models/currency/buy/buy_value_to_amount_model.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/models/user_model.dart';
@@ -22,10 +23,12 @@ class BuyController extends GetxController {
   var cryptoValueController = TextEditingController(text: "0");
   var amountController = TextEditingController(text: "0");
   var denominatedValue = TextEditingController(text: "0");
+  var percentValue = TextEditingController(text: "0");
   final _logger = Logger();
   var isRefreshed = false.obs;
   var isBought = true.obs;
   var isTypeFinished = true.obs;
+
   /* Getting coin info's */
   var index = 0.obs;
 
@@ -91,7 +94,6 @@ class BuyController extends GetxController {
             msg: _buyModel.message.toString(),
             backgroundColor: Colors.green,
           );
-          coinCode.value = "";
           coinValue.value = "";
           cryptoAmount.value = "";
           transactionFeeRate.value = "";
@@ -114,6 +116,65 @@ class BuyController extends GetxController {
           backgroundColor: Colors.red,
         );
       }
+    }
+  }
+
+  getPercent(String percentage) async {
+    isTypeFinished.value = false;
+    isRefreshed.value = false;
+    final _userInfo =
+        UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
+    final _token = _userInfo.result.token;
+    Map<String, String> _header = {
+      'Accept': 'application/json',
+      'Authorization': 'Bearer $_token',
+    };
+    _logger.d(dashboardValue.cryptoData[index.value].coinName.toLowerCase());
+    final Map<String, dynamic> _body = {
+      "coin_code":
+          dashboardValue.cryptoData[index.value].coinName.toLowerCase(),
+      "crypto_percent": percentage,
+    };
+    var _response = await http.post(
+        Uri.parse(ApiRoutes.baseUrl +
+            ApiRoutes.getBuyCryptoFiatPercentValueGetFiatCryptoAmount),
+        body: _body,
+        headers: _header);
+    _logger.d(_response.body);
+    if (_response.statusCode == 200) {
+      isTypeFinished.value = true;
+      var _result = buyPercentModelFromJson(_response.body);
+      if (_result.code.toString() == "1") {
+        if (!_result.result.status) {
+          isRefreshed.value = false;
+          Fluttertoast.showToast(
+            msg: _result.result.message,
+            backgroundColor: Colors.red,
+          );
+          settingTextFieldsToZero();
+        } else {
+          isRefreshed.value = true;
+          coinCode.value =
+              dashboardValue.cryptoData[index.value].coinName.toLowerCase();
+          coinValue.value = _result.result.receivedCoinValue.toString();
+          cryptoAmount.value = _result.result.receivedCoinValue.toString();
+          transactionFeeRate.value =
+              _result.result.coinBuyTransactionRate.toString();
+          transactionFee.value = _result.result.transactionFee.toString();
+          cryptoValue.value = _result.result.cryptoValue.toString();
+          /* Prepare for buy */
+          amountController.text = _result.result.receivedCoinValue.toString();
+          denominatedValue.text = _result.result.cryptoValue.toString();
+          cryptoValueController.text =
+              _result.result.actualCoinValue.toString();
+        }
+      } else {
+        GlobalVals.errorToast(_result.message);
+        settingTextFieldsToZero();
+      }
+    } else {
+      GlobalVals.errorToast("Server Error: ${_response.statusCode}");
+      settingTextFieldsToZero();
     }
   }
 
@@ -153,6 +214,7 @@ class BuyController extends GetxController {
             msg: _result.result.message,
             backgroundColor: Colors.red,
           );
+          settingTextFieldsToZero();
         } else {
           isRefreshed.value = true;
           /* Prepare for buy */
@@ -178,6 +240,7 @@ class BuyController extends GetxController {
             msg: _result.result.message,
             backgroundColor: Colors.red,
           );
+          settingTextFieldsToZero();
         } else {
           isRefreshed.value = true;
           coinCode.value =
@@ -202,6 +265,13 @@ class BuyController extends GetxController {
       Fluttertoast.showToast(
           msg: "Server Error. Please try again later.",
           backgroundColor: Colors.red);
+      settingTextFieldsToZero();
     }
+  }
+
+  settingTextFieldsToZero() {
+    amountController.text = "0";
+    cryptoValueController.text = "0";
+    denominatedValue.text = "0";
   }
 }
