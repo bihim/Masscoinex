@@ -136,7 +136,7 @@ class CurrencySelectedScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        Row(
+                        /*Row(
                           crossAxisAlignment: CrossAxisAlignment.center,
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -152,7 +152,7 @@ class CurrencySelectedScreen extends StatelessWidget {
                               width: 2.w,
                             ),
                             Text(
-                              "${_currencySelectedController.currencySelectedList[index].money} BCH",
+                              "Type",
                               style: TextStyle(
                                 color: _selectedIndex.value == index
                                     ? Colors.red
@@ -163,7 +163,7 @@ class CurrencySelectedScreen extends StatelessWidget {
                         ),
                         SizedBox(
                           height: 2.h,
-                        ),
+                        ),*/
                         Text(
                           _currencySelectedController
                               .currencySelectedList[index].values,
@@ -357,15 +357,10 @@ class CurrencySelectedScreen extends StatelessWidget {
                 ),
                 children: [
                   TextSpan(
-                    text: "0.670013\n\n",
+                    text: _currencySelectedController
+                        .dashboardValue.cryptoData[index].cryptoWallet.toString(),
                     style: TextStyle(
                       fontSize: 25.sp,
-                    ),
-                  ),
-                  TextSpan(
-                    text: "≈ \$23665.00\n",
-                    style: TextStyle(
-                      fontSize: 18.sp,
                     ),
                   ),
                 ],

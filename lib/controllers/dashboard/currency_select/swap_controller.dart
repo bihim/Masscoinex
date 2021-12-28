@@ -15,6 +15,7 @@ import 'package:masscoinex/models/currency/swap/swap_percent_model.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:masscoinex/routes/route_list.dart';
 
 class SwapController extends GetxController {
   final _box = Hive.box(GlobalVals.hiveBox);
@@ -64,7 +65,7 @@ class SwapController extends GetxController {
     isTypeFinished.value = false;
     isRefreshed.value = false;
     final _userInfo =
-    UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
+        UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
     final _token = _userInfo.result.token;
     Map<String, String> _header = {
       'Accept': 'application/json',
@@ -73,13 +74,12 @@ class SwapController extends GetxController {
     _logger.d(dashboardValue.cryptoData[index.value].coinName.toLowerCase());
     final Map<String, dynamic> _body = {
       "fromselectedCoin":
-      dashboardValue.cryptoData[index.value].coinName.toLowerCase(),
+          dashboardValue.cryptoData[index.value].coinName.toLowerCase(),
       "toselectedCoin": dropdownValueTo.value,
       "cryptoPercent": percentage,
     };
     var _response = await http.post(
-        Uri.parse(ApiRoutes.baseUrl +
-            ApiRoutes.getPercentSwapCryptoAmount),
+        Uri.parse(ApiRoutes.baseUrl + ApiRoutes.getPercentSwapCryptoAmount),
         body: _body,
         headers: _header);
     _logger.d(_response.body);
@@ -115,7 +115,6 @@ class SwapController extends GetxController {
       settingTextFieldsToZero();
     }
   }
-
 
   insertValue(String cryptoValues) async {
     isTypeFinished.value = false;
@@ -184,7 +183,7 @@ class SwapController extends GetxController {
     }
   }
 
-  withdrawCrypto() async {
+  withdrawCrypto(int _index) async {
     if (!isRefreshed.value) {
       Fluttertoast.showToast(
         msg: "Please enter your withdraw amount",
@@ -230,6 +229,9 @@ class SwapController extends GetxController {
           toCryptoValue.value = "";
           isRefreshed.value = false;
           settingTextFieldsToZero();
+          Get.toNamed(Routes.transactionHistory, arguments: [
+            _index,
+          ]);
         } else {
           Fluttertoast.showToast(
             msg: _saveSell.message.toString(),
@@ -277,8 +279,19 @@ class SwapController extends GetxController {
       if (_result.code == "1") {
         if (_result.result.status) {
           coinList.value = _result.result.userCoinsList;
-          dropdownValueTo.value =
-              _result.result.userCoinsList.first.coinCode.capitalizeFirst!;
+          if (dashboardValue.cryptoData[index.value].coinName !=
+              _result.result.userCoinsList.first.coinCode.capitalizeFirst!) {
+            dropdownValueTo.value =
+                _result.result.userCoinsList.first.coinCode.capitalizeFirst!;
+            _logger.d(
+                "Coin name: ${dashboardValue.cryptoData[index.value].coinName} and coin list first name: ${_result.result.userCoinsList.first.coinCode.capitalizeFirst!}");
+          } else {
+            if (_result.result.userCoinsList.length >= 2) {
+              dropdownValueTo.value =
+                  _result.result.userCoinsList[1].coinCode.capitalizeFirst!;
+            }
+          }
+
           for (var coinCode in _result.result.userCoinsList) {
             dropDownValueToList.value.add(coinCode.coinCode);
           }

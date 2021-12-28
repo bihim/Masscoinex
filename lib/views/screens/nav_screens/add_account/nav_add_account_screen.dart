@@ -175,8 +175,7 @@ class NavAddAccountScreen extends StatelessWidget {
                     _branchStateController.text.isEmpty ||
                     _branchAddressController.text.isEmpty ||
                     _branchCityController.text.isEmpty ||
-                    _branchZipController.text.isEmpty ||
-                    _branchTelephoneController.text.isEmpty) {
+                    _branchZipController.text.isEmpty) {
                   Fluttertoast.showToast(
                       msg: "One of the fields are empty",
                       backgroundColor: Colors.red);

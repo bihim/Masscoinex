@@ -35,6 +35,8 @@ class ProfileScreen extends StatelessWidget {
   final image = XFile("").obs;
   final isPicked = false.obs;
   final isImageClicked = false.obs;
+  final _imageNetwork = "".obs;
+
   @override
   Widget build(BuildContext context) {
     handleAppLifecycleState();
@@ -51,6 +53,7 @@ class ProfileScreen extends StatelessWidget {
     _cityController.text = _result.city;
     _postCodeController.text = _result.postcode;
     _addressController.text = _result.address ?? "";
+    _imageNetwork.value = "${_result.imageName}";
     final _date = DateFormat("yyyy-MM-dd").format(DateTime.now());
     _selectedDate.value =
         DateFormat("yyyy-MM-dd").parse(_result.dob == "" ? _date : _result.dob);
@@ -96,7 +99,8 @@ class ProfileScreen extends StatelessWidget {
                             ),
                           ),
                           TextSpan(
-                            text: "User ID: ${_profileInfo.result.id}\n",
+                            text:
+                                "User ID: ${(_profileInfo.result.referralCode != null ? _profileInfo.result.referralCode : "")}\n",
                             style: TextStyle(
                               color: GlobalVals.appbarColor,
                               fontSize: 14.sp,
@@ -115,18 +119,18 @@ class ProfileScreen extends StatelessWidget {
                     SizedBox(
                       height: 2.h,
                     ),
-                    _textFields(
-                        "Full Name", _fullnameController, TextInputType.name),
+                    _textFields("Full Name", _fullnameController,
+                        TextInputType.name, true),
                     SizedBox(
                       height: 2.h,
                     ),
-                    _textFields(
-                        "Email", _emailController, TextInputType.emailAddress),
+                    _textFields("Email", _emailController,
+                        TextInputType.emailAddress, false),
                     SizedBox(
                       height: 2.h,
                     ),
                     _textFields("Referral Code", _referralController,
-                        TextInputType.text),
+                        TextInputType.text, false),
                     SizedBox(
                       height: 2.h,
                     ),
@@ -169,34 +173,38 @@ class ProfileScreen extends StatelessWidget {
                     SizedBox(
                       height: 2.h,
                     ),
-                    _textFields("Phone", _phoneController, TextInputType.phone),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    _textFields("Pin", _pinController, TextInputType.number),
+                    _textFields(
+                        "Phone", _phoneController, TextInputType.phone, true),
                     SizedBox(
                       height: 2.h,
                     ),
                     _textFields(
-                        "Country", _countryController, TextInputType.name),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    _textFields("State", _stateController, TextInputType.name),
-                    SizedBox(
-                      height: 2.h,
-                    ),
-                    _textFields("City", _cityController, TextInputType.name),
+                        "Pin", _pinController, TextInputType.number, true),
                     SizedBox(
                       height: 2.h,
                     ),
                     _textFields(
-                        "Post Code", _postCodeController, TextInputType.name),
+                        "State", _stateController, TextInputType.name, true),
                     SizedBox(
                       height: 2.h,
                     ),
                     _textFields(
-                        "Address", _addressController, TextInputType.name),
+                        "City", _cityController, TextInputType.name, true),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    _textFields("Post Code", _postCodeController,
+                        TextInputType.name, true),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    _textFields("Country", _countryController,
+                        TextInputType.name, false),
+                    SizedBox(
+                      height: 2.h,
+                    ),
+                    _textFields("Address", _addressController,
+                        TextInputType.name, true),
                     SizedBox(height: 2.h),
                     Container(
                       width: double.infinity,
@@ -275,7 +283,7 @@ class ProfileScreen extends StatelessWidget {
                                           fit: BoxFit.cover,
                                         )
                                       : Image.network(
-                                          _result.imageName,
+                                          _imageNetwork.value,
                                           fit: BoxFit.cover,
                                         ),
                                 ),
@@ -318,11 +326,13 @@ class ProfileScreen extends StatelessWidget {
   Container _textFields(
       String text,
       TextEditingController textEditingController,
-      TextInputType textInputType) {
+      TextInputType textInputType,
+      bool canEdit) {
     return Container(
       height: 4.h,
       width: double.infinity,
       child: TextField(
+        enabled: canEdit,
         controller: textEditingController,
         keyboardType: textInputType,
         decoration: InputDecoration(
@@ -391,6 +401,7 @@ class ProfileScreen extends StatelessWidget {
     _logger.d(_response.statusCode);
     _response.stream.transform(utf8.decoder).listen((event) {
       isPicked.value = false;
+      _logger.d("event: $event");
       Get.back();
       getProfileInfo();
       Fluttertoast.showToast(
@@ -449,15 +460,27 @@ class ProfileScreen extends StatelessWidget {
             ),
             onTap: () async {
               isImageClicked.value = true;
-              var _getGalleryImage =
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
                   await _picker.pickImage(source: ImageSource.gallery);
-              if (_getGalleryImage != null) {
+              /*var _getGalleryImage =
+                  await _picker.pickImage(source: ImageSource.gallery);*/
+              if (photo != null) {
+                isPicked.value = true;
+                image.value = photo;
+                isImageClicked.value = false;
+                Get.back();
+                updateProfilePicture();
+              } else {
+                Get.back();
+              }
+              /*if (_getGalleryImage != null) {
                 isPicked.value = true;
                 image.value = _getGalleryImage;
               } else {
                 isPicked.value = false;
                 image.value = XFile("");
-              }
+              }*/
             },
           ),
           ListTile(
@@ -468,6 +491,22 @@ class ProfileScreen extends StatelessWidget {
             ),
             onTap: () async {
               isImageClicked.value = true;
+              final ImagePicker _picker = ImagePicker();
+              final XFile? photo =
+                  await _picker.pickImage(source: ImageSource.camera);
+              /*var _getGalleryImage =
+              await _picker.pickImage(source: ImageSource.gallery);*/
+              if (photo != null) {
+                isPicked.value = true;
+                image.value = photo;
+                isImageClicked.value = false;
+                Get.back();
+                updateProfilePicture();
+              } else {
+                Get.back();
+              }
+
+              /*isImageClicked.value = true;
               var _getGalleryImage =
                   await _picker.pickImage(source: ImageSource.camera);
               if (_getGalleryImage != null) {
@@ -478,7 +517,7 @@ class ProfileScreen extends StatelessWidget {
                 _logger.d("isPicked: else ${isPicked.value}");
                 isPicked.value = false;
                 image.value = XFile("");
-              }
+              }*/
             },
           ),
         ],
@@ -501,7 +540,7 @@ class ProfileScreen extends StatelessWidget {
           Future.delayed(Duration(milliseconds: 500), () {
             _logger.d("isPicked: ${isPicked.value}");
             if (isImageClicked.value == true) {
-              Get.back();
+              //Get.back();
               isImageClicked.value = false;
               if (isPicked.value == true) {
                 updateProfilePicture();
@@ -533,6 +572,8 @@ class ProfileScreen extends StatelessWidget {
     );
     _logger.d(_response.body);
     if (_response.statusCode == 200) {
+      var _result = profileModelFromJson(_response.body);
+      _imageNetwork.value = _result.result.imageName;
       _box.put(GlobalVals.profileInfo, _response.body);
     } else {
       GlobalVals.errorToast("Server Error");

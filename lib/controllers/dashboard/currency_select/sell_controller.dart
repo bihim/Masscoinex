@@ -13,6 +13,7 @@ import 'package:masscoinex/models/currency/sell/sell_percentage_model.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:masscoinex/routes/route_list.dart';
 
 class SellController extends GetxController {
   final _box = Hive.box(GlobalVals.hiveBox);
@@ -106,7 +107,7 @@ class SellController extends GetxController {
           cryptoValueController.text = _result.result.cryptoValue.toString();
         }
       } else {
-        GlobalVals.errorToast(_result.message);
+        GlobalVals.errorToast(_result.result.message);
         settingTextFieldsToZero();
       }
     } else {
@@ -249,7 +250,7 @@ class SellController extends GetxController {
     }
   }
 
-  sellCrypto() async {
+  sellCrypto(int _index) async {
     if (!isRefreshed.value) {
       Fluttertoast.showToast(
         msg: "Please enter your buy amount",
@@ -293,8 +294,10 @@ class SellController extends GetxController {
           transactionFee.value = "";
           cryptoValue.value = "";
           isRefreshed.value = false;
-
           settingTextFieldsToZero();
+          Get.toNamed(Routes.transactionHistory, arguments: [
+            _index,
+          ]);
         } else {
           Fluttertoast.showToast(
             msg: _saveSell.message.toString(),

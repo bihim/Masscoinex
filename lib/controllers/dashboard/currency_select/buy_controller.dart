@@ -14,6 +14,7 @@ import 'package:masscoinex/models/currency/buy/buy_value_to_amount_model.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:masscoinex/routes/route_list.dart';
 
 class BuyController extends GetxController {
   final _box = Hive.box(GlobalVals.hiveBox);
@@ -55,7 +56,7 @@ class BuyController extends GetxController {
     selectedCurrency.value = dashboardValue.wallet.currency;
   }
 
-  buyCoin() async {
+  buyCoin(int _index) async {
     if (!isRefreshed.value) {
       Fluttertoast.showToast(
         msg: "Please enter your buy amount",
@@ -103,6 +104,9 @@ class BuyController extends GetxController {
           cryptoValueController.text = "";
           denominatedValue.text = "";
           isRefreshed.value = false;
+          Get.toNamed(Routes.transactionHistory, arguments: [
+            _index,
+          ]);
         } else {
           Fluttertoast.showToast(
             msg: _buyModel.message.toString(),

@@ -11,6 +11,7 @@ class ApiRoutes {
   static const profileUpdate = "update-profile";
   static const addBank = "add-bank";
   static const updatePhoto = "update-photo";
+  static const currencyList = "currency-list";
 
   /* Buy */
   static const getFiatCryptoValue = "get-fiat-crypto-value";

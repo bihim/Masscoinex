@@ -83,19 +83,19 @@ class DashboardScreen extends StatelessWidget {
                                                 TextSpan(
                                                   text: _result
                                                       .cryptoData[index]
-                                                      .coinName,
+                                                      .coinName+"\n",
                                                   style: TextStyle(
                                                     fontSize: 17.sp,
                                                   ),
                                                 ),
-                                                TextSpan(
+                                                /*TextSpan(
                                                   text:
                                                       "(${_result.cryptoData[index].coinSymbol})" +
                                                           "\n",
                                                   style: TextStyle(
                                                     fontSize: 15.sp,
                                                   ),
-                                                ),
+                                                ),*/
                                                 TextSpan(
                                                   text: _result
                                                       .cryptoData[index]

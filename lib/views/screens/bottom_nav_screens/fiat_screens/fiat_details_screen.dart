@@ -25,17 +25,19 @@ class FiatDetailsScreen extends StatelessWidget {
           SizedBox(
             height: 1.h,
           ),
-          Obx(() {
-            return fiatController.isHistoryRefreshed.value == true
-                ? fiatController.historyList.value.length != 0
-                ? _fiatHistory()
-                : Center(
-              child: Text("No data available"),
-            )
-                : const Center(
-              child: CircularProgressIndicator(),
-            );
-          },),
+          Obx(
+            () {
+              return fiatController.isHistoryRefreshed.value == true
+                  ? fiatController.historyList.value.length != 0
+                      ? _fiatHistory()
+                      : Center(
+                          child: Text("No data available"),
+                        )
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    );
+            },
+          ),
         ],
       ),
     );
@@ -58,7 +60,7 @@ class FiatDetailsScreen extends StatelessWidget {
                         children: [
                           TextSpan(
                             text:
-                            "${fiatController.historyList.value[index].mode}\n",
+                                "${fiatController.historyList.value[index].mode}\n",
                             style: TextStyle(
                               color: Colors.grey.shade800,
                               fontWeight: FontWeight.bold,
@@ -66,26 +68,21 @@ class FiatDetailsScreen extends StatelessWidget {
                           ),
                           TextSpan(
                             text:
-                            "Transaction: ${fiatController.historyList
-                                .value[index].transactionNo ?? ""}\n",
+                                "Transaction: ${fiatController.historyList.value[index].transactionNo ?? ""}\n",
                             style: TextStyle(
                               color: Colors.grey.shade800,
                             ),
                           ),
                           TextSpan(
                             text:
-                            "Transaction Fee: ${fiatController.historyList
-                                .value[index].transactionFee ?? ""}\n",
+                                "Transaction Fee: ${fiatController.historyList.value[index].transactionFee ?? ""}\n",
                             style: TextStyle(
                               color: Colors.grey.shade800,
                             ),
                           ),
                           TextSpan(
                             text:
-                            "${fiatController.historyList.value[index].createdAt
-                                .day}-${fiatController.historyList.value[index]
-                                .createdAt.month}-${fiatController.historyList
-                                .value[index].createdAt.year}",
+                                "${fiatController.historyList.value[index].createdAt.day}-${fiatController.historyList.value[index].createdAt.month}-${fiatController.historyList.value[index].createdAt.year}",
                             style: TextStyle(
                               color: Colors.grey.shade800,
                             ),
@@ -97,9 +94,7 @@ class FiatDetailsScreen extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.end,
                       children: [
                         Text(
-                          "Amount: ${fiatController.historyList.value[index]
-                              .currency ?? ""} ${fiatController.historyList
-                              .value[index].amount ?? ""}",
+                          "Amount: ${fiatController.historyList.value[index].currency ?? ""} ${fiatController.historyList.value[index].amount ?? ""}",
                           style: TextStyle(
                             color: Colors.black,
                             fontWeight: FontWeight.bold,
@@ -110,9 +105,7 @@ class FiatDetailsScreen extends StatelessWidget {
                           height: 1.h,
                         ),
                         Text(
-                          "Pay amount: ${fiatController.historyList.value[index]
-                              .currency ?? ""} ${fiatController.historyList
-                              .value[index].amount ?? ""}",
+                          "Pay amount: ${fiatController.historyList.value[index].currency ?? ""} ${fiatController.historyList.value[index].amount ?? ""}",
                           style: TextStyle(
                             color: Colors.grey.shade800,
                             fontSize: 14.sp,
@@ -127,7 +120,7 @@ class FiatDetailsScreen extends StatelessWidget {
                             Icon(
                               Icons.circle,
                               color: statusColor(fiatController
-                                  .historyList.value[index].paymentStatus ??
+                                      .historyList.value[index].paymentStatus ??
                                   ""),
                               size: 2.h,
                             ),
@@ -136,10 +129,11 @@ class FiatDetailsScreen extends StatelessWidget {
                             ),
                             Text(
                               fiatController
-                                  .historyList.value[index].paymentStatus ?? "",
+                                      .historyList.value[index].paymentStatus ??
+                                  "",
                               style: TextStyle(
-                                color: statusColor(fiatController
-                                    .historyList.value[index].paymentStatus ??
+                                color: statusColor(fiatController.historyList
+                                        .value[index].paymentStatus ??
                                     ""),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -183,21 +177,24 @@ class FiatDetailsScreen extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TextButton(
-            onPressed: () {},
-            child: Row(
-              children: [
-                Icon(
-                  Icons.sort_rounded,
-                  color: Colors.white,
-                ),
-                Text(
-                  "Sort",
-                  style: TextStyle(
+          Visibility(
+            visible: false,
+            child: TextButton(
+              onPressed: () {},
+              child: Row(
+                children: [
+                  Icon(
+                    Icons.sort_rounded,
                     color: Colors.white,
                   ),
-                ),
-              ],
+                  Text(
+                    "Sort",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
+                  ),
+                ],
+              ),
             ),
           ),
           TextButton(
@@ -286,7 +283,7 @@ class FiatDetailsScreen extends StatelessWidget {
       onPressed: voidCallback,
       child: Padding(
         padding:
-        EdgeInsets.only(left: 1.5.h, right: 1.5.h, top: 1.h, bottom: 1.h),
+            EdgeInsets.only(left: 1.5.h, right: 1.5.h, top: 1.h, bottom: 1.h),
         child: Row(
           children: [
             Icon(

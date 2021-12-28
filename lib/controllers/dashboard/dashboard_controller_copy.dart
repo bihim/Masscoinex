@@ -15,7 +15,9 @@ class DashBoardControllerCopy extends GetxController {
   var resultLength = 0.obs;
   var _logger = Logger();
   getAllDashboard() async {
+    _logger.d("Being Called");
     isDashboardLoading.value = true;
+    responseResult.value = "";
     final _box = await Hive.openBox(GlobalVals.hiveBox);
     final _userInfo =
         UserModel.fromJson(json.decode(_box.get(GlobalVals.user)));
@@ -31,6 +33,7 @@ class DashBoardControllerCopy extends GetxController {
     );
     if (_response.statusCode == 200) {
       isDashboardLoading.value = false;
+      _logger.d("Being Called again");
       _box.put(GlobalVals.dashBoard, _response.body);
       responseResult.value = _response.body;
       var _result = DashboardModel.fromJson(json.decode(_response.body));
@@ -38,6 +41,7 @@ class DashBoardControllerCopy extends GetxController {
       /* _logger.d(_response.body);
       _logger.d(_token); */
     } else {
+      _logger.d("Being Called again error");
       GlobalVals.errorToast("Server Error");
     }
   }

@@ -58,7 +58,7 @@ class SellPercentageResult {
     status: json["status"],
     message: json["message"],
     afterInitialRateFeeValue: json["afterInitialRateFeeValue"],
-    cryptoValue: json["crypto_value"].toDouble(),
+    cryptoValue: json["crypto_value"],
     userCoinAmountAfterFees: json["userCoinAmountAfterFees"],
     coinSellTransactionRate: json["coin_sell_transaction_rate"],
     coinSellTransactionVolumeFees: json["coin_sell_transaction_volume_fees"],

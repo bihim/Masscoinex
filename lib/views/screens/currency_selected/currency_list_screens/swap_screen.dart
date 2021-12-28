@@ -57,7 +57,7 @@ class CurrencySwapScreen extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            _controller.withdrawCrypto();
+            _controller.withdrawCrypto(index);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 2.h),
@@ -129,8 +129,7 @@ class CurrencySwapScreen extends StatelessWidget {
     );
   }
 
-
-  Column _percent() {
+  Widget _percent() {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -155,6 +154,7 @@ class CurrencySwapScreen extends StatelessWidget {
             ),
           ),
           child: TextField(
+            enabled: false,
             inputFormatters: [
               LengthLimitingTextInputFormatter(3),
             ],
@@ -170,7 +170,7 @@ class CurrencySwapScreen extends StatelessWidget {
             ),
             onChanged: (text) {
               if (int.parse(text) <= 100) {
-                Future.delayed(Duration(milliseconds: 800), () {
+                Future.delayed(GlobalVals.duration, () {
                   if (text == _controller.percentValue.text) {
                     _controller.insertPercentage(_controller.percentValue.text);
                   }
@@ -181,7 +181,34 @@ class CurrencySwapScreen extends StatelessWidget {
             },
           ),
         ),
+        Row(
+          children: [
+            _percentButton("10%", "10"),
+            _percentButton("25%", "25"),
+            _percentButton("50%", "50"),
+            _percentButton("75%", "75"),
+            _percentButton("100%", "100"),
+          ],
+        )
       ],
+    );
+  }
+
+  Widget _percentButton(String percent, String percentValue) {
+    return Expanded(
+      flex: 1,
+      child: TextButton(
+        onPressed: () {
+          _controller.percentValue.text = percentValue;
+          _controller.insertPercentage(percentValue);
+        },
+        child: Text(
+          percent,
+          style: TextStyle(
+            color: Colors.grey,
+          ),
+        ),
+      ),
     );
   }
 
@@ -229,7 +256,7 @@ class CurrencySwapScreen extends StatelessWidget {
                     ),
                   ),
                   onChanged: (text) {
-                    Future.delayed(Duration(milliseconds: 800), () {
+                    Future.delayed(GlobalVals.duration, () {
                       if (text == _controller.cryptoValueController.text) {
                         _controller.insertValue(
                             _controller.cryptoValueController.text);
@@ -275,8 +302,7 @@ class CurrencySwapScreen extends StatelessWidget {
                   cursorColor: GlobalVals.appbarColor,
                   controller: _controller.amountController,
                   decoration: InputDecoration(
-                    suffix: Text(
-                        "${_controller.dashboardValue.wallet.currency}        "),
+                    suffix: Text("     "),
                     border: UnderlineInputBorder(
                       borderSide: BorderSide.none,
                     ),
@@ -387,7 +413,7 @@ class CurrencySwapScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Crypto Currency",
+                "Cryptocurrency",
                 style: TextStyle(
                   color: Colors.grey.shade800,
                   fontWeight: FontWeight.bold,
@@ -406,7 +432,7 @@ class CurrencySwapScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 2.h, 2.h),
                   child: Text(
                     _controller.dashboardValue.cryptoData[index].coinName,
                   ),
@@ -484,9 +510,10 @@ class CurrencySwapScreen extends StatelessWidget {
               child: InkWell(
                 child: Container(
                   width: double.infinity,
-                  margin: EdgeInsets.symmetric(
-                    vertical: 1.8.h,
-                    horizontal: 2.h,
+                  margin: EdgeInsets.only(
+                    top: 1.8.h,
+                    bottom: 1.8.h,
+                    left: 2.h,
                   ),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,

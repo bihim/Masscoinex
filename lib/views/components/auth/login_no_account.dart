@@ -37,7 +37,7 @@ class LoginNoAccount extends StatelessWidget {
                       TextSpan(
                         text: "Create one here!",
                         style: TextStyle(
-                          color: GlobalVals.buttonColor,
+                          color: GlobalVals.textColor,
                           fontSize: 16.sp,
                           fontWeight: FontWeight.w600,
                         ),

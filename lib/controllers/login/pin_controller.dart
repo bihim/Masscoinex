@@ -73,8 +73,9 @@ class PinController extends GetxController {
     );
     _logger.d(_response.body);
     if (_response.statusCode == 200) {
-      _box.put(GlobalVals.profileInfo, _response.body);
-      Get.offAllNamed(Routes.mainScreenCopy);
+      _box
+          .put(GlobalVals.profileInfo, _response.body)
+          .then((value) => Get.offAllNamed(Routes.mainScreenCopy));
       //Get.offAllNamed(Routes.mainScreenCopy);
       //responseResult.value = _response.body;
       // var _result = DashboardModel.fromJson(json.decode(_response.body));

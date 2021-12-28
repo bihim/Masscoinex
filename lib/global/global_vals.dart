@@ -7,7 +7,8 @@ class GlobalVals {
   static const bottomNavSelectedColor = Color(0xFFf7499e);
   static const raiseColor = 0xFF71b553;
   static const downColor = 0xFFe07978;
-  static const buttonColor = Color(0xFF2072ef);
+  static const buttonColor = Color(0xFF5c28b0);
+  static const textColor = Colors.blue;
   static const currencyColor = Color(0xFF4d16a8);
 
   //?Hive Texts
@@ -28,6 +29,9 @@ class GlobalVals {
   static const paymentMethodId = "payment-method-id";
   static const paymentMethodName = "payment-method-name";
   static const referenceNo = "referenceNo";
+  static const tempToken = "tempToken";
+
+  static const duration = Duration(seconds: 3);
 
   //?ErrorToast
   static errorToast(String text) {

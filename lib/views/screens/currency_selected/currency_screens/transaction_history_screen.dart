@@ -313,21 +313,24 @@ class TransactionHistory extends StatelessWidget {
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
-          TextButton(
-            onPressed: () {},
-            child: Row(
-              children: [
-                Icon(
-                  Icons.sort_rounded,
-                  color: Colors.white,
-                ),
-                Text(
-                  "Sort",
-                  style: TextStyle(
+          Visibility(
+            visible: false,
+            child: TextButton(
+              onPressed: () {},
+              child: Row(
+                children: [
+                 /* Icon(
+                    Icons.sort_rounded,
                     color: Colors.white,
+                  ),*/
+                  Text(
+                    "",
+                    style: TextStyle(
+                      color: Colors.white,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
           TextButton(

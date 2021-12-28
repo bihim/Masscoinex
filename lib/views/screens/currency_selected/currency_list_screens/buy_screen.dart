@@ -163,6 +163,7 @@ class BuyScreen extends StatelessWidget {
             ),
           ),
           child: TextField(
+            enabled: false,
             inputFormatters: [
               LengthLimitingTextInputFormatter(3),
             ],
@@ -178,7 +179,7 @@ class BuyScreen extends StatelessWidget {
             ),
             onChanged: (text) {
               if (int.parse(text) <= 100) {
-                Future.delayed(Duration(milliseconds: 800), () {
+                Future.delayed(GlobalVals.duration, () {
                   if (text == _controller.percentValue.text) {
                     _controller.getPercent(_controller.percentValue.text);
                     _logger.d(_controller.amountController.text);
@@ -189,6 +190,15 @@ class BuyScreen extends StatelessWidget {
               }
             },
           ),
+        ),
+        Row(
+          children: [
+            _percentButton("10%", "10"),
+            _percentButton("25%", "25"),
+            _percentButton("50%", "50"),
+            _percentButton("75%", "75"),
+            _percentButton("100%", "100"),
+          ],
         ),
       ],
     );
@@ -238,7 +248,7 @@ class BuyScreen extends StatelessWidget {
                     ),
                   ),
                   onChanged: (text) {
-                    Future.delayed(Duration(milliseconds: 800), () {
+                    Future.delayed(GlobalVals.duration, () {
                       if (text == _controller.cryptoValueController.text) {
                         _controller.getBuy(
                             _controller.cryptoValueController.text,
@@ -293,7 +303,7 @@ class BuyScreen extends StatelessWidget {
                     ),
                   ),
                   onChanged: (text) {
-                    Future.delayed(Duration(milliseconds: 800), () {
+                    Future.delayed(GlobalVals.duration, () {
                       if (text == _controller.amountController.text) {
                         _controller.getBuy(_controller.amountController.text,
                             "crypto_amount", ApiRoutes.getFiatCryptoValue);
@@ -321,7 +331,7 @@ class BuyScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Crypto Currency",
+                "Cryptocurrency",
                 style: TextStyle(
                   color: Colors.grey.shade800,
                   fontWeight: FontWeight.bold,
@@ -340,7 +350,7 @@ class BuyScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 2.h, 2.h),
                   child: Text(
                     _controller.dashboardValue.cryptoData[index].coinName,
                   ),
@@ -374,6 +384,7 @@ class BuyScreen extends StatelessWidget {
                 height: 1.h,
               ),
               Container(
+                width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
@@ -383,7 +394,7 @@ class BuyScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 0, 2.h),
                   child: Text(
                     _controller.selectedCurrency.value,
                   ),
@@ -424,7 +435,7 @@ class BuyScreen extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            _controller.buyCoin();
+            _controller.buyCoin(index);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 2.h),
@@ -433,6 +444,24 @@ class BuyScreen extends StatelessWidget {
                 : const CircularProgressIndicator(
                     color: Colors.white,
                   ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _percentButton(String percent, String percentValue) {
+    return Expanded(
+      flex: 1,
+      child: TextButton(
+        onPressed: () {
+          _controller.percentValue.text = percentValue;
+          _controller.getPercent(percentValue);
+        },
+        child: Text(
+          percent,
+          style: TextStyle(
+            color: Colors.grey,
           ),
         ),
       ),

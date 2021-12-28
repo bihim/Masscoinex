@@ -16,7 +16,8 @@ class SellScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     _controller.index.value = index;
-    _controller.coinCode.value = _controller.dashboardValue.cryptoData[index].coinName.toLowerCase();
+    _controller.coinCode.value =
+        _controller.dashboardValue.cryptoData[index].coinName.toLowerCase();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: 1.h,
@@ -121,6 +122,7 @@ class SellScreen extends StatelessWidget {
             ),
           ),
           child: TextField(
+            enabled: false,
             inputFormatters: [
               LengthLimitingTextInputFormatter(3),
             ],
@@ -136,7 +138,7 @@ class SellScreen extends StatelessWidget {
             ),
             onChanged: (text) {
               if (int.parse(text) <= 100) {
-                Future.delayed(Duration(milliseconds: 800), () {
+                Future.delayed(GlobalVals.duration, () {
                   if (text == _controller.percentValue.text) {
                     _controller.insertPercentage(_controller.percentValue.text);
                     _logger.d(_controller.amountController.text);
@@ -147,6 +149,15 @@ class SellScreen extends StatelessWidget {
               }
             },
           ),
+        ),
+        Row(
+          children: [
+            _percentButton("10%", "10"),
+            _percentButton("25%", "25"),
+            _percentButton("50%", "50"),
+            _percentButton("75%", "75"),
+            _percentButton("100%", "100"),
+          ],
         ),
       ],
     );
@@ -236,7 +247,7 @@ class SellScreen extends StatelessWidget {
                     ),
                   ),
                   onChanged: (text) {
-                    Future.delayed(Duration(milliseconds: 800), () {
+                    Future.delayed(GlobalVals.duration, () {
                       if (text == _controller.cryptoValueController.text) {
                         _controller.insertValue(
                             _controller.cryptoValueController.text);
@@ -289,7 +300,7 @@ class SellScreen extends StatelessWidget {
                     ),
                   ),
                   onChanged: (text) {
-                    Future.delayed(Duration(milliseconds: 800), () {
+                    Future.delayed(GlobalVals.duration, () {
                       if (text == _controller.amountController.text) {
                         _controller
                             .insertAmount(_controller.amountController.text);
@@ -317,7 +328,7 @@ class SellScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Crypto Currency",
+                "Cryptocurrency",
                 style: TextStyle(
                   color: Colors.grey.shade800,
                   fontWeight: FontWeight.bold,
@@ -336,7 +347,7 @@ class SellScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 2.h, 2.h),
                   child: Text(
                     _controller.dashboardValue.cryptoData[index].coinName,
                   ),
@@ -370,6 +381,7 @@ class SellScreen extends StatelessWidget {
                 height: 1.h,
               ),
               Container(
+                width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
@@ -379,7 +391,7 @@ class SellScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 0, 2.h),
                   child: Text(
                     _controller.selectedCurrency.value,
                   ),
@@ -411,7 +423,7 @@ class SellScreen extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            _controller.sellCrypto();
+            _controller.sellCrypto(index);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 2.h),
@@ -420,6 +432,24 @@ class SellScreen extends StatelessWidget {
                 : const CircularProgressIndicator(
                     color: Colors.white,
                   ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _percentButton(String percent, String percentValue) {
+    return Expanded(
+      flex: 1,
+      child: TextButton(
+        onPressed: () {
+          _controller.percentValue.text = percentValue;
+          _controller.insertPercentage(percentValue);
+        },
+        child: Text(
+          percent,
+          style: TextStyle(
+            color: Colors.grey,
           ),
         ),
       ),

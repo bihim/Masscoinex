@@ -7,7 +7,6 @@ import 'package:get/get.dart';
 
 class FiatDepositScreen extends StatelessWidget {
   final FiatController controller;
-
   FiatDepositScreen({Key? key, required this.controller}) : super(key: key);
 
   @override
@@ -207,7 +206,7 @@ class FiatDepositScreen extends StatelessWidget {
               ),
             ),
             onChanged: (text) {
-              Future.delayed(Duration(milliseconds: 800), () {
+              Future.delayed(GlobalVals.duration, () {
                 if (text == controller.amountController.text) {
                   controller.insertValue(controller.amountController.text);
                 }
@@ -350,7 +349,39 @@ class FiatDepositScreen extends StatelessWidget {
       ],
     );
   }
-
+  Container _continue(String text, VoidCallback voidCallback) {
+    return Container(
+      width: double.infinity,
+      child: ElevatedButton(
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(
+            GlobalVals.buttonColor,
+          ),
+          elevation: MaterialStateProperty.all(0),
+          shape: MaterialStateProperty.all(
+            RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(
+                5.h,
+              ),
+            ),
+          ),
+        ),
+        onPressed: voidCallback,
+        child: Padding(
+          padding: EdgeInsets.symmetric(vertical: 2.h),
+          child: text == "Continue"
+              ? Obx(() {
+                  return controller.hasDepositSaved.value == true
+                      ? Text(text)
+                      : const CircularProgressIndicator(
+                          color: Colors.white,
+                        );
+                })
+              : Text(text),
+        ),
+      ),
+    );
+  }
   Widget _dropDown(CrossAxisAlignment crossAxisAlignment, String text,
       RxString dropdownInitValue, List<String> dropdownList) {
     return Column(
@@ -367,7 +398,7 @@ class FiatDepositScreen extends StatelessWidget {
           height: 1.h,
         ),
         Obx(
-          () => Container(
+              () => Container(
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(1.h),
@@ -394,7 +425,7 @@ class FiatDepositScreen extends StatelessWidget {
                 );
               }).toList(),
             ), */
-                Material(
+            Material(
               color: Colors.transparent,
               child: InkWell(
                 child: Container(
@@ -447,37 +478,4 @@ class FiatDepositScreen extends StatelessWidget {
     );
   }
 
-  Container _continue(String text, VoidCallback voidCallback) {
-    return Container(
-      width: double.infinity,
-      child: ElevatedButton(
-        style: ButtonStyle(
-          backgroundColor: MaterialStateProperty.all(
-            GlobalVals.buttonColor,
-          ),
-          elevation: MaterialStateProperty.all(0),
-          shape: MaterialStateProperty.all(
-            RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(
-                5.h,
-              ),
-            ),
-          ),
-        ),
-        onPressed: voidCallback,
-        child: Padding(
-          padding: EdgeInsets.symmetric(vertical: 2.h),
-          child: text == "Continue"
-              ? Obx(() {
-                  return controller.hasDepositSaved.value == true
-                      ? Text(text)
-                      : const CircularProgressIndicator(
-                          color: Colors.white,
-                        );
-                })
-              : Text(text),
-        ),
-      ),
-    );
-  }
 }

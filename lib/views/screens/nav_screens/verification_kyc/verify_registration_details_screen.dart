@@ -1,6 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:hive/hive.dart';
 import 'package:masscoinex/controllers/nav_kyc/verify_registration_details_controller.dart';
+import 'package:masscoinex/models/profile_model.dart';
+import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/global/global_vals.dart';
@@ -8,6 +11,7 @@ import 'package:masscoinex/global/global_vals.dart';
 class VerifyRegistrationDetailsScreen extends StatelessWidget {
   final _registrationDetailsController =
       Get.put(VerifyRegistrationDetailsController());
+  final _box = Hive.box(GlobalVals.hiveBox);
 
   @override
   Widget build(BuildContext context) {
@@ -17,9 +21,14 @@ class VerifyRegistrationDetailsScreen extends StatelessWidget {
     return Obx(
       () => WillPopScope(
         onWillPop: () {
+          ProfileModel? _userType =
+              profileModelFromJson(_box.get(GlobalVals.profileInfo));
           if (_registrationDetailsController.currentIndex.value > 0) {
             _registrationDetailsController.currentIndex.value =
                 _registrationDetailsController.currentIndex.value - 1;
+            return Future.value(false);
+          } else if (_userType.result.userType != "kyc") {
+            GlobalVals.errorToast("Upload KYC First");
             return Future.value(false);
           } else {
             return Future.value(true);
@@ -27,7 +36,7 @@ class VerifyRegistrationDetailsScreen extends StatelessWidget {
         },
         child: Scaffold(
           appBar: AppBar(
-            title: const Text("Registration"),
+            title: const Text("Upload KYC"),
             backgroundColor: GlobalVals.appbarColor,
           ),
           body: Container(

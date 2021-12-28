@@ -25,6 +25,7 @@ class BankPaymentControllerWithdraw extends GetxController {
   var selectedIndex = 0.obs;
   var isButtonActive = false.obs;
   var isDepositSaved = true.obs;
+  var isThereAnyBankSaved = false.obs;
   var id = "".obs;
   var userDataList = <UserBank>[].obs;
 
@@ -71,14 +72,21 @@ class BankPaymentControllerWithdraw extends GetxController {
       if (result.code == "1") {
         isButtonActive.value = true;
         userDataList.value = result.userBanks;
+        if (result.userBanks.isNotEmpty) {
+          isThereAnyBankSaved.value = true;
+          bankName.value = result.userBanks.first.bankName;
+          bankAddress.value = result.userBanks.first.bankAddress;
+          accountNo.value = result.userBanks.first.accountNo;
+          name.value = result.userBanks.first.fullName;
 
-        bankName.value = result.userBanks.first.bankName;
-        bankAddress.value = result.userBanks.first.bankAddress;
-        accountNo.value = result.userBanks.first.accountNo;
-        name.value = result.userBanks.first.fullName;
+          amountController.text = result.amount.toString();
+          currencyController.text = _dashboard.wallet.currency ?? "";
+        }
+        else{
+          isThereAnyBankSaved.value = false;
+          GlobalVals.errorToast("No bank account found in this account");
+        }
 
-        amountController.text = result.amount.toString();
-        currencyController.text = _dashboard.wallet.currency ?? "";
       } else {
         GlobalVals.errorToast("Fetch Error");
       }

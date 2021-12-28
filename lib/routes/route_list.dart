@@ -17,6 +17,7 @@ class Routes {
   static const completeScreen = "/completeScreen";
   static const selectCurrencyScreen = "/selectCurrencyScreen";
   static const addAccount = "/addAccount";
+  static const selectCurrencyScreenAfterRegistration = "/selectCurrencyScreenAfterRegistration";
   static const addAccountSuccessful = "/addAccountSuccessful";
   //CurrencySelected
   static const currencySelected = "/currencySelected";

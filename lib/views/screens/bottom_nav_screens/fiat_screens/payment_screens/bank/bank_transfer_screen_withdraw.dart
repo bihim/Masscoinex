@@ -9,12 +9,12 @@ import 'package:get/get.dart';
 class BankTransferScreenWithdraw extends StatelessWidget {
   final _controller = Get.put(BankPaymentControllerWithdraw());
 
-  BankTransferScreenWithdraw({Key? key,})
-      : super(key: key);
+  BankTransferScreenWithdraw({
+    Key? key,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(
         title: Text("Bank Transfer"),
@@ -35,7 +35,11 @@ class BankTransferScreenWithdraw extends StatelessWidget {
             SizedBox(
               height: 2.h,
             ),
-            Obx(() => _controller.isListLoaded.value == true? _bankDropdown() : SizedBox()),
+            Obx(() => _controller.isListLoaded.value == true
+                ? _controller.isThereAnyBankSaved.value == true
+                    ? _bankDropdown()
+                    : SizedBox()
+                : SizedBox()),
             SizedBox(
               height: 2.h,
             ),

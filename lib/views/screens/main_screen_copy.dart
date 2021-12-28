@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive/hive.dart';
+import 'package:logger/logger.dart';
 import 'package:masscoinex/controllers/main/main_controller_copy.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/models/profile_model.dart';
+import 'package:masscoinex/models/user_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
@@ -20,8 +22,18 @@ class MainScreenCopy extends StatelessWidget {
           ? Get.parameters["isComingFromCurrency"]!
           : "no";
   final _curIndex = 0.obs;
+  final _logger = Logger();
+
   @override
   Widget build(BuildContext context) {
+    _logger.d(_box.get(GlobalVals.profileInfo));
+    ProfileModel? _userType =
+        profileModelFromJson(_box.get(GlobalVals.profileInfo));
+    /*Future.delayed(Duration(seconds: 1), () {
+      if (_userType.result.userType != "kyc") {
+        Get.toNamed(Routes.verifyKyc);
+      }
+    });*/
     print("Indexxx $_index");
     Future<bool> _onWillPop() async {
       return (await showDialog(
@@ -68,12 +80,21 @@ class MainScreenCopy extends StatelessWidget {
               () => _mainController.bottomIndex.value == 0
                   ? Padding(
                       padding: EdgeInsets.only(right: 1.h),
-                      child: CircleAvatar(
-                        backgroundColor: Colors.white,
-                        radius: 2.h,
-                        child: Icon(
-                          Icons.person,
-                          color: GlobalVals.appbarColor,
+                      child: Material(
+                        color: Colors.transparent,
+                        child: InkWell(
+                          child: CircleAvatar(
+                            backgroundColor: Colors.white,
+                            radius: 2.h,
+                            child: Icon(
+                              Icons.person,
+                              color: GlobalVals.appbarColor,
+                            ),
+                          ),
+                          onTap: () {
+                            _mainController.bottomIndex.value = 3;
+                            _index = 3;
+                          },
                         ),
                       ),
                     )
@@ -81,7 +102,7 @@ class MainScreenCopy extends StatelessWidget {
             ),
           ],
         ),
-        drawer: _drawer(),
+        drawer: _drawer(_userType),
         body: Obx(
           () => IndexedStack(
             children: _mainController.screensCopy,
@@ -115,7 +136,7 @@ class MainScreenCopy extends StatelessWidget {
     );
   }
 
-  Widget _drawer() {
+  Widget _drawer(ProfileModel? _userType) {
     final _profileInfo =
         ProfileModel.fromJson(json.decode(_box.get(GlobalVals.profileInfo)));
     return Drawer(
@@ -183,7 +204,10 @@ class MainScreenCopy extends StatelessWidget {
                       ],
                     ),
                     IconButton(
-                      onPressed: () {},
+                      onPressed: () {
+                        _mainController.bottomIndex.value = 3;
+                        _index = 3;
+                      },
                       icon: Icon(Icons.edit_outlined),
                     ),
                   ],
@@ -192,21 +216,23 @@ class MainScreenCopy extends StatelessWidget {
             ),
             Column(
               children: [
-                _tiles(
-                  Icons.ballot_outlined,
-                  "Verify Identity (KYC)",
-                  "Upload documents to complete the KYC process",
-                  () {
-                    Get.toNamed(Routes.verifyKyc);
-                  },
-                ),
+                _userType!.result.userType != "kyc"
+                    ? _tiles(
+                        Icons.ballot_outlined,
+                        "Verify Identity (KYC)",
+                        "Upload documents to complete the KYC process",
+                        () {
+                          Get.toNamed(Routes.verifyKyc);
+                        },
+                      )
+                    : const SizedBox(),
                 _tiles(Icons.account_balance_outlined, "Bank & Card",
                     "View & edit your bank & card details", () {
                   Get.toNamed(Routes.addCardOrBank);
                 }),
                 _tiles(Icons.history_outlined, "Transaction History",
                     "View your crypto and fiat transactions", () {
-                  Get.toNamed(Routes.transactionHistory);
+                  Get.toNamed(Routes.dashboardHistory);
                 }),
                 _tiles(
                     Icons.local_offer_outlined,

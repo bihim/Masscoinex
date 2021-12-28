@@ -16,6 +16,7 @@ import 'package:masscoinex/views/screens/auth/registration/mobile_verification_s
 import 'package:masscoinex/views/screens/auth/registration/registration_details_screen.dart';
 import 'package:masscoinex/views/screens/auth/registration/registration_screen.dart';
 import 'package:masscoinex/views/screens/auth/registration/select_country_screen.dart';
+import 'package:masscoinex/views/screens/auth/registration/select_country_screen_after_registration.dart';
 import 'package:masscoinex/views/screens/auth/registration/verify_select_country_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screens/dashboard_deposit_screen.dart';
 import 'package:masscoinex/views/screens/bottom_nav_screens/dashboard_screens/dashboard_history_screen.dart';
@@ -174,6 +175,10 @@ class Pages {
     GetPage(
       name: Routes.verifySelectCurrency,
       page: () => VerifySelectCurrencyScreen(),
+    ),
+    GetPage(
+      name: Routes.selectCurrencyScreenAfterRegistration,
+      page: () => SelectCurrencyScreenAfterRegistration(),
     ),
   ];
 }

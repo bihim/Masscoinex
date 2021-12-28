@@ -56,7 +56,7 @@ class DepositScreen extends StatelessWidget {
             ),
           ),
           onPressed: () {
-            _controller.saveDeposit();
+            _controller.saveDeposit(index);
           },
           child: Padding(
             padding: EdgeInsets.symmetric(vertical: 2.h),
@@ -211,7 +211,7 @@ class DepositScreen extends StatelessWidget {
                     ),
                   ),
                   onChanged: (text) {
-                    Future.delayed(Duration(milliseconds: 800), () {
+                    Future.delayed(GlobalVals.duration, () {
                       if (text == _controller.cryptoValueController.text) {
                         _controller.insertValue(
                             _controller.cryptoValueController.text);
@@ -265,7 +265,7 @@ class DepositScreen extends StatelessWidget {
                     ),
                   ),
                   onChanged: (text) {
-                    /*Future.delayed(Duration(milliseconds: 800), () {
+                    /*Future.delayed(GlobalVals.duration, () {
                       if (text == _controller.amountController.text) {
                         _controller
                             .insertAmount(_controller.amountController.text);
@@ -293,7 +293,7 @@ class DepositScreen extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Crypto Currency",
+                "Cryptocurrency",
                 style: TextStyle(
                   color: Colors.grey.shade800,
                   fontWeight: FontWeight.bold,
@@ -312,7 +312,7 @@ class DepositScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 2.h, 2.h),
                   child: Text(
                     _controller.dashboardValue.cryptoData[index].coinName,
                   ),
@@ -346,6 +346,7 @@ class DepositScreen extends StatelessWidget {
                 height: 1.h,
               ),
               Container(
+                width: double.infinity,
                 padding: EdgeInsets.symmetric(horizontal: 3.h),
                 decoration: BoxDecoration(
                   color: Colors.grey.shade200,
@@ -355,7 +356,7 @@ class DepositScreen extends StatelessWidget {
                   ),
                 ),
                 child: Padding(
-                  padding: EdgeInsets.fromLTRB(0, 2.h, 7.h, 2.h),
+                  padding: EdgeInsets.fromLTRB(0, 2.h, 0, 2.h),
                   child: Text(
                     _controller.selectedCurrency.value,
                   ),

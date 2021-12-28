@@ -17,39 +17,44 @@ class FiatWalletScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            /*_fiatBalance(),*/
-            Obx(
-              () => SizedBox(
-                child: _fiatController.responseResult.value == ""
-                    ? const CircularProgressIndicator(
-                        color: Colors.deepPurple,
-                      )
-                    : _balanceText(),
+      child: RefreshIndicator(
+        onRefresh: ()async{
+          _fiatController.fiatHistory("");
+        },
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              /*_fiatBalance(),*/
+              Obx(
+                () => SizedBox(
+                  child: _fiatController.responseResult.value == ""
+                      ? const CircularProgressIndicator(
+                          color: Colors.deepPurple,
+                        )
+                      : _balanceText(),
+                ),
               ),
-            ),
-            SizedBox(
-              height: 1.h,
-            ),
-            Obx(
-              () => IndexedStack(
-                children: [
-                  FiatDetailsScreen(
-                    fiatController: _fiatController,
-                  ),
-                  FiatDepositScreen(
-                    controller: _fiatController,
-                  ),
-                  FiatWithdrawScreen(
-                    controller: _fiatController,
-                  ),
-                ],
-                index: _fiatController.fiatIndex.value,
+              SizedBox(
+                height: 1.h,
               ),
-            )
-          ],
+              Obx(
+                () => IndexedStack(
+                  children: [
+                    FiatDetailsScreen(
+                      fiatController: _fiatController,
+                    ),
+                    FiatDepositScreen(
+                      controller: _fiatController,
+                    ),
+                    FiatWithdrawScreen(
+                      controller: _fiatController,
+                    ),
+                  ],
+                  index: _fiatController.fiatIndex.value,
+                ),
+              )
+            ],
+          ),
         ),
       ),
     );

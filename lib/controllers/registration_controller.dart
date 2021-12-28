@@ -34,25 +34,31 @@ class RegistrationController extends GetxController {
     };
     var _response = await http
         .post(Uri.parse(ApiRoutes.baseUrl + ApiRoutes.register), body: _body);
+
+    _logger.d(_response.body);
+
     if (_response.statusCode == 200) {
       isRegistering.value = false;
       var _status = RegisterModel.fromJson(json.decode(_response.body));
       _logger.d(_response.body);
       if (_status.code == "0") {
-        //var _error = RegisterModel.fromJsonError(json.decode(_response.body));
-        GlobalVals.errorToast("Something went wrong");
+        var _error = RegisterModel.fromJsonError(json.decode(_response.body));
+        GlobalVals.errorToast(_error.registerResultError!.email.first);
       } else {
-        /* var _success =
-            RegisterModel.fromJsonSuccess(json.decode(_response.body)); */
+         var _success =
+            RegisterModel.fromJsonSuccess(json.decode(_response.body));
         var _box = await Hive.openBox(GlobalVals.hiveBox);
-        //var _getBox = GetStorage();
         _box.put(GlobalVals.register, _response.body);
         _logger.d(_response.body);
         if (_isKyc) {
           _box.put("isComingFromRegistration", true);
           Get.toNamed(Routes.registrationDetails);
         } else {
-          Get.offAllNamed(Routes.loginEmail);
+          GlobalVals.successToast(_status.message);
+          String _token = _success.registerResult!.token;
+          _box.put(GlobalVals.tempToken, _token);
+          Get.toNamed(Routes.selectCurrencyScreenAfterRegistration);
+          //Get.offAllNamed(Routes.loginEmail);
         }
       }
     } else {

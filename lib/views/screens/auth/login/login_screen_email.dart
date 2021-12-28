@@ -1,15 +1,19 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:logger/logger.dart';
 import 'package:masscoinex/controllers/login/login_controller_email.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/views/components/auth/login_no_account.dart';
+import 'package:masscoinex/views/components/auth/obscuring_text_editing_controller.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 
 class LoginEmailScreen extends StatelessWidget {
   final _emailTextController = TextEditingController();
+  final _passwordTextControllerObscure = ObscuringTextEditingController();
   final _passwordTextController = TextEditingController();
   final _isPasswordVisible = true.obs;
+  final _logger = Logger();
   final LoginControllerEmail _loginControllereEmail =
       Get.put(LoginControllerEmail());
 
@@ -36,6 +40,16 @@ class LoginEmailScreen extends StatelessWidget {
                   height: 2.h,
                 ),
                 _textInputFields(),
+                SizedBox(
+                  width: double.infinity,
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: TextButton(
+                      onPressed: () {},
+                      child: Text("Reset Password and Pin"),
+                    ),
+                  ),
+                ),
                 SizedBox(
                   height: 2.h,
                 ),
@@ -80,15 +94,16 @@ class LoginEmailScreen extends StatelessWidget {
                 "Please enable terms and condition",
               );
             } else if (_emailTextController.text.isEmpty ||
-                _passwordTextController.text.isEmpty) {
+                _loginControllereEmail.typedPassword.value.isEmpty) {
               GlobalVals.errorToast(
                 "Input Fields are empty",
               );
             } else {
               _loginControllereEmail.checkUserCredentials(
-                  _emailTextController.text, _passwordTextController.text);
+                  _emailTextController.text,
+                  _loginControllereEmail.typedPassword.value);
             }
-
+            _logger.d(_loginControllereEmail.typedPassword.value);
             //Get.toNamed(Routes.emailVerification);
           },
           child: Padding(
@@ -217,13 +232,29 @@ class LoginEmailScreen extends StatelessWidget {
           width: double.infinity,
           child: Obx(
             () => TextField(
-              controller: _passwordTextController,
-              obscureText: _isPasswordVisible.value,
-              keyboardType: TextInputType.emailAddress,
+              controller: _isPasswordVisible.value == false
+                  ? _passwordTextController
+                  : _passwordTextControllerObscure,
+              enableSuggestions: false,
+              autocorrect: false,
               decoration: InputDecoration(
                 suffixIcon: IconButton(
                   onPressed: () {
                     _isPasswordVisible.value = !_isPasswordVisible.value;
+                    if (_isPasswordVisible.value == true) {
+                      _passwordTextController.text =
+                          _loginControllereEmail.typedPassword.value;
+                      _passwordTextController.selection =
+                          TextSelection.fromPosition(TextPosition(
+                              offset: _passwordTextController.text.length));
+                    } else {
+                      _passwordTextControllerObscure.text =
+                          _loginControllereEmail.typedPassword.value;
+                      _passwordTextControllerObscure.selection =
+                          TextSelection.fromPosition(TextPosition(
+                              offset:
+                                  _passwordTextControllerObscure.text.length));
+                    }
                   },
                   icon: Icon(
                     _isPasswordVisible.value == true
@@ -244,6 +275,17 @@ class LoginEmailScreen extends StatelessWidget {
                   horizontal: 2.h,
                 ),
               ),
+              onChanged: (value) {
+                _loginControllereEmail.typedPassword.value = value;
+                if (_isPasswordVisible.value == true) {
+                  _passwordTextController.text = value;
+                } else {
+                  _passwordTextControllerObscure.text = value;
+                }
+                _logger.d(
+                    "From Controller: ${_loginControllereEmail.typedPassword.value}");
+                _logger.d("From Value: ${value}");
+              },
             ),
           ),
         ),

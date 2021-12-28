@@ -11,6 +11,7 @@ import 'package:masscoinex/routes/route_list.dart';
 class LoginControllerEmail extends GetxController {
   var isCheckedCondition = false.obs;
   var isLoggingLoading = false.obs;
+  var typedPassword = "".obs;
   final _logger = Logger();
 
   checkUserCredentials(String email, String password) async {

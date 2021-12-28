@@ -13,6 +13,7 @@ import 'package:masscoinex/models/currency/withdraw_percent_model.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/models/user_model.dart';
 import 'package:http/http.dart' as http;
+import 'package:masscoinex/routes/route_list.dart';
 
 class WithdrawController extends GetxController {
   final _box = Hive.box(GlobalVals.hiveBox);
@@ -240,7 +241,7 @@ class WithdrawController extends GetxController {
     }
   }*/
 
-  saveWithdraw() async {
+  saveWithdraw(int _index) async {
     if (!isRefreshed.value) {
       Fluttertoast.showToast(
         msg: "Please enter your buy amount",
@@ -288,8 +289,10 @@ class WithdrawController extends GetxController {
             transactionFee.value = "";
             cryptoValue.value = "";
             isRefreshed.value = false;
-
             settingTextFieldsToZero();
+            Get.toNamed(Routes.transactionHistory, arguments: [
+              _index,
+            ]);
           } else {
             Fluttertoast.showToast(
               msg: _saveSell.message.toString(),

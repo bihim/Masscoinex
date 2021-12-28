@@ -17,6 +17,7 @@ class RegistrationScreen extends StatelessWidget {
   final _set4DigitPinEditingController = TextEditingController();
   final _confirm4DigitPinEditingController = TextEditingController();
   final _mobileNumberEditingController = TextEditingController();
+  final _obscurePassword = false.obs;
   final _countryCode = "IN".obs;
   final RegistrationController _registrationController = Get.find();
 
@@ -115,7 +116,9 @@ class RegistrationScreen extends StatelessWidget {
                       SizedBox(
                         height: 2.h,
                       ),
-                      _password(),
+                      Obx(() {
+                        return _password();
+                      }),
                       SizedBox(
                         height: 2.h,
                       ),
@@ -346,9 +349,19 @@ class RegistrationScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: TextField(
-            keyboardType: TextInputType.visiblePassword,
+            obscureText: _obscurePassword.value,
             controller: _enterPasswordEditingController,
             decoration: InputDecoration(
+              suffixIcon: IconButton(
+                onPressed: () {
+                  _obscurePassword.value = !_obscurePassword.value;
+                },
+                icon: Icon(
+                  _obscurePassword.value == true
+                      ? Icons.visibility_off_rounded
+                      : Icons.visibility_rounded,
+                ),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   5.h,
@@ -370,9 +383,19 @@ class RegistrationScreen extends StatelessWidget {
         Expanded(
           flex: 1,
           child: TextField(
-            keyboardType: TextInputType.visiblePassword,
+            obscureText: _obscurePassword.value,
             controller: _confirmPasswordEditingController,
             decoration: InputDecoration(
+              suffixIcon: IconButton(
+                onPressed: () {
+                  _obscurePassword.value = !_obscurePassword.value;
+                },
+                icon: Icon(
+                  _obscurePassword.value == true
+                      ? Icons.visibility_off_rounded
+                      : Icons.visibility_rounded,
+                ),
+              ),
               border: OutlineInputBorder(
                 borderRadius: BorderRadius.circular(
                   5.h,
