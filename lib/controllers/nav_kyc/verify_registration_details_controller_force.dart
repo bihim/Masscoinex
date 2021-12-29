@@ -10,12 +10,12 @@ import 'package:masscoinex/models/user_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:path/path.dart';
 import 'package:masscoinex/api/api_routes.dart';
-import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/registration_details_screen/declaration_screen.dart';
-import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/registration_details_screen/document_screen.dart';
-import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/registration_details_screen/selfie_id_screen.dart';
-import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/registration_details_screen/selfie_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/registration_details_screen_force/declaration_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/registration_details_screen_force/document_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/registration_details_screen_force/selfie_id_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/registration_details_screen_force/selfie_screen.dart';
 
-class VerifyRegistrationDetailsController extends GetxController {
+class VerifyRegistrationDetailsControllerForce extends GetxController {
   var currentIndex = 0.obs;
   var previousIndex = 0.obs;
   var uploadImageFront = XFile("").obs;
@@ -33,7 +33,7 @@ class VerifyRegistrationDetailsController extends GetxController {
   final _logger = Logger();
 
   List<StatelessWidget> screens(
-      VerifyRegistrationDetailsController registrationDetailsController) {
+      VerifyRegistrationDetailsControllerForce registrationDetailsController) {
     return [
       VerifyDocumentScreen(
         registrationDetailsController: registrationDetailsController,
@@ -113,7 +113,7 @@ class VerifyRegistrationDetailsController extends GetxController {
       isUploaded.value = false;
       var _box = await Hive.openBox(GlobalVals.hiveBox);
       _box.put(GlobalVals.kycUploadModel, event);
-      Get.offNamed(Routes.verifyKycUpload);
+      Get.offNamed(Routes.verifyKycUploadNewLogic);
       isCompleted.value = true;
       _logger.d(event);
     });

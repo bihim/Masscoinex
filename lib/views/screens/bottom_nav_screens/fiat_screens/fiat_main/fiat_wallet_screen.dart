@@ -92,19 +92,19 @@ class FiatWalletScreen extends StatelessWidget {
                   TextSpan(
                     text: "FIAT BALANCE\n\n\n",
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.white60,
                       fontWeight: FontWeight.bold,
                       fontSize: 19.sp,
                     ),
                   ),
-                  TextSpan(
+                  /*TextSpan(
                     text: "Total Balance\n",
                     style: TextStyle(
                       color: Colors.white60,
                       fontWeight: FontWeight.bold,
                       fontSize: 16.sp,
                     ),
-                  ),
+                  ),*/
                   TextSpan(
                     text: "INR 230000",
                     style: TextStyle(

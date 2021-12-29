@@ -52,13 +52,15 @@ class RegistrationController extends GetxController {
         _logger.d(_response.body);
         if (_isKyc) {
           _box.put("isComingFromRegistration", true);
-          Get.toNamed(Routes.registrationDetails);
+          //Get.toNamed(Routes.registrationDetails);
+          GlobalVals.successToast(_status.message);
+          Get.offAllNamed(Routes.loginEmail);
         } else {
           GlobalVals.successToast(_status.message);
           String _token = _success.registerResult!.token;
           _box.put(GlobalVals.tempToken, _token);
-          Get.toNamed(Routes.selectCurrencyScreenAfterRegistration);
-          //Get.offAllNamed(Routes.loginEmail);
+          //Get.toNamed(Routes.selectCurrencyScreenAfterRegistration);
+          Get.offAllNamed(Routes.loginEmail);
         }
       }
     } else {

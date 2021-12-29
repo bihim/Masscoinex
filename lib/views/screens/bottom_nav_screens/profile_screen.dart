@@ -39,7 +39,7 @@ class ProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    handleAppLifecycleState();
+    //handleAppLifecycleState();
     final _profileInfo =
         ProfileModel.fromJson(json.decode(_box.get(GlobalVals.profileInfo)));
     final _result = _profileInfo.result;
@@ -526,7 +526,7 @@ class ProfileScreen extends StatelessWidget {
     );
   }
 
-  handleAppLifecycleState() {
+  /*handleAppLifecycleState() {
     SystemChannels.lifecycle.setMessageHandler((msg) {
       print('SystemChannels> $msg');
       _logger.d('SystemChannels> $msg');
@@ -554,7 +554,7 @@ class ProfileScreen extends StatelessWidget {
       }
       return Future.value("");
     });
-  }
+  }*/
 
   getProfileInfo() async {
     final _box = await Hive.openBox(GlobalVals.hiveBox);

@@ -14,6 +14,7 @@ class DashBoardControllerCopy extends GetxController {
   var responseResult = "".obs;
   var resultLength = 0.obs;
   var _logger = Logger();
+
   getAllDashboard() async {
     _logger.d("Being Called");
     isDashboardLoading.value = true;
@@ -38,8 +39,8 @@ class DashBoardControllerCopy extends GetxController {
       responseResult.value = _response.body;
       var _result = DashboardModel.fromJson(json.decode(_response.body));
       resultLength.value = _result.cryptoData.length;
-      /* _logger.d(_response.body);
-      _logger.d(_token); */
+       _logger.d(_response.body);
+      _logger.d(_token);
     } else {
       _logger.d("Being Called again error");
       GlobalVals.errorToast("Server Error");

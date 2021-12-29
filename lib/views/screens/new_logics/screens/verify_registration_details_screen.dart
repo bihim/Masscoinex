@@ -2,15 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:masscoinex/controllers/nav_kyc/verify_registration_details_controller.dart';
+import 'package:masscoinex/controllers/nav_kyc/verify_registration_details_controller_force.dart';
 import 'package:masscoinex/models/profile_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 import 'package:get/get.dart';
 import 'package:masscoinex/global/global_vals.dart';
 
-class VerifyRegistrationDetailsScreen extends StatelessWidget {
+class VerifyRegistrationDetailsScreenNewLogicForce extends StatelessWidget {
   final _registrationDetailsController =
-      Get.put(VerifyRegistrationDetailsController());
+      Get.put(VerifyRegistrationDetailsControllerForce());
   final _box = Hive.box(GlobalVals.hiveBox);
 
   @override
@@ -27,7 +28,7 @@ class VerifyRegistrationDetailsScreen extends StatelessWidget {
             _registrationDetailsController.currentIndex.value =
                 _registrationDetailsController.currentIndex.value - 1;
             return Future.value(false);
-          } else if (_userType.result.userType != "kyc") {
+          } else if (_userType.result.kycStatus == "Pending") {
             GlobalVals.errorToast("Upload KYC First");
             return Future.value(false);
           } else {

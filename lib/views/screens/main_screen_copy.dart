@@ -8,12 +8,12 @@ import 'package:masscoinex/controllers/main/main_controller_copy.dart';
 import 'package:masscoinex/global/global_vals.dart';
 import 'package:masscoinex/models/dashboard_model.dart';
 import 'package:masscoinex/models/profile_model.dart';
-import 'package:masscoinex/models/user_model.dart';
 import 'package:masscoinex/routes/route_list.dart';
 import 'package:responsive_sizer/responsive_sizer.dart';
 
 class MainScreenCopy extends StatelessWidget {
   final _mainController = Get.put(MainControllerCopy());
+  final _scaffoldKey = GlobalKey<ScaffoldState>(); //new line
   final _box = Hive.box(GlobalVals.hiveBox);
   int _index = int.parse(
       Get.parameters["index"] != null ? Get.parameters["index"]! : "1234");
@@ -29,11 +29,15 @@ class MainScreenCopy extends StatelessWidget {
     _logger.d(_box.get(GlobalVals.profileInfo));
     ProfileModel? _userType =
         profileModelFromJson(_box.get(GlobalVals.profileInfo));
-    /*Future.delayed(Duration(seconds: 1), () {
-      if (_userType.result.userType != "kyc") {
-        Get.toNamed(Routes.verifyKyc);
+    Future.delayed(Duration(seconds: 1), () {
+      if (_userType.result.kycStatus == "Pending") {
+        if (_userType.result.userType == "kyc") {
+          Get.toNamed(Routes.verifyKycNewLogic);
+        } else if (_userType.result.userType == "non-kyc") {
+          Get.toNamed(Routes.currencySelectNewLogic);
+        }
       }
-    });*/
+    });
     print("Indexxx $_index");
     Future<bool> _onWillPop() async {
       return (await showDialog(
@@ -60,11 +64,27 @@ class MainScreenCopy extends StatelessWidget {
           false;
     }
 
+    void openDrawer() {
+      _scaffoldKey.currentState!.openDrawer();
+    }
+
     return WillPopScope(
       onWillPop: _onWillPop,
       child: Scaffold(
+        key: _scaffoldKey,
         appBar: AppBar(
           title: Obx(() => _title()),
+          leading: Obx(
+            () => _mainController.shouldShowMenu.value != true
+                ? SizedBox()
+                : IconButton(
+                    onPressed: () {
+                      openDrawer();
+                    },
+                    icon: Icon(Icons.menu_rounded),
+                    color: Colors.white,
+                  ),
+          ),
           bottom: PreferredSize(
             child: Container(
               color: Colors.white,
@@ -102,7 +122,11 @@ class MainScreenCopy extends StatelessWidget {
             ),
           ],
         ),
-        drawer: _drawer(_userType),
+        drawer: Obx(() {
+          return _mainController.shouldShowMenu.value == true
+              ? _drawer(_userType)
+              : SizedBox();
+        }),
         body: Obx(
           () => IndexedStack(
             children: _mainController.screensCopy,
@@ -216,7 +240,7 @@ class MainScreenCopy extends StatelessWidget {
             ),
             Column(
               children: [
-                _userType!.result.userType != "kyc"
+                _userType!.result.kycStatus != "Approved"
                     ? _tiles(
                         Icons.ballot_outlined,
                         "Verify Identity (KYC)",
@@ -226,21 +250,49 @@ class MainScreenCopy extends StatelessWidget {
                         },
                       )
                     : const SizedBox(),
-                _tiles(Icons.account_balance_outlined, "Bank & Card",
-                    "View & edit your bank & card details", () {
-                  Get.toNamed(Routes.addCardOrBank);
+                Obx(() {
+                  return _mainController.bankAndCardTitle.value != ""
+                      ? _tiles(
+                          Icons.account_balance_outlined,
+                          _mainController.bankAndCardTitle.value,
+                          _mainController.bankAndCardSubtitle.value, () {
+                          switch (_mainController.bankAndCardTitle.value) {
+                            case "Bank":
+                              Get.toNamed(Routes.addBankNewLogic);
+                              break;
+                            case "Card":
+                              Get.toNamed(Routes.addCardNewLogic);
+                              break;
+                            default:
+                              Get.toNamed(Routes.addCardOrBank);
+                              break;
+                          }
+                        })
+                      : const SizedBox();
                 }),
+                Obx(
+                  () => _mainController.shouldShowCurrency.value == true
+                      ? _userType.result.kycStatus != "Approved"
+                          ? _tiles(Icons.paid_outlined, "Select Currency",
+                              "Select your currency", () {
+                              Get.toNamed(Routes.currencySelectNewLogic);
+                            })
+                          : SizedBox()
+                      : SizedBox(),
+                ),
                 _tiles(Icons.history_outlined, "Transaction History",
                     "View your crypto and fiat transactions", () {
                   Get.toNamed(Routes.dashboardHistory);
                 }),
-                _tiles(
+                /*_tiles(
                     Icons.local_offer_outlined,
                     "Fees",
                     "See all fees including membership, withdrawal, deposit",
-                    () {}),
+                    () {}),*/
                 _tiles(Icons.notifications_outlined, "Notifications",
-                    "Controll all app notifications", () {}),
+                    "Control all app notifications", () {
+                  Get.toNamed(Routes.notification);
+                }),
                 _tiles(Icons.security_outlined, "Security Center",
                     "Set security features like change pin, password and more",
                     () {

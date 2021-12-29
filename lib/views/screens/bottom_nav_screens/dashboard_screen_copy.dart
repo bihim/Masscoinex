@@ -22,7 +22,7 @@ class DashboardScreenCopy extends StatelessWidget {
         ProfileModel.fromJson(json.decode(_box.get(GlobalVals.profileInfo))); */
     /* var _result = DashboardModel.fromJson(
         json.decode(_dashBoardController.responseResult.value)); */
-    handleAppLifecycleState();
+    //handleAppLifecycleState();
     return RefreshIndicator(
       onRefresh: () async {
         _dashBoardController.getAllDashboard();

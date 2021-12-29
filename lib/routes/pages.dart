@@ -29,12 +29,21 @@ import 'package:masscoinex/views/screens/currency_selected/currency_screens/tran
 import 'package:masscoinex/views/screens/currency_selected/currency_selected_screen.dart';
 import 'package:masscoinex/views/screens/main_screen.dart';
 import 'package:masscoinex/views/screens/main_screen_copy.dart';
-import 'package:masscoinex/views/screens/nav_screens/add_account/add_account_complete_screen.dart';
-import 'package:masscoinex/views/screens/nav_screens/add_account/nav_add_account_screen.dart';
-import 'package:masscoinex/views/screens/nav_screens/security_screen.dart';
-import 'package:masscoinex/views/screens/nav_screens/support_screen.dart';
-import 'package:masscoinex/views/screens/nav_screens/verification_kyc/verify_kyc_uploaded_screen.dart';
-import 'package:masscoinex/views/screens/nav_screens/verification_kyc/verify_registration_details_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/add_account/add_account_complete_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/add_account/nav_add_account_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/new_logic/add_bank_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/new_logic/add_card_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/new_logic_force/add_bank_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/new_logic_force/add_card_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/notification_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/security_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/support_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/verify_kyc_uploaded_screen.dart';
+import 'package:masscoinex/views/screens/nav_drawer_screens/verification_kyc/verify_registration_details_screen.dart';
+import 'package:masscoinex/views/screens/new_logics/screens/currency_select_screen.dart';
+import 'package:masscoinex/views/screens/new_logics/screens/currency_select_screen_force.dart';
+import 'package:masscoinex/views/screens/new_logics/screens/verify_kyc_uploaded_screen.dart';
+import 'package:masscoinex/views/screens/new_logics/screens/verify_registration_details_screen.dart';
 import 'package:masscoinex/views/screens/splash_screen.dart';
 
 class Pages {
@@ -179,6 +188,44 @@ class Pages {
     GetPage(
       name: Routes.selectCurrencyScreenAfterRegistration,
       page: () => SelectCurrencyScreenAfterRegistration(),
+    ),
+    GetPage(
+      name: Routes.notification,
+      page: () => NotificationScreen(),
+    ),
+    /*New Logic starts*/
+    GetPage(
+      name: Routes.currencySelectNewLogic,
+      page: () => CurrencySelectNewLogic(),
+      transition: Transition.noTransition,
+    ),
+    GetPage(
+      name: Routes.addBankNewLogic,
+      page: () => AddBankScreenNewLogic(),
+    ),
+    GetPage(
+      name: Routes.addCardNewLogic,
+      page: () => AddCardScreenNewLogic(),
+    ),
+    GetPage(
+      name: Routes.verifyKycNewLogic,
+      page: () => VerifyRegistrationDetailsScreenNewLogicForce(),
+    ),
+    GetPage(
+      name: Routes.verifyKycUploadNewLogic,
+      page: () => VerifyKycUploadedScreenNewLogicForce(),
+    ),
+    GetPage(
+      name: Routes.verifySelectCurrencyNewLogic,
+      page: () => CurrencySelectNewLogicForce(),
+    ),
+    GetPage(
+      name: Routes.addBankNewLogicForce,
+      page: () => AddBankScreenNewLogicForce(),
+    ),
+    GetPage(
+      name: Routes.addCardNewLogicForce,
+      page: () => AddCardScreenNewLogicForce(),
     ),
   ];
 }
